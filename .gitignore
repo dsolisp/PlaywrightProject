@@ -1,0 +1,15 @@
+node_modules/
+dist/
+allure-results/
+allure-report/
+coverage/
+.env
+.DS_Store
+*.log
+*.sqlite
+*.db
+output/
+tmp/
+*.png
+*.mp4
+*.webm
