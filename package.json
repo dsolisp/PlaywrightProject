@@ -1,0 +1,43 @@
+{
+  "name": "playwrightproject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:api && npm run test:db && npm run test:visual && npx playwright test",
+    "test:unit": "jest --config jest.config.cjs",
+    "test:api": "jest src/tests/api --config jest.config.cjs",
+    "test:db": "jest src/tests/db --config jest.config.cjs",
+    "test:visual": "jest src/tests/visual --config jest.config.cjs",
+    "lint": "eslint . --ext .js,.ts",
+    "format": "prettier --write .",
+    "prepare": "husky install",
+    "allure": "allure generate allure-results --clean && allure open allure-report",
+    "k6": "k6 run k6/search_engine.k6.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/css": "^0.13.0",
+    "@eslint/js": "^9.37.0",
+    "@playwright/test": "^1.56.0",
+    "@types/jest": "^30.0.0",
+    "allure-commandline": "^2.34.1",
+    "axios": "^1.12.2",
+    "better-sqlite3": "^12.4.1",
+    "eslint": "^9.37.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0",
+    "husky": "^8.0.0",
+    "jest": "^30.2.0",
+    "k6": "^0.0.0",
+    "lint-staged": "^16.2.4",
+    "pino": "^10.0.0",
+    "pixelmatch": "^7.1.0",
+    "playwright": "^1.56.0",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
+  }
+}
