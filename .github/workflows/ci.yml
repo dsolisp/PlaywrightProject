@@ -23,9 +23,13 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npx tsc --noEmit
-      - name: Run tests
+      - name: Run tests (unit/api/db/visual)
+        env:
+          CI: 'true'
         run: npm test
       - name: Run Playwright tests
+        env:
+          CI: 'true'
         run: npx playwright test --reporter=allure-playwright
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
