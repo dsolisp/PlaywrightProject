@@ -1,9 +1,12 @@
+/* eslint-env node */
 const fs = require('fs');
 const path = require('path');
 
 // Dynamically include only existing test roots so Jest validation doesn't fail
 const possibleRoots = ['src/tests/unit', 'src/tests/api', 'src/tests/db'];
+/* eslint-disable no-undef */
 const cwd = process.cwd();
+/* eslint-enable no-undef */
 const roots = possibleRoots
   .map((p) => path.join(cwd, p))
   .filter((abs) => fs.existsSync(abs))
