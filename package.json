@@ -16,7 +16,8 @@
     "allure": "allure generate allure-results --clean && allure open allure-report",
     "k6": "k6 run k6/search_engine.k6.js",
     "k6:run": "node scripts/run_k6_impl.js",
-    "analytics": "ts-node scripts/analytics.ts"
+    "analytics": "ts-node scripts/analytics.ts",
+    "monitoring": "ts-node scripts/monitoring.ts"
   },
   "keywords": [],
   "author": "",
