@@ -19,3 +19,4 @@ tmp/
 # for CI comparisons.
 !src/tests/visual/duckduckgo_baseline.png
 !src/tests/e2e/visual.e2e.spec.ts-snapshots/*.png
+!src/db/chinook.db
