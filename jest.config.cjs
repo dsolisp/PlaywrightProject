@@ -7,7 +7,7 @@ module.exports = {
   // Run tests under src/tests; Playwright E2E/visual tests live under src/tests/e2e and are run with Playwright.
   roots: ['<rootDir>/src/tests'],
   testMatch: ['**/?(*.)+(spec|test).ts'],
-  // Ignore Playwright E2E tests (they are run with `npx playwright test`)
+  // Ignore Playwright E2E tests (they are run with Playwright)
   testPathIgnorePatterns: ['<rootDir>/src/tests/e2e/'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   transform: {

@@ -44,3 +44,11 @@ jobs:
         with:
           name: k6-results
           path: k6-results/
+      - name: Generate analytics
+        run: npm run analytics
+      - name: Upload analytics reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: analytics-reports
+          path: reports/

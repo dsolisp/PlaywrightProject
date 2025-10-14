@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Analytics Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .summary { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+    .metric { display: inline-block; margin: 10px; text-align: center; }
+    .metric-value { font-size: 2em; font-weight: bold; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .passed { color: green; }
+    .failed { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Test Analytics Dashboard</h1>
+  <div class="summary">
+    <h2>Summary</h2>
+    <div class="metric">
+      <div class="metric-value">1</div>
+      <div>Total Tests</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">1</div>
+      <div>Passed</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">0</div>
+      <div>Failed</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">100.0%</div>
+      <div>Pass Rate</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">127.01ms</div>
+      <div>Avg Duration</div>
+    </div>
+    
+  </div>
+  <h2>Test Results</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Test Name</th>
+        <th>Status</th>
+        <th>Duration (ms)</th>
+        <th>Suite</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td>k6 Performance Test</td>
+          <td class="passed">passed</td>
+          <td>127.01070000000004</td>
+          <td>performance</td>
+          <td>2025-10-14T19:08:34.992Z</td>
+        </tr>
+      
+    </tbody>
+  </table>
+</body>
+</html>

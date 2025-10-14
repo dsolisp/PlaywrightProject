@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "totalTests": 1,
+    "passed": 1,
+    "failed": 0,
+    "passRate": 1,
+    "avgDuration": 127.01070000000004,
+    "totalDuration": 127.01070000000004,
+    "timestamp": "2025-10-14T19:08:34.993Z",
+    "environment": "development",
+    "trends": {}
+  },
+  "results": [
+    {
+      "name": "k6 Performance Test",
+      "status": "passed",
+      "duration": 127.01070000000004,
+      "suite": "performance",
+      "timestamp": "2025-10-14T19:08:34.992Z"
+    }
+  ]
+}
