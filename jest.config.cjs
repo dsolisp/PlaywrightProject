@@ -1,22 +1,14 @@
 /* eslint-env node */
-const fs = require('fs');
-const path = require('path');
-
-// Dynamically include only existing test roots so Jest validation doesn't fail
-const possibleRoots = ['src/tests/unit', 'src/tests/api', 'src/tests/db'];
-/* eslint-disable no-undef */
-const cwd = process.cwd();
-/* eslint-enable no-undef */
-const roots = possibleRoots
-  .map((p) => path.join(cwd, p))
-  .filter((abs) => fs.existsSync(abs))
-  .map((abs) => `<rootDir>/${path.relative(cwd, abs).replace(/\\/g, '/')}`);
+// Jest configuration for unit tests (ts-jest)
 
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  // Only run unit, api, and db Jest tests. Playwright E2E/visual tests live under src/tests/e2e and are run with Playwright.
-  roots: roots.length ? roots : ['<rootDir>/src/tests/unit'],
+  // Run tests under src/tests; Playwright E2E/visual tests live under src/tests/e2e and are run with Playwright.
+  roots: ['<rootDir>/src/tests'],
+  testMatch: ['**/?(*.)+(spec|test).ts'],
+  // Ignore Playwright E2E tests (they are run with `npx playwright test`)
+  testPathIgnorePatterns: ['<rootDir>/src/tests/e2e/'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
