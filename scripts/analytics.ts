@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 
 interface TestResult {
   name: string;
@@ -25,6 +24,47 @@ interface AnalyticsSummary {
   };
 }
 
+interface JestSuite {
+  testFilePath: string;
+  testResults: JestTest[];
+}
+
+interface JestTest {
+  title: string;
+  status: string;
+  duration?: number;
+}
+
+interface PlaywrightSuite {
+  title: string;
+  specs: PlaywrightSpec[];
+}
+
+interface PlaywrightSpec {
+  tests: PlaywrightTest[];
+}
+
+interface PlaywrightTest {
+  title: string;
+  results: PlaywrightResult[];
+}
+
+interface PlaywrightResult {
+  status: string;
+  duration: number;
+}
+
+interface K6Metrics {
+  [key: string]: {
+    value?: number;
+    avg?: number;
+  };
+}
+
+interface K6Data {
+  metrics: K6Metrics;
+}
+
 class TestAnalytics {
   private resultsDir = path.join(process.cwd(), 'data', 'results');
   private reportsDir = path.join(process.cwd(), 'reports');
@@ -34,7 +74,7 @@ class TestAnalytics {
   }
 
   private ensureDirectories() {
-    [this.resultsDir, this.reportsDir].forEach(dir => {
+    [this.resultsDir, this.reportsDir].forEach((dir) => {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
@@ -79,8 +119,8 @@ class TestAnalytics {
       if (fs.existsSync(jestOutputPath)) {
         const data = JSON.parse(fs.readFileSync(jestOutputPath, 'utf8'));
         // Parse Jest JSON format
-        data.testResults?.forEach((suite: any) => {
-          suite.testResults?.forEach((test: any) => {
+        data.testResults?.forEach((suite: JestSuite) => {
+          suite.testResults?.forEach((test: JestTest) => {
             results.push({
               name: test.title,
               status: test.status === 'passed' ? 'passed' : 'failed',
@@ -104,9 +144,9 @@ class TestAnalytics {
       if (fs.existsSync(playwrightResultsPath)) {
         const data = JSON.parse(fs.readFileSync(playwrightResultsPath, 'utf8'));
         // Parse Playwright JSON format
-        data.suites?.forEach((suite: any) => {
-          suite.specs?.forEach((spec: any) => {
-            spec.tests?.forEach((test: any) => {
+        data.suites?.forEach((suite: PlaywrightSuite) => {
+          suite.specs?.forEach((spec: PlaywrightSpec) => {
+            spec.tests?.forEach((test: PlaywrightTest) => {
               results.push({
                 name: test.title,
                 status: test.results[0]?.status === 'passed' ? 'passed' : 'failed',
@@ -129,7 +169,7 @@ class TestAnalytics {
     try {
       const k6ResultsPath = path.join(process.cwd(), 'k6-results.json');
       if (fs.existsSync(k6ResultsPath)) {
-        const data = JSON.parse(fs.readFileSync(k6ResultsPath, 'utf8'));
+        const data: K6Data = JSON.parse(fs.readFileSync(k6ResultsPath, 'utf8'));
         // Parse k6 summary format
         if (data.metrics) {
           const failedRate = data.metrics['http_req_failed']?.value || 0;
@@ -151,7 +191,7 @@ class TestAnalytics {
 
   private calculateSummary(results: TestResult[]): AnalyticsSummary {
     const totalTests = results.length;
-    const passed = results.filter(r => r.status === 'passed').length;
+    const passed = results.filter((r) => r.status === 'passed').length;
     const failed = totalTests - passed;
     const passRate = totalTests > 0 ? passed / totalTests : 0;
     const totalDuration = results.reduce((sum, r) => sum + r.duration, 0);
@@ -198,9 +238,9 @@ class TestAnalytics {
 
   private exportCSV(results: TestResult[]) {
     const csvHeader = 'Name,Status,Duration,Suite,Timestamp\n';
-    const csvRows = results.map(r =>
-      `"${r.name}","${r.status}",${r.duration},"${r.suite}","${r.timestamp}"`
-    ).join('\n');
+    const csvRows = results
+      .map((r) => `"${r.name}","${r.status}",${r.duration},"${r.suite}","${r.timestamp}"`)
+      .join('\n');
     const csvContent = csvHeader + csvRows;
     const filePath = path.join(this.reportsDir, 'analytics.csv');
     fs.writeFileSync(filePath, csvContent);
@@ -249,12 +289,14 @@ class TestAnalytics {
       <div class="metric-value">${summary.avgDuration.toFixed(2)}ms</div>
       <div>Avg Duration</div>
     </div>
-    ${summary.trends?.change !== undefined ? `
-    <div class="metric">
+    ${
+      summary.trends?.change !== undefined
+        ? `<div class="metric">
       <div class="metric-value">${(summary.trends.change * 100).toFixed(1)}%</div>
       <div>Trend Change</div>
-    </div>
-    ` : ''}
+    </div>`
+        : ''
+    }
   </div>
   <h2>Test Results</h2>
   <table>
@@ -268,7 +310,9 @@ class TestAnalytics {
       </tr>
     </thead>
     <tbody>
-      ${results.map(r => `
+      ${results
+        .map(
+          (r) => `
         <tr>
           <td>${r.name}</td>
           <td class="${r.status}">${r.status}</td>
@@ -276,7 +320,9 @@ class TestAnalytics {
           <td>${r.suite}</td>
           <td>${r.timestamp}</td>
         </tr>
-      `).join('')}
+      `,
+        )
+        .join('')}
     </tbody>
   </table>
 </body>
