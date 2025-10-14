@@ -6,7 +6,7 @@ describe('ChinookDB', () => {
     const artists = db.listArtists();
     expect(artists.length).toBeGreaterThan(0);
     const albums = db.listAlbumsByArtist(1);
-    expect(albums[0].Title).toBe('Greatest Hits');
+    expect(albums[0].Title).toBe('For Those About To Rock We Salute You');
     const tracks = db.topTracks(2);
     expect(tracks.length).toBeGreaterThanOrEqual(2);
   });

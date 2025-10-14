@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const DB_PATH = path.join(__dirname, 'chinook.db');
+const DB_PATH = path.join(process.cwd(), 'src/db/chinook.db');
 
 export class ChinookDB {
   db: Database.Database;
@@ -15,18 +15,18 @@ export class ChinookDB {
   }
 
   listArtists() {
-    const stmt = this.db.prepare('SELECT ArtistId, Name FROM Artist');
+    const stmt = this.db.prepare('SELECT ArtistId, Name FROM artists');
     return stmt.all() as Array<{ ArtistId: number; Name: string }>;
   }
 
   listAlbumsByArtist(artistId: number) {
-    const stmt = this.db.prepare('SELECT AlbumId, Title FROM Album WHERE ArtistId = ?');
+    const stmt = this.db.prepare('SELECT AlbumId, Title FROM albums WHERE ArtistId = ?');
     return stmt.all(artistId) as Array<{ AlbumId: number; Title: string }>;
   }
 
   topTracks(limit = 10) {
     const stmt = this.db.prepare(
-      'SELECT TrackId, Name, Milliseconds FROM Track ORDER BY Milliseconds DESC LIMIT ?',
+      'SELECT TrackId, Name, Milliseconds FROM tracks ORDER BY Milliseconds DESC LIMIT ?',
     );
     return stmt.all(limit) as Array<{ TrackId: number; Name: string; Milliseconds: number }>;
   }

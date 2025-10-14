@@ -37,8 +37,7 @@ jobs:
           name: allure-results
           path: allure-results/
       - name: Run k6 performance tests
-        run: |
-          if [ -f k6/search_engine.k6.js ]; then npx k6 run k6/search_engine.k6.js || true; fi
+        run: npm run k6:run:short
       - name: Upload k6 results
         if: always()
         uses: actions/upload-artifact@v4
