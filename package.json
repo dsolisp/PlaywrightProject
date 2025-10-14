@@ -10,6 +10,8 @@
     "test:visual": "jest --config jest.config.cjs --testPathPatterns=src/tests/visual",
     "lint": "eslint . --ext .js,.ts",
     "format": "prettier --write .",
+    "playwright:update-snapshots": "npx playwright test --update-snapshots",
+    "playwright:visual-live": "USE_LIVE=true npx playwright test src/tests/e2e/visual_live.e2e.spec.ts",
     "prepare": "husky install",
     "allure": "allure generate allure-results --clean && allure open allure-report",
     "k6": "k6 run k6/search_engine.k6.js"
