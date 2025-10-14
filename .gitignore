@@ -13,3 +13,4 @@ tmp/
 *.png
 *.mp4
 *.webm
+/test-results
