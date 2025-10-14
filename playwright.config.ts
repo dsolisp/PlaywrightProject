@@ -39,21 +39,11 @@ export default defineConfig({
     },
     {
       name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        launchOptions: {
-          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-        },
-      },
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        launchOptions: {
-          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-        },
-      },
+      use: { ...devices['Desktop Safari'] },
     },
   ],
 });
