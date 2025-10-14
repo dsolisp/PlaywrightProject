@@ -16,6 +16,19 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     baseURL: 'https://duckduckgo.com',
+    // Set a common desktop UA and launch args to make headless runs look more
+    // like a real browser. These options are useful for CI where headless
+    // browsers may be fingerprinted and blocked by anti-bot systems.
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    launchOptions: {
+      args: [
+        '--disable-blink-features=AutomationControlled',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    },
   },
   projects: [
     {
