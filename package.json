@@ -1,6 +1,7 @@
 {
   "name": "playwrightproject",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "npm run test:unit && npm run test:api && npm run test:db && npm run test:visual && npx playwright test",
@@ -10,18 +11,34 @@
     "test:visual": "jest --config jest.config.cjs --testPathPatterns=src/tests/visual",
     "lint": "eslint . --ext .js,.ts",
     "format": "prettier --write .",
+    "playwright:update-snapshots": "npx playwright test --update-snapshots",
+    "playwright:visual-live": "USE_LIVE=true npx playwright test src/tests/e2e/visual_live.e2e.spec.ts",
     "prepare": "husky install",
     "allure": "allure generate allure-results --clean && allure open allure-report",
-    "k6": "k6 run k6/search_engine.k6.js"
+    "k6": "k6 run k6/search_engine.k6.js",
+    "k6:run": "node scripts/run_k6_impl.js",
+    "analytics": "ts-node scripts/analytics.ts",
+    "monitoring": "ts-node scripts/monitoring.ts",
+    "ml": "ts-node scripts/ml.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix --max-warnings=100",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@eslint/css": "^0.13.0",
     "@eslint/js": "^9.37.0",
     "@playwright/test": "^1.56.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/jest": "^30.0.0",
     "@types/pngjs": "^6.0.5",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
@@ -31,11 +48,14 @@
     "axios": "^1.12.2",
     "better-sqlite3": "^12.4.1",
     "eslint": "^9.37.0",
+    "eslint-plugin-playwright": "^2.4.0",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.4.0",
     "husky": "^8.0.0",
     "jest": "^30.2.0",
+    "jest-json-reporter": "^1.2.2",
+    "jest-reporters": "^0.0.2",
     "k6": "^0.0.0",
     "lint-staged": "^16.2.4",
     "pino": "^10.0.0",
@@ -43,6 +63,7 @@
     "playwright": "^1.56.0",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
 }

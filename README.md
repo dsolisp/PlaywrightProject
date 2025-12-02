@@ -1,107 +1,224 @@
-# PlaywrightProject
+# Playwright TypeScript Test Framework
 
-A modern, portfolio-quality JavaScript/TypeScript test automation repository demonstrating advanced automation capabilities with Playwright, API, DB, visual, and performance testing.
+A production-ready test automation framework built with **Playwright** and **TypeScript**, featuring complete feature parity with the Python Selenium and Java Selenium projects in this repository.
 
-## Tech Stack
+## ✨ Features
 
-- Playwright Test (TypeScript)
-- Axios (API testing)
-- better-sqlite3 (DB testing)
-- pixelmatch (visual regression)
-- k6 (performance)
-- Allure (reporting)
-- pino (logging)
-- Jest (unit testing)
-- ESLint, Prettier (linting/formatting)
-- Husky, lint-staged (pre-commit)
+| Category         | Features                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| **Test Types**   | Unit, API, Web UI, Visual, Accessibility, Performance, Contract, Database, Integration |
+| **Browsers**     | Chromium, Firefox, WebKit (Safari)                                                     |
+| **Reporting**    | HTML, Allure, JSON, JUnit XML                                                          |
+| **CI/CD**        | GitHub Actions, Docker, Docker Compose                                                 |
+| **Code Quality** | TypeScript, ESLint, Prettier                                                           |
 
-## Project Structure
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Install Playwright browsers
+npx playwright install
+
+# Run unit tests
+npm run test:unit
+
+# Run API tests
+npm run test:api
+
+# Run web tests
+npm run test:web
+
+# Run all tests
+npm test
+```
+
+## 📁 Project Structure
 
 ```
-.
-├── README.md
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── docs/
-│   └── ...
-├── playwright.config.ts
-├── package.json
-├── tsconfig.json
+PlaywrightProject/
 ├── src/
-│   ├── pages/
-│   ├── api/
-│   ├── db/
-│   ├── utils/
-│   └── tests/
-├── allure-results/
-├── k6/
-├── .husky/
-├── .eslintrc.js
-├── .prettierrc
-└── ...
+│   ├── config/          # Settings, constants, timeouts
+│   ├── fixtures/        # Playwright fixtures (pages, auth)
+│   ├── locators/        # Centralized element locators
+│   ├── pages/           # Page Object Models
+│   ├── types/           # TypeScript interfaces
+│   └── utils/           # Logger, data manager, error classifier
+├── tests/
+│   ├── api/             # API tests (REST)
+│   ├── web/             # Web UI tests
+│   ├── unit/            # Unit tests (Vitest)
+│   ├── visual/          # Visual regression tests
+│   ├── accessibility/   # A11y tests (Axe-core)
+│   ├── performance/     # Performance tests
+│   ├── contract/        # API contract tests
+│   ├── database/        # Database tests (SQLite)
+│   └── integration/     # E2E integration tests
+├── scripts/             # Shell scripts
+├── test-data/           # Test data files
+├── Dockerfile           # Docker image
+├── docker-compose.yml   # Docker Compose config
+└── playwright.config.ts # Playwright configuration
 ```
 
-## Setup
-
-1. Install dependencies:
-   ```sh
-   npm install
-   ```
-2. Install Playwright browsers:
-   ```sh
-   npx playwright install
-   ```
-
-## Usage
-
-- **Lint:** `npm run lint`
-- **Format:** `npm run format`
-- **Test (all):** `npm test`
-- **E2E:** `npx playwright test`
-- **Unit:** `npm run test:unit`
-- **API:** `npm run test:api`
-- **DB:** `npm run test:db`
-- **Visual:** `npm run test:visual`
-- **Performance:** `npm run k6`
-- **Allure Report:** `npm run allure`
-
-## Contributing
-
-- Use feature branches for each logical unit
-- Each commit must be atomic and leave the repo in a working state
-- Use conventional commit messages
-- CI enforces lint, typecheck, and all tests on PRs
-
-## Visual tests and fixtures
-
-- The E2E and visual suites default to using a local HTML fixture for DuckDuckGo in CI to avoid flakiness from bot-detection and dynamic content.
-- Local runs will attempt a live search first and automatically fall back to the fixture if the live site blocks the headless request.
-
-Opt-in to live site testing
-
-- To force tests to use the real DuckDuckGo site (dev-only), set an environment variable when running tests:
+## 🧪 Test Commands
 
 ```bash
-USE_LIVE=true npx playwright test
+# Unit tests with coverage
+npm run test:unit
+npm run coverage
+
+# Playwright tests
+npm run test:api          # API tests
+npm run test:web          # Web tests
+npm run test:a11y         # Accessibility tests
+npm run test:visual       # Visual tests
+npm run test:performance  # Performance tests
+npm run test:contract     # Contract tests
+
+# All tests
+npm test
+
+# Headed mode (see browser)
+npm run test:headed
+
+# Debug mode
+npm run test:debug
+
+# View HTML report
+npx playwright show-report
 ```
 
-Updating visual baselines
-
-- The visual test creates a baseline image on first run at `src/tests/visual/duckduckgo_baseline.png`.
-- To regenerate and commit a new baseline locally:
+## 🐳 Docker
 
 ```bash
-# run the visual test to recreate the baseline
-rm -f src/tests/visual/duckduckgo_baseline.png && npm run test:visual
-# review the new baseline, then commit it
-git add src/tests/visual/duckduckgo_baseline.png && git commit -m "test(visual): update baseline"
+# Run all tests in Docker
+docker-compose up playwright
+
+# Run specific test type
+docker-compose up unit-tests
+docker-compose up api-tests
+docker-compose up web-tests
+
+# View Allure reports
+docker-compose up -d allure
+open http://localhost:5050
 ```
 
-CI notes
+## 📊 Feature Parity Matrix
 
-- CI uses the fixture baseline checked into the repository for deterministic comparisons. If you prefer to keep baselines out of source control, we can switch to storing them as CI artifacts and update the workflow accordingly.
+| Feature                | Python Selenium   | Java Selenium       | TypeScript Playwright   |
+| ---------------------- | ----------------- | ------------------- | ----------------------- |
+| **Core Architecture**  |
+| Page Object Model      | ✅ `BasePage`     | ✅ `BasePage`       | ✅ `BasePage`           |
+| Centralized Locators   | ✅ `locators/`    | ✅ `locators/`      | ✅ `src/locators/`      |
+| Settings/Config        | ✅ `settings.py`  | ✅ `Settings.java`  | ✅ `settings.ts`        |
+| Constants              | ✅ `constants.py` | ✅ `Constants.java` | ✅ `constants.ts`       |
+| **Test Types**         |
+| Unit Tests             | ✅ pytest (205)   | ✅ JUnit (117)      | ✅ Vitest (52)          |
+| API Tests              | ✅ requests       | ✅ RestAssured      | ✅ Playwright request   |
+| Web UI Tests           | ✅ Selenium       | ✅ Selenium         | ✅ Playwright           |
+| Visual Regression      | ✅ pixelmatch     | ✅ ImageIO          | ✅ `toHaveScreenshot()` |
+| Accessibility          | ✅ axe-core       | ✅ axe-core         | ✅ @axe-core/playwright |
+| Performance            | ✅ Locust         | ✅ Gatling          | ✅ Core Web Vitals      |
+| Contract Tests         | ✅ -              | ✅ Pact             | ✅ Schema validation    |
+| Database Tests         | ✅ SQLite         | ✅ SQLite           | ✅ better-sqlite3       |
+| **Utilities**          |
+| Error Classifier       | ✅                | ✅                  | ✅                      |
+| Structured Logging     | ✅                | ✅                  | ✅ Winston              |
+| Test Data Manager      | ✅                | ✅                  | ✅                      |
+| Performance Monitor    | ✅                | ✅                  | ✅                      |
+| **Infrastructure**     |
+| Docker Support         | ✅                | ✅                  | ✅                      |
+| CI/CD (GitHub Actions) | ✅                | ✅                  | ✅                      |
+| Allure Reports         | ✅                | ✅                  | ✅                      |
+| HTML Reports           | ✅ pytest-html    | ✅ Extent           | ✅ Playwright HTML      |
+| Parallel Execution     | ✅ pytest-xdist   | ✅ JUnit parallel   | ✅ Built-in             |
 
-## More
+### Test Counts Summary
 
-- See `docs/` for feature guides and CI/CD details.
+| Framework      | Unit | API | Web | Visual | A11y | Perf | Contract | Integration | **Total** |
+| -------------- | ---- | --- | --- | ------ | ---- | ---- | -------- | ----------- | --------- |
+| **Python**     | 205  | 16  | ~20 | 4      | -    | 8    | -        | 15          | **~268**  |
+| **Java**       | 117  | 16  | -   | -      | 4    | -    | 3        | -           | **~140**  |
+| **TypeScript** | 52   | 11  | 16  | 10     | 6    | 8    | 7        | 5           | **115**   |
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+BASE_URL=https://duckduckgo.com
+API_BASE_URL=https://jsonplaceholder.typicode.com
+HEADLESS=true
+BROWSER=chromium
+CI=true
+```
+
+### playwright.config.ts
+
+Key configuration options:
+
+- Multi-browser support (Chromium, Firefox, WebKit)
+- Automatic retries on failure
+- Video and trace on retry
+- HTML and Allure reporting
+
+## 📝 Writing Tests
+
+### Page Object Example
+
+```typescript
+import { BasePage } from './base.page';
+import { LoginLocators } from '../locators/sauce-demo.locators';
+
+export class LoginPage extends BasePage {
+  async login(username: string, password: string): Promise<void> {
+    await this.fill(LoginLocators.USERNAME_INPUT, username);
+    await this.fill(LoginLocators.PASSWORD_INPUT, password);
+    await this.click(LoginLocators.LOGIN_BUTTON);
+  }
+}
+```
+
+### Test Example
+
+```typescript
+import { test, expect } from '../fixtures/test-fixtures';
+
+test('should login successfully', async ({ loginPage, inventoryPage }) => {
+  await loginPage.open();
+  await loginPage.login('standard_user', 'secret_sauce');
+  expect(await inventoryPage.isLoaded()).toBe(true);
+});
+```
+
+## 📈 Reports
+
+- **HTML Report**: `npx playwright show-report`
+- **Allure Report**: `npm run report`
+- **Coverage**: `open coverage/index.html`
+
+## 🛠️ Development
+
+```bash
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+npm run lint:fix
+
+# Format code
+npm run format
+```
+
+## 📚 Related Projects
+
+- [Python Selenium Framework](../) - Python version with pytest
+- [Java Selenium Framework](../SeleniumJavaProject/) - Java version with JUnit
+
+---
+
+Built with ❤️ using Playwright + TypeScript
