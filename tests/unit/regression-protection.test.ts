@@ -4,7 +4,7 @@
  *
  * These tests catch breaking changes early in the CI pipeline.
  */
-
+import { describe, test, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 

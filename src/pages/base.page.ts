@@ -1,5 +1,5 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { logger, logAction, logPageNavigation } from '../utils/logger';
+import { Page, Locator } from '@playwright/test';
+import { logAction, logPageNavigation } from '../utils/logger';
 import { TIMEOUTS } from '../config/constants';
 
 /**
@@ -123,17 +123,59 @@ export abstract class BasePage {
     return this.getLocator(selector).count();
   }
 
+  protected async getAllTextContents(selector: string): Promise<string[]> {
+    return this.getLocator(selector).allTextContents();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // FORM CONTROLS
+  // ═══════════════════════════════════════════════════════════════════
+
+  protected async selectOption(selector: string, value: string): Promise<void> {
+    logAction('selectOption', selector, value);
+    await this.getLocator(selector).selectOption(value);
+  }
+
+  protected async check(selector: string): Promise<void> {
+    logAction('check', selector);
+    await this.getLocator(selector).check();
+  }
+
+  protected async uncheck(selector: string): Promise<void> {
+    logAction('uncheck', selector);
+    await this.getLocator(selector).uncheck();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // INDEXED ELEMENT OPERATIONS
+  // ═══════════════════════════════════════════════════════════════════
+
+  protected async clickNth(selector: string, index: number): Promise<void> {
+    logAction('clickNth', selector, `index: ${index}`);
+    await this.getLocator(selector).nth(index).click();
+  }
+
+  protected async getNthText(selector: string, index: number): Promise<string> {
+    return (await this.getLocator(selector).nth(index).textContent()) || '';
+  }
+
   // ═══════════════════════════════════════════════════════════════════
   // WAITS
   // ═══════════════════════════════════════════════════════════════════
 
-  protected async waitForVisible(selector: string, timeout = TIMEOUTS.DEFAULT): Promise<Locator> {
+  protected async waitForVisible(
+    selector: string,
+    timeout: number = TIMEOUTS.DEFAULT,
+  ): Promise<Locator> {
     const locator = this.getLocator(selector);
     await locator.waitFor({ state: 'visible', timeout });
     return locator;
   }
 
-  protected async waitForHidden(selector: string, timeout = TIMEOUTS.DEFAULT): Promise<void> {
+  protected async waitForHidden(
+    selector: string,
+    timeout: number = TIMEOUTS.DEFAULT,
+  ): Promise<void> {
     await this.getLocator(selector).waitFor({ state: 'hidden', timeout });
   }
 

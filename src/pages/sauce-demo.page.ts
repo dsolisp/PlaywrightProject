@@ -28,11 +28,9 @@ export class LoginPage extends BasePage {
   }
 
   async login(username: string, password: string): Promise<void> {
-    // Match Python: fill username, password, click login
     await this.fill(LoginLocators.USERNAME_INPUT, username);
     await this.fill(LoginLocators.PASSWORD_INPUT, password);
-    // Login button is an input, not button
-    await this.page.locator(LoginLocators.LOGIN_BUTTON).click();
+    await this.click(LoginLocators.LOGIN_BUTTON);
   }
 
   async loginWithDefaults(): Promise<void> {
@@ -66,33 +64,29 @@ export class InventoryPage extends BasePage {
   }
 
   async getItemNames(): Promise<string[]> {
-    return this.getLocator(InventoryLocators.ITEM_NAME).allTextContents();
+    return this.getAllTextContents(InventoryLocators.ITEM_NAME);
   }
 
   async getItemPrices(): Promise<string[]> {
-    return this.getLocator(InventoryLocators.ITEM_PRICE).allTextContents();
+    return this.getAllTextContents(InventoryLocators.ITEM_PRICE);
   }
 
   async addToCart(index: number): Promise<void> {
-    const buttons = this.getLocator(InventoryLocators.ADD_TO_CART_BUTTON);
-    await buttons.nth(index).click();
+    await this.clickNth(InventoryLocators.ADD_TO_CART_BUTTON, index);
   }
 
   async addAllToCart(): Promise<void> {
-    const buttons = this.getLocator(InventoryLocators.ADD_TO_CART_BUTTON);
-    const count = await buttons.count();
-    for (let i = 0; i < count; i++) {
-      await buttons.nth(i).click();
+    const itemCount = await this.count(InventoryLocators.ADD_TO_CART_BUTTON);
+    for (let i = 0; i < itemCount; i++) {
+      await this.clickNth(InventoryLocators.ADD_TO_CART_BUTTON, i);
     }
   }
 
   async getCartBadgeCount(): Promise<number> {
-    // Match Python: CART_BADGE = span[data-test="shopping-cart-badge"]
-    const badge = this.page.locator(InventoryLocators.CART_BADGE);
-    if (!(await badge.isVisible())) {
+    if (!(await this.isVisible(InventoryLocators.CART_BADGE))) {
       return 0;
     }
-    const text = (await badge.textContent()) || '0';
+    const text = await this.getText(InventoryLocators.CART_BADGE);
     return parseInt(text, 10) || 0;
   }
 
@@ -101,7 +95,7 @@ export class InventoryPage extends BasePage {
   }
 
   async sortBy(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
-    await this.getLocator(InventoryLocators.SORT_DROPDOWN).selectOption(option);
+    await this.selectOption(InventoryLocators.SORT_DROPDOWN, option);
   }
 }
 
@@ -119,12 +113,11 @@ export class CartPage extends BasePage {
   }
 
   async getItemNames(): Promise<string[]> {
-    return this.getLocator(CartLocators.ITEM_NAME).allTextContents();
+    return this.getAllTextContents(CartLocators.ITEM_NAME);
   }
 
   async removeItem(index: number): Promise<void> {
-    const buttons = this.getLocator(CartLocators.REMOVE_BUTTON);
-    await buttons.nth(index).click();
+    await this.clickNth(CartLocators.REMOVE_BUTTON, index);
   }
 
   async checkout(): Promise<void> {

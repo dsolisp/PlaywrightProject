@@ -1,9 +1,13 @@
 import { createBdd } from 'playwright-bdd';
 import { expect } from '@playwright/test';
+import { settings } from '../../../src/config/settings';
+import {
+  LoginLocators,
+  InventoryLocators,
+  CartLocators,
+} from '../../../src/locators/sauce-demo.locators';
 
 const { Given, When, Then } = createBdd();
-
-const SAUCE_DEMO_URL = 'https://www.saucedemo.com';
 
 // Product name to data-test attribute mapping
 const productDataTestMap: Record<string, string> = {
@@ -16,10 +20,10 @@ const productDataTestMap: Record<string, string> = {
 };
 
 Given('I am logged in as {string}', async ({ page }, username: string) => {
-  await page.goto(SAUCE_DEMO_URL);
-  await page.fill('#user-name', username);
-  await page.fill('#password', 'secret_sauce');
-  await page.click('#login-button');
+  await page.goto(settings().sauceDemoUrl);
+  await page.fill(LoginLocators.USERNAME_INPUT, username);
+  await page.fill(LoginLocators.PASSWORD_INPUT, settings().saucePassword);
+  await page.click(LoginLocators.LOGIN_BUTTON);
   await expect(page).toHaveURL(/inventory/);
 });
 
@@ -29,7 +33,7 @@ When('I add {string} to the cart', async ({ page }, productName: string) => {
 });
 
 Then('the cart badge should show {string}', async ({ page }, count: string) => {
-  const cartBadge = page.locator('.shopping_cart_badge');
+  const cartBadge = page.locator(InventoryLocators.CART_BADGE);
   await expect(cartBadge).toHaveText(count);
 });
 
@@ -44,16 +48,18 @@ When('I remove {string} from the cart', async ({ page }, productName: string) =>
 });
 
 Then('the cart should be empty', async ({ page }) => {
-  const cartBadge = page.locator('.shopping_cart_badge');
+  const cartBadge = page.locator(InventoryLocators.CART_BADGE);
   await expect(cartBadge).not.toBeVisible();
 });
 
 When('I go to the cart', async ({ page }) => {
-  await page.click('.shopping_cart_link');
+  await page.click(InventoryLocators.CART_LINK);
   await expect(page).toHaveURL(/cart/);
 });
 
 Then('I should see {string} in the cart', async ({ page }, productName: string) => {
-  const cartItem = page.locator('.cart_item .inventory_item_name', { hasText: productName });
+  const cartItem = page.locator(`${CartLocators.CART_ITEMS} ${CartLocators.ITEM_NAME}`, {
+    hasText: productName,
+  });
   await expect(cartItem).toBeVisible();
 });

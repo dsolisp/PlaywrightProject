@@ -2,7 +2,7 @@
  * Unit tests for constants validation.
  * Equivalent to C#'s ConstantsTests.cs - ensures framework constants are correctly defined.
  */
-
+import { describe, test, expect } from 'vitest';
 import {
   BROWSERS,
   CREDENTIALS,

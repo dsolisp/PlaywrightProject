@@ -40,58 +40,30 @@ export class SearchEnginePage extends BasePage {
   }
 
   /**
-   * Submit search by pressing Enter key
-   * Waits for suggestions to appear, then submits
-   * Does not wait for results - caller should handle waiting
+   * Consolidated search method
+   * @param query - Search query string
+   * @param options - Search options
+   * @param options.waitForResults - Whether to wait for results to appear (default: true)
+   * @param options.timeout - Timeout for waiting for results (default: 15000)
    */
-  async submitWithEnter(): Promise<this> {
-    // Wait a moment for suggestions to load
-    await this.page.waitForTimeout(500);
-    // Press Enter to submit the search
-    await this.page.keyboard.press('Enter');
-    // Wait for navigation to start
-    await this.page.waitForURL(/search/, { timeout: 10000 }).catch(() => {
-      // URL might not change if blocked
-    });
-    return this;
-  }
+  async search(
+    query: string,
+    options: { waitForResults?: boolean; timeout?: number } = {},
+  ): Promise<this> {
+    const { waitForResults = true, timeout = 15000 } = options;
 
-  async submitSearch(): Promise<this> {
-    // Press Enter to submit
-    await this.pressKey('Enter');
-    // Wait for page to load and results to appear
-    await this.waitForLoadState('domcontentloaded');
-    // Wait for result items to appear (may timeout if blocked)
-    try {
-      await this.page.waitForSelector(BingLocators.RESULT_ITEMS, {
-        state: 'attached',
-        timeout: 15000,
-      });
-    } catch {
-      // Results may be blocked by CAPTCHA - this is expected
-    }
-    return this;
-  }
-
-  async search(query: string): Promise<this> {
-    await this.enterSearchQuery(query);
-    await this.submitSearch();
-    return this;
-  }
-
-  async searchWithEnter(query: string): Promise<this> {
     await this.enterSearchQuery(query);
     await this.pressKey('Enter');
-    // Wait for page to load and results to appear
     await this.waitForLoadState('domcontentloaded');
-    try {
-      await this.page.waitForSelector(BingLocators.RESULT_ITEMS, {
-        state: 'attached',
-        timeout: 15000,
-      });
-    } catch {
-      // Results may be blocked by CAPTCHA - this is expected
+
+    if (waitForResults) {
+      try {
+        await this.waitForVisible(BingLocators.RESULT_ITEMS, timeout);
+      } catch {
+        // Results may be blocked by CAPTCHA - this is expected in automation
+      }
     }
+
     return this;
   }
 
@@ -109,16 +81,12 @@ export class SearchEnginePage extends BasePage {
   }
 
   async getResultTitles(): Promise<string[]> {
-    const locator = this.getLocator(BingLocators.RESULT_TITLES);
-    return locator.allTextContents();
+    return this.getAllTextContents(BingLocators.RESULT_TITLES);
   }
 
   async clickResult(index: number): Promise<void> {
-    // Wait for results to be stable
-    await this.page.waitForLoadState('networkidle');
-    // Click on the link inside h2
-    const results = this.getLocator(`${BingLocators.RESULT_TITLES} a`);
-    await results.nth(index).click({ timeout: 15000 });
+    await this.waitForLoadState('networkidle');
+    await this.clickNth(`${BingLocators.RESULT_TITLES} a`, index);
   }
 
   // ═══════════════════════════════════════════════════════════════════

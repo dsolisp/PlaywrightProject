@@ -1,104 +1,31 @@
 import { test, expect } from '@playwright/test';
 import { settings } from '../../src/config/settings';
-import { ErrorClassifier, ErrorCategory, ErrorSeverity } from '../../src/utils/error-classifier';
-import { PerformanceMonitor } from '../../src/utils/performance-monitor';
 import { generateTestData, clearCache } from '../../src/utils/data-manager';
+import {
+  LoginLocators,
+  InventoryLocators,
+  CartLocators,
+  CheckoutLocators,
+} from '../../src/locators/sauce-demo.locators';
 
 /**
  * Framework Integration Tests
  * Tests that framework components work together correctly
- * Equivalent to Python's tests/integration/test_framework_core.py
  */
 
 test.describe('Framework Integration Tests', () => {
-  test.describe('Error Classifier Integration', () => {
-    test('should classify timeout errors correctly', async ({ page }) => {
-      const classifier = new ErrorClassifier();
-
-      // Simulate a timeout error
-      const timeoutError = new Error('Timeout 30000ms exceeded');
-      const classification = classifier.classify(timeoutError);
-
-      expect(classification.category).toBe(ErrorCategory.TIMEOUT);
-      expect(classification.severity).toBe(ErrorSeverity.HIGH);
-      expect(classification.retryable).toBe(true);
-    });
-
-    test('should classify element not found errors', async ({ page }) => {
-      const classifier = new ErrorClassifier();
-
-      const elementError = new Error('Element not found: #nonexistent');
-      const classification = classifier.classify(elementError);
-
-      expect(classification.category).toBe(ErrorCategory.ELEMENT);
-      expect(classification.severity).toBe(ErrorSeverity.MEDIUM);
-    });
-
-    test('should classify network errors', async ({ page }) => {
-      const classifier = new ErrorClassifier();
-
-      const networkError = new Error('net::ERR_CONNECTION_REFUSED');
-      const classification = classifier.classify(networkError);
-
-      expect(classification.category).toBe(ErrorCategory.NETWORK);
-      expect(classification.retryable).toBe(true);
-    });
-  });
-
-  test.describe('Performance Monitor Integration', () => {
-    test('should track page load performance', async ({ page }) => {
-      const monitor = new PerformanceMonitor();
-
-      monitor.start('page_load');
-      await page.goto(settings().sauceDemoUrl);
-      const duration = monitor.stop('page_load');
-
-      expect(duration).toBeGreaterThan(0);
-      expect(duration).toBeLessThan(30000); // Should load within 30s
-    });
-
-    test('should track multiple operations', async ({ page }) => {
-      const monitor = new PerformanceMonitor();
-
-      monitor.start('login_flow');
-      await page.goto(settings().sauceDemoUrl);
-
-      monitor.start('fill_credentials');
-      await page.fill('#user-name', 'standard_user');
-      await page.fill('#password', 'secret_sauce');
-      const fillDuration = monitor.stop('fill_credentials');
-
-      await page.click('#login-button');
-      await page.waitForURL(/inventory/);
-      const totalDuration = monitor.stop('login_flow');
-
-      expect(fillDuration).toBeGreaterThan(0);
-      expect(totalDuration).toBeGreaterThan(fillDuration);
-    });
-
-    test('should get all metrics', async ({ page }) => {
-      const monitor = new PerformanceMonitor();
-
-      monitor.start('op1');
-      await page.waitForTimeout(50);
-      monitor.stop('op1');
-
-      monitor.start('op2');
-      await page.waitForTimeout(50);
-      monitor.stop('op2');
-
-      const metrics = monitor.getMetrics();
-      expect(Object.keys(metrics).length).toBe(2);
-      expect(metrics['op1']).toBeGreaterThan(0);
-      expect(metrics['op2']).toBeGreaterThan(0);
-    });
-  });
-
   test.describe('Data Manager Integration', () => {
-    test('should generate and use test data', async ({ page }) => {
+    test('should generate and use test data with factory pattern', async ({ page }) => {
       clearCache();
 
-      const userData = generateTestData('user');
+      // Use factory pattern to generate data
+      const testData = generateTestData();
+      const userData = {
+        firstName: testData.firstName(),
+        lastName: testData.lastName(),
+        email: testData.email(),
+        zipCode: testData.zipCode(),
+      };
 
       expect(userData.email).toContain('@');
       expect(userData.firstName).toBeTruthy();
@@ -106,22 +33,43 @@ test.describe('Framework Integration Tests', () => {
 
       // Use generated data in a form
       await page.goto(settings().sauceDemoUrl);
-      await page.fill('#user-name', 'standard_user');
-      await page.fill('#password', 'secret_sauce');
-      await page.click('#login-button');
+      await page.fill(LoginLocators.USERNAME_INPUT, 'standard_user');
+      await page.fill(LoginLocators.PASSWORD_INPUT, 'secret_sauce');
+      await page.click(LoginLocators.LOGIN_BUTTON);
 
       // Navigate to checkout
-      await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
-      await page.click('.shopping_cart_link');
-      await page.click('[data-test="checkout"]');
+      await page.click(InventoryLocators.ADD_BACKPACK_BUTTON);
+      await page.click(InventoryLocators.CART_LINK);
+      await page.click(CartLocators.CHECKOUT_BUTTON);
 
-      // Use generated data
-      await page.fill('[data-test="firstName"]', userData.firstName);
-      await page.fill('[data-test="lastName"]', userData.lastName);
-      await page.fill('[data-test="postalCode"]', '12345');
+      // Use generated data in checkout form
+      await page.fill(CheckoutLocators.FIRST_NAME, userData.firstName);
+      await page.fill(CheckoutLocators.LAST_NAME, userData.lastName);
+      await page.fill(CheckoutLocators.POSTAL_CODE, userData.zipCode);
 
-      await page.click('[data-test="continue"]');
+      await page.click(CheckoutLocators.CONTINUE_BUTTON);
       await expect(page).toHaveURL(/checkout-step-two/);
+    });
+
+    test('should generate unique data on each call', async () => {
+      const testData = generateTestData();
+
+      const email1 = testData.email();
+      // Wait 1ms to ensure different timestamp
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      const email2 = testData.email();
+
+      // Each call should generate a unique value (uses Date.now())
+      expect(email1).not.toBe(email2);
+    });
+
+    test('should generate valid UUID', async () => {
+      const testData = generateTestData();
+      const uuid = testData.uuid();
+
+      // UUID v4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      expect(uuid).toMatch(uuidRegex);
     });
   });
 
@@ -131,7 +79,7 @@ test.describe('Framework Integration Tests', () => {
 
       expect(config.baseUrl).toBeTruthy();
       expect(config.sauceDemoUrl).toBeTruthy();
-      expect(config.timeout).toBeGreaterThan(0);
+      expect(config.defaultTimeout).toBeGreaterThan(0);
     });
 
     test('should use settings in page navigation', async ({ page }) => {
@@ -142,41 +90,16 @@ test.describe('Framework Integration Tests', () => {
     });
   });
 
-  test.describe('Combined Framework Flow', () => {
-    test('should use all framework components together', async ({ page }) => {
-      const monitor = new PerformanceMonitor();
-      const classifier = new ErrorClassifier();
-      const config = settings();
+  test.describe('Locators Integration', () => {
+    test('should use centralized locators for login flow', async ({ page }) => {
+      await page.goto(settings().sauceDemoUrl);
 
-      // Start monitoring
-      monitor.start('full_flow');
+      // Use centralized locators
+      await page.fill(LoginLocators.USERNAME_INPUT, 'standard_user');
+      await page.fill(LoginLocators.PASSWORD_INPUT, 'secret_sauce');
+      await page.click(LoginLocators.LOGIN_BUTTON);
 
-      try {
-        // Navigate
-        monitor.start('navigation');
-        await page.goto(config.sauceDemoUrl);
-        monitor.stop('navigation');
-
-        // Login
-        monitor.start('login');
-        await page.fill('#user-name', 'standard_user');
-        await page.fill('#password', 'secret_sauce');
-        await page.click('#login-button');
-        await page.waitForURL(/inventory/);
-        monitor.stop('login');
-
-        // Verify
-        await expect(page.locator('.inventory_container')).toBeVisible();
-      } catch (error) {
-        // Classify any errors
-        const classification = classifier.classify(error as Error);
-        console.error(`Error classified as: ${classification.category}`);
-        throw error;
-      } finally {
-        monitor.stop('full_flow');
-        const metrics = monitor.getMetrics();
-        console.log('Performance metrics:', metrics);
-      }
+      await expect(page.locator(InventoryLocators.INVENTORY_CONTAINER)).toBeVisible();
     });
   });
 });

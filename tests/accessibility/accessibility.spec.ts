@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { settings } from '../../src/config/settings';
+import { CREDENTIALS } from '../../src/config/constants';
+import { LoginLocators } from '../../src/locators/sauce-demo.locators';
 
 /**
  * Accessibility Tests using Axe-core
@@ -8,7 +10,7 @@ import { settings } from '../../src/config/settings';
  */
 
 test.describe('Accessibility Tests', () => {
-  test.describe('DuckDuckGo Accessibility', () => {
+  test.describe('Bing Accessibility', () => {
     test('should not have critical accessibility violations on homepage', async ({ page }) => {
       await page.goto(settings().baseUrl);
 
@@ -40,7 +42,7 @@ test.describe('Accessibility Tests', () => {
       await page.goto(settings().baseUrl);
 
       const results = await new AxeBuilder({ page })
-        .include('form')
+        .include('#sb_form')
         .withTags(['wcag2a', 'wcag2aa'])
         .analyze();
 
@@ -69,9 +71,9 @@ test.describe('Accessibility Tests', () => {
     test('should have accessible inventory page', async ({ page }) => {
       // Login first
       await page.goto(settings().sauceDemoUrl);
-      await page.fill('#user-name', 'standard_user');
-      await page.fill('#password', 'secret_sauce');
-      await page.click('#login-button');
+      await page.fill(LoginLocators.USERNAME_INPUT, CREDENTIALS.SAUCE.STANDARD_USER.username);
+      await page.fill(LoginLocators.PASSWORD_INPUT, CREDENTIALS.SAUCE.STANDARD_USER.password);
+      await page.click(LoginLocators.LOGIN_BUTTON);
 
       // Wait for inventory page
       await page.waitForSelector('.inventory_container');

@@ -1,31 +1,15 @@
 {
+  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["ES2022", "DOM"],
-    "outDir": "./dist",
-    "rootDir": ".",
+    "target": "ES2021",
+    "module": "commonjs",
+    "lib": ["ES2021", "DOM"],
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@config/*": ["src/config/*"],
-      "@pages/*": ["src/pages/*"],
-      "@locators/*": ["src/locators/*"],
-      "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"],
-      "@fixtures/*": ["src/fixtures/*"],
-      "@test-data/*": ["test-data/*"]
-    },
-    "types": ["node", "vitest/globals"]
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*", "tests/**/*", "playwright.config.ts", "vitest.config.ts"],
+  "include": ["src/**/*.ts", "playwright.config.ts", "src/tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
