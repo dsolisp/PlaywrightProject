@@ -2,99 +2,102 @@
 mode: agent
 ---
 
-Portfolio JS/TS Test Automation Repo
-Objective:
-Generate a modern, portfolio-quality JavaScript/TypeScript test automation repository that mirrors the features, structure, and best practices of my Python Selenium/Playwright framework. The repo must be self-contained, idiomatic, and demonstrate advanced automation capabilities.
+# Portfolio JS/TS Test Automation Repo
 
-1. Tech Stack
-   Test Runner: Playwright Test (TypeScript)
-   API Testing: Axios (with typed API helpers)
-   DB Testing: SQLite (Chinook DB sample, with TypeORM or better-sqlite3)
-   Visual Testing: pixelmatch, Playwright screenshots
-   Performance Testing: k6 (JS scripts)
-   Reporting: Allure
-   Logging: pino
-   Linting/Formatting: ESLint, Prettier
-   Pre-commit: Husky, lint-staged
-   CI: GitHub Actions (with Allure, k6, and artifact upload)
-   Optional: TensorFlow.js (for ML demo)
-   Unit Testing: Jest (for all new functions/utilities)
-2. Project Structure
-   .
-   ├── README.md
-   ├── .github/
-   │ └── workflows/
-   │ └── ci.yml
-   ├── docs/
-   │ └── ...
-   ├── playwright.config.ts
-   ├── package.json
-   ├── tsconfig.json
-   ├── src/
-   │ ├── pages/
-   │ │ └── search_engine_page.ts
-   │ ├── api/
-   │ │ └── search_engine_api.ts
-   │ ├── db/
-   │ │ └── chinook.db
-   │ ├── utils/
-   │ │ └── logger.ts
-   │ └── tests/
-   │ ├── e2e/
-   │ │ └── search_engine.e2e.spec.ts
-   │ ├── api/
-   │ │ └── search_engine_api.spec.ts
-   │ ├── db/
-   │ │ └── chinook_db.spec.ts
-   │ ├── visual/
-   │ │ └── search_engine.visual.spec.ts
-   │ ├── perf/
-   │ │ └── search_engine.k6.js
-   │ └── unit/
-   │ └── logger.spec.ts
-   ├── allure-results/
-   ├── k6/
-   │ └── search_engine.k6.js
-   ├── .husky/
-   ├── .eslintrc.js
-   ├── .prettierrc
-   └── ...
-3. Representative Examples
-   E2E: Search Engine (generic, parameterized page object, test, locator)
-   API: Search Engine instant answer API (typed helper, test)
-   DB: Chinook sample DB (query, test)
-   Visual: Search Engine homepage visual regression (pixelmatch)
-   Performance: Search Engine search with k6 (JS script)
-   Unit: All new functions/utilities must have Jest unit tests
-4. Documentation
-   README.md with:
-   Project overview
-   Tech stack
-   Setup instructions
-   Example usage
-   Project structure tree
-   How to run tests (all types)
-   How to view Allure reports
-   How to run k6 scripts
-   How to use Husky/pre-commit
-   docs with:
-   Feature guides (E2E, API, DB, Visual, Perf)
-   CI/CD and contribution guide
-5. Git & Commit Strategy
-   Never commit to main
-   Use feature branches for each logical unit (e.g., feature/e2e-search-engine, feature/api-search-engine, etc.)
-   Each commit must be atomic and leave the repo in a working state (tests pass, lint clean)
-   Each new function or utility must include a unit test in the same commit
-   Use conventional commit messages (e.g., feat(e2e): add search engine test)
-   CI must enforce lint, typecheck, and all tests on PRs
-6. Acceptance Criteria
-   All representative files and tests are present and working
-   Allure and k6 integration is functional
-   Husky/pre-commit is set up and working
-   README and docs are clear and complete
-   CI workflow is present and passes
-   All code is idiomatic, typed, and follows best practices
-   Start by scaffolding the repo, then add features in atomic, working commits as described.
+> **Note**: This prompt was used to generate the initial project. The actual implementation has evolved - see README.md for current state.
+
+## Objective
+
+Generate a modern, portfolio-quality JavaScript/TypeScript test automation repository that demonstrates advanced automation capabilities with industry best practices for 2025.
+
+## Implemented Tech Stack
+
+| Category       | Technology                    | Status |
+| -------------- | ----------------------------- | ------ |
+| Test Runner    | Playwright Test (TypeScript)  | ✅     |
+| Unit Testing   | Vitest (replaced Jest)        | ✅     |
+| API Testing    | Axios + Playwright            | ✅     |
+| DB Testing     | better-sqlite3                | ✅     |
+| Visual Testing | Playwright built-in snapshots | ✅     |
+| Accessibility  | axe-core                      | ✅     |
+| BDD            | playwright-bdd                | ✅     |
+| Reporting      | Allure                        | ✅     |
+| Logging        | Pino + Winston                | ✅     |
+| Linting        | ESLint v9 (flat config)       | ✅     |
+| Formatting     | Prettier                      | ✅     |
+| Pre-commit     | Husky + lint-staged           | ✅     |
+| CI/CD          | GitHub Actions                | ✅     |
+
+## Test Count
+
+- **Unit Tests**: 98 (Vitest)
+- **Playwright Tests**: 78
+- **BDD Tests**: 13
+- **Total**: 189 tests
+
+## Actual Project Structure
+
+```
+PlaywrightProject/
+├── src/
+│   ├── config/          # Configuration (settings.ts, constants.ts)
+│   ├── fixtures/        # Custom Playwright fixtures
+│   ├── locators/        # Centralized selectors
+│   ├── pages/           # Page Object Model (base.page.ts, etc.)
+│   └── utils/           # Utilities (logger, data-manager, factory)
+├── tests/
+│   ├── accessibility/   # axe-core WCAG tests
+│   ├── api/             # API integration tests
+│   ├── bdd/             # Cucumber/Gherkin tests
+│   ├── contract/        # API contract tests
+│   ├── database/        # SQLite tests
+│   ├── integration/     # E2E integration tests
+│   ├── performance/     # Performance metrics
+│   ├── unit/            # Unit tests (Vitest)
+│   ├── visual/          # Visual regression
+│   └── web/             # Browser E2E tests
+├── playwright.config.ts
+├── vitest.config.ts
+├── eslint.config.js     # ESLint v9 flat config
+└── package.json
+```
+
+## Test Applications
+
+1. **SauceDemo** (https://www.saucedemo.com) - E-commerce demo
+2. **Bing** (https://www.bing.com) - Search engine (CAPTCHA-resilient tests)
+
+## Original Prompt Goals (for reference)
+
+Visual: Search Engine homepage visual regression (pixelmatch)
+Performance: Search Engine search with k6 (JS script)
+Unit: All new functions/utilities must have Jest unit tests 4. Documentation
+README.md with:
+Project overview
+Tech stack
+Setup instructions
+Example usage
+Project structure tree
+How to run tests (all types)
+How to view Allure reports
+How to run k6 scripts
+How to use Husky/pre-commit
+docs with:
+Feature guides (E2E, API, DB, Visual, Perf)
+CI/CD and contribution guide 5. Git & Commit Strategy
+Never commit to main
+Use feature branches for each logical unit (e.g., feature/e2e-search-engine, feature/api-search-engine, etc.)
+Each commit must be atomic and leave the repo in a working state (tests pass, lint clean)
+Each new function or utility must include a unit test in the same commit
+Use conventional commit messages (e.g., feat(e2e): add search engine test)
+CI must enforce lint, typecheck, and all tests on PRs 6. Acceptance Criteria
+All representative files and tests are present and working
+Allure and k6 integration is functional
+Husky/pre-commit is set up and working
+README and docs are clear and complete
+CI workflow is present and passes
+All code is idiomatic, typed, and follows best practices
+Start by scaffolding the repo, then add features in atomic, working commits as described.
 
 ### 1. Initial Setup (main branch)
 

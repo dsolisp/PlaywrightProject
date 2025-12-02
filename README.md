@@ -1,107 +1,284 @@
-# PlaywrightProject
+# Playwright TypeScript Test Automation Framework
 
-A modern, portfolio-quality JavaScript/TypeScript test automation repository demonstrating advanced automation capabilities with Playwright, API, DB, visual, and performance testing.
+![CI](https://github.com/dsolisp/PlaywrightProject/actions/workflows/ci.yml/badge.svg)
 
-## Tech Stack
+A modern, portfolio-quality test automation framework demonstrating industry best practices for 2025. Built with Playwright, Vitest, and TypeScript.
 
-- Playwright Test (TypeScript)
-- Axios (API testing)
-- better-sqlite3 (DB testing)
-- pixelmatch (visual regression)
-- k6 (performance)
-- Allure (reporting)
-- pino (logging)
-- Jest (unit testing)
-- ESLint, Prettier (linting/formatting)
-- Husky, lint-staged (pre-commit)
+---
 
-## Project Structure
+## 📊 Test Coverage
 
-```
-.
-├── README.md
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── docs/
-│   └── ...
-├── playwright.config.ts
-├── package.json
-├── tsconfig.json
-├── src/
-│   ├── pages/
-│   ├── api/
-│   ├── db/
-│   ├── utils/
-│   └── tests/
-├── allure-results/
-├── k6/
-├── .husky/
-├── .eslintrc.js
-├── .prettierrc
-└── ...
-```
+| Test Type     | Count   | Framework      |
+| ------------- | ------- | -------------- |
+| Unit Tests    | 98      | Vitest         |
+| E2E/Web Tests | 78      | Playwright     |
+| BDD Tests     | 13      | playwright-bdd |
+| **Total**     | **189** |                |
 
-## Setup
+---
 
-1. Install dependencies:
-   ```sh
-   npm install
-   ```
-2. Install Playwright browsers:
-   ```sh
-   npx playwright install
-   ```
+## 📋 Prerequisites
 
-## Usage
+- **Node.js 20+** ([Download](https://nodejs.org/))
+- **npm** (comes with Node.js)
+- **Git** ([Download](https://git-scm.com/))
+- (Optional) **Allure CLI** for local reporting: `brew install allure`
 
-- **Lint:** `npm run lint`
-- **Format:** `npm run format`
-- **Test (all):** `npm test`
-- **E2E:** `npx playwright test`
-- **Unit:** `npm run test:unit`
-- **API:** `npm run test:api`
-- **DB:** `npm run test:db`
-- **Visual:** `npm run test:visual`
-- **Performance:** `npm run k6`
-- **Allure Report:** `npm run allure`
+---
 
-## Contributing
-
-- Use feature branches for each logical unit
-- Each commit must be atomic and leave the repo in a working state
-- Use conventional commit messages
-- CI enforces lint, typecheck, and all tests on PRs
-
-## Visual tests and fixtures
-
-- The E2E and visual suites default to using a local HTML fixture for DuckDuckGo in CI to avoid flakiness from bot-detection and dynamic content.
-- Local runs will attempt a live search first and automatically fall back to the fixture if the live site blocks the headless request.
-
-Opt-in to live site testing
-
-- To force tests to use the real DuckDuckGo site (dev-only), set an environment variable when running tests:
+## ⚡ Quick Start
 
 ```bash
-USE_LIVE=true npx playwright test
+# Clone the repository
+git clone https://github.com/dsolisp/PlaywrightProject.git
+cd PlaywrightProject
+
+# Install dependencies
+npm ci
+
+# Install Playwright browsers
+npx playwright install --with-deps
+
+# Run all tests
+npm test
 ```
 
-Updating visual baselines
+---
 
-- The visual test creates a baseline image on first run at `src/tests/visual/duckduckgo_baseline.png`.
-- To regenerate and commit a new baseline locally:
+## ✨ Key Features
+
+### 🧪 Testing Capabilities
+
+| Feature               | Technology           | Description                                   |
+| --------------------- | -------------------- | --------------------------------------------- |
+| **E2E Web Testing**   | Playwright           | Page Object Model with base class inheritance |
+| **API Testing**       | Axios + Playwright   | REST API validation and contract testing      |
+| **Visual Regression** | Playwright Snapshots | Automated screenshot comparison               |
+| **Accessibility**     | axe-core             | WCAG 2.1 AA compliance checking               |
+| **BDD Testing**       | playwright-bdd       | Cucumber-style Gherkin syntax                 |
+| **Unit Testing**      | Vitest               | Fast, modern unit test runner                 |
+| **Performance**       | Playwright Metrics   | Page load and Core Web Vitals                 |
+
+### 🏗️ Architecture Patterns
+
+- **Page Object Model (POM)** - Centralized page interactions
+- **Fixture Pattern** - Reusable test setup with authentication
+- **Factory Pattern** - Dynamic test data generation
+- **Centralized Locators** - Single source of truth for selectors
+- **Configuration Management** - Environment-based settings
+
+### 🔧 Developer Experience
+
+- **TypeScript** - Full type safety throughout
+- **ESLint v9** - Modern flat config with Playwright plugin
+- **Prettier** - Consistent code formatting
+- **Husky** - Pre-commit hooks for quality gates
+- **Allure Reports** - Rich HTML test reporting
+
+---
+
+## 🏗️ Project Structure
+
+```
+PlaywrightProject/
+├── src/                          # Source code
+│   ├── config/                   # Configuration management
+│   │   ├── constants.ts          # Application constants & credentials
+│   │   └── settings.ts           # Environment settings loader
+│   ├── fixtures/                 # Playwright test fixtures
+│   │   └── test-fixtures.ts      # Custom fixtures with auth
+│   ├── locators/                 # Centralized element selectors
+│   │   ├── sauce-demo.locators.ts
+│   │   └── search-engine.locators.ts
+│   ├── pages/                    # Page Object Model classes
+│   │   ├── base.page.ts          # Abstract base page
+│   │   ├── sauce-demo.page.ts    # SauceDemo page objects
+│   │   └── search-engine.page.ts # Bing search page object
+│   └── utils/                    # Utility modules
+│       ├── data-manager.ts       # Test data loading (CSV, JSON, YAML)
+│       ├── database.ts           # SQLite database helper
+│       ├── logger.ts             # Pino-based structured logging
+│       └── test-data-factory.ts  # Factory pattern for test data
+│
+├── tests/                        # All test files
+│   ├── accessibility/            # WCAG accessibility tests
+│   ├── api/                      # API integration tests
+│   ├── bdd/                      # Cucumber BDD tests
+│   │   ├── features/             # Gherkin feature files
+│   │   └── steps/                # Step definitions
+│   ├── contract/                 # API contract tests
+│   ├── database/                 # Database tests
+│   ├── integration/              # E2E integration tests
+│   ├── performance/              # Performance metrics tests
+│   ├── unit/                     # Unit tests (Vitest)
+│   ├── visual/                   # Visual regression tests
+│   └── web/                      # Web E2E tests
+│
+├── test-data/                    # Test data files
+│   ├── users.json                # User test data
+│   └── test_users.csv            # CSV test data
+│
+├── .github/workflows/            # CI/CD pipelines
+│   └── ci.yml                    # GitHub Actions workflow
+│
+├── playwright.config.ts          # Playwright configuration
+├── vitest.config.ts              # Vitest configuration
+├── eslint.config.js              # ESLint flat config
+├── tsconfig.json                 # TypeScript configuration
+└── package.json                  # Dependencies & scripts
+```
+
+---
+
+## 🧪 Running Tests
+
+### Quick Commands
 
 ```bash
-# run the visual test to recreate the baseline
-rm -f src/tests/visual/duckduckgo_baseline.png && npm run test:visual
-# review the new baseline, then commit it
-git add src/tests/visual/duckduckgo_baseline.png && git commit -m "test(visual): update baseline"
+# Run all tests (unit + Playwright)
+npm test
+
+# Unit tests only (Vitest)
+npm run test:unit
+
+# Playwright E2E tests
+npx playwright test
+
+# Specific test file
+npx playwright test tests/web/sauce-demo.spec.ts
+
+# Specific browser
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+
+# Headed mode (see browser)
+npx playwright test --headed
+
+# Debug mode
+npx playwright test --debug
+
+# Update visual snapshots
+npm run playwright:update-snapshots
 ```
 
-CI notes
+### BDD Tests (Separate Config)
 
-- CI uses the fixture baseline checked into the repository for deterministic comparisons. If you prefer to keep baselines out of source control, we can switch to storing them as CI artifacts and update the workflow accordingly.
+```bash
+cd tests/bdd
+npx bddgen                        # Generate test files from features
+npx playwright test               # Run BDD tests
+```
 
-## More
+### Test Reports
 
-- See `docs/` for feature guides and CI/CD details.
+```bash
+# View Playwright HTML report
+npx playwright show-report
+
+# Generate Allure report
+npm run allure
+```
+
+---
+
+## 🎯 Test Applications
+
+This framework tests two applications:
+
+### 1. SauceDemo (Primary)
+
+- **URL**: https://www.saucedemo.com
+- **Purpose**: E-commerce testing demo
+- **Tests**: Login, inventory, cart, checkout flows
+
+### 2. Bing Search (Secondary)
+
+- **URL**: https://www.bing.com
+- **Purpose**: Search engine automation
+- **Tests**: Search, results, navigation
+- **Note**: Tests are CAPTCHA-resilient
+
+---
+
+## 📁 Key Files Explained
+
+| File                             | Purpose                                  |
+| -------------------------------- | ---------------------------------------- |
+| `playwright.config.ts`           | Browser config, timeouts, reporters      |
+| `vitest.config.ts`               | Unit test runner configuration           |
+| `src/fixtures/test-fixtures.ts`  | Custom Playwright fixtures with auth     |
+| `src/pages/base.page.ts`         | Abstract base class for all pages        |
+| `src/config/settings.ts`         | Environment configuration loader         |
+| `src/utils/test-data-factory.ts` | Factory pattern for generating test data |
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file (see `.env.example`):
+
+```bash
+# Optional - defaults are provided
+BASE_URL=https://www.bing.com
+SAUCE_DEMO_URL=https://www.saucedemo.com
+LOG_LEVEL=info
+```
+
+---
+
+## 🤝 Contributing
+
+1. Create a feature branch: `git checkout -b feature/my-feature`
+2. Run quality checks: `npm run lint && npm test`
+3. Commit with conventional commits: `feat(scope): description`
+4. Submit a PR to `main`
+
+### Code Style
+
+- Follow Page Object Model for new pages
+- Add locators to centralized locator files
+- Include unit tests for new utilities
+- Update documentation for new features
+
+---
+
+## 🐛 Troubleshooting
+
+| Issue                 | Solution                                             |
+| --------------------- | ---------------------------------------------------- |
+| Browser not installed | `npx playwright install --with-deps`                 |
+| Tests timeout on Bing | Normal - CAPTCHA protection, tests handle gracefully |
+| Visual tests fail     | Run `npm run playwright:update-snapshots`            |
+| TypeScript errors     | Run `npx tsc --noEmit` to check                      |
+| ESLint errors         | Run `npm run lint` to see issues                     |
+
+---
+
+## 📚 Documentation
+
+- [ZERO-TO-HERO.md](ZERO-TO-HERO.md) - Complete guide to recreate this project from scratch
+- [.github/prompts/playwright.prompt.md](.github/prompts/playwright.prompt.md) - AI prompt used to generate this project
+
+---
+
+## 🏆 Why This Framework?
+
+This project demonstrates:
+
+✅ **Modern Architecture** - POM, fixtures, factories, centralized config
+✅ **Multi-Layer Testing** - Unit, integration, E2E, visual, accessibility, BDD
+✅ **Type Safety** - Full TypeScript with strict mode
+✅ **CI/CD Ready** - GitHub Actions with Allure reporting
+✅ **Real-World Patterns** - CAPTCHA handling, auth fixtures, data-driven tests
+✅ **2025 Best Practices** - ESLint v9, Vitest, Playwright latest
+
+---
+
+## 📄 License
+
+ISC
+
+---
+
+Built with ❤️ using Playwright, TypeScript, and modern testing practices

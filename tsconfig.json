@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "playwright.config.ts", "src/tests/**/*.ts"],
+  "include": ["src/**/*.ts", "playwright.config.ts", "src/tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

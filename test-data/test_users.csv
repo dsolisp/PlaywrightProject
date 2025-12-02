@@ -1,0 +1,6 @@
+username,password,email,role,enabled
+standard_user,secret_sauce,standard@example.com,user,true
+locked_out_user,secret_sauce,locked@example.com,user,false
+problem_user,secret_sauce,problem@example.com,user,true
+performance_glitch_user,secret_sauce,perf@example.com,user,true
+admin_user,admin_pass,admin@example.com,admin,true

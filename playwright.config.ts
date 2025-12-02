@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './src/tests/e2e',
+  testDir: './tests',
+  testIgnore: ['**/unit/**', '**/tests/unit/**', '**/database/**', '**/bdd/**'],
   timeout: 30000,
   expect: {
     timeout: 5000,
@@ -10,12 +11,16 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['list'], ['allure-playwright']],
+  reporter: [
+    ['list'],
+    ['allure-playwright'],
+    ['json', { outputFile: 'data/results/playwright-results.json' }],
+  ],
   use: {
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    baseURL: 'https://duckduckgo.com',
+    baseURL: 'https://www.bing.com',
     // Set a common desktop UA and launch args to make headless runs look more
     // like a real browser. These options are useful for CI where headless
     // browsers may be fingerprinted and blocked by anti-bot systems.

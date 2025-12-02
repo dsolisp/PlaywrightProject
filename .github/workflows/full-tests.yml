@@ -1,0 +1,47 @@
+name: Full Test Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Test type to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - playwright
+          - bdd
+
+jobs:
+  full-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run unit tests
+        run: npm run test:unit
+      - name: Run Playwright tests
+        if: ${{ inputs.test_type == 'all' || inputs.test_type == 'playwright' }}
+        env:
+          CI: 'true'
+        run: npx playwright test --reporter=list,allure-playwright
+      - name: Run BDD tests
+        if: ${{ inputs.test_type == 'all' || inputs.test_type == 'bdd' }}
+        env:
+          CI: 'true'
+        run: cd tests/bdd && npx bddgen && npx playwright test
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/

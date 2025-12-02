@@ -1,0 +1,113 @@
+# Docker Compose for Playwright TypeScript Test Framework
+version: '3.8'
+
+services:
+  # ═══════════════════════════════════════════════════════════════════
+  # Test Runner
+  # ═══════════════════════════════════════════════════════════════════
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright-tests
+    environment:
+      - CI=true
+      - HEADLESS=true
+      - BASE_URL=https://duckduckgo.com
+      - API_BASE_URL=https://jsonplaceholder.typicode.com
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+      - ./coverage:/app/coverage
+      - ./allure-results:/app/allure-results
+    networks:
+      - test-network
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Unit Tests Only
+  # ═══════════════════════════════════════════════════════════════════
+  unit-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright-unit-tests
+    command: npm run test:unit
+    volumes:
+      - ./coverage:/app/coverage
+    networks:
+      - test-network
+
+  # ═══════════════════════════════════════════════════════════════════
+  # API Tests Only
+  # ═══════════════════════════════════════════════════════════════════
+  api-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright-api-tests
+    command: npm run test:api
+    environment:
+      - API_BASE_URL=https://jsonplaceholder.typicode.com
+    volumes:
+      - ./test-results:/app/test-results
+    networks:
+      - test-network
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Web Tests Only
+  # ═══════════════════════════════════════════════════════════════════
+  web-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: playwright-web-tests
+    command: npm run test:web
+    environment:
+      - BASE_URL=https://duckduckgo.com
+      - SAUCE_DEMO_URL=https://www.saucedemo.com
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    networks:
+      - test-network
+
+  # ═══════════════════════════════════════════════════════════════════
+  # Allure Report Server
+  # ═══════════════════════════════════════════════════════════════════
+  allure:
+    image: frankescobar/allure-docker-service:2.21.0
+    container_name: allure-report
+    ports:
+      - '5050:5050'
+    environment:
+      - CHECK_RESULTS_EVERY_SECONDS=3
+      - KEEP_HISTORY=1
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./allure-reports:/app/default-reports
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
+
+# ═══════════════════════════════════════════════════════════════════
+# Usage:
+#
+# Run all tests:
+#   docker-compose up playwright
+#
+# Run specific test type:
+#   docker-compose up unit-tests
+#   docker-compose up api-tests
+#   docker-compose up web-tests
+#
+# View Allure reports:
+#   docker-compose up -d allure
+#   Open http://localhost:5050
+#
+# Clean up:
+#   docker-compose down
+# ═══════════════════════════════════════════════════════════════════
+
