@@ -3,7 +3,6 @@ import {
   generateTestData,
   clearCache,
   loadCsv,
-  loadCsvTyped,
   filterCsv,
   findCsvRow,
 } from '../../src/utils/data-manager';

@@ -116,8 +116,13 @@ test.describe('E2E Integration Tests', () => {
       const searchInput = page.locator('#sb_form_q');
       await searchInput.fill('playwright testing automation');
 
-      // Wait for suggestions to appear, then press Escape to dismiss them
-      await page.waitForTimeout(500);
+      // Wait for suggestions dropdown, then dismiss it
+      await page
+        .locator('#sa_ul, .sa_sg')
+        .waitFor({ state: 'visible', timeout: 2000 })
+        .catch(() => {
+          // Suggestions may not appear - continue anyway
+        });
       await page.keyboard.press('Escape');
 
       // Submit the search form
@@ -127,8 +132,8 @@ test.describe('E2E Integration Tests', () => {
       await page.waitForURL(/\/search\?/, { timeout: 15000 });
 
       // Check if we hit a CAPTCHA challenge (common for automated browsers)
-      // Wait a moment for page to stabilize
-      await page.waitForTimeout(1000);
+      // Wait for page to stabilize by waiting for body to be visible
+      await page.locator('body').waitFor({ state: 'visible' });
 
       // Check for CAPTCHA by looking for the challenge text
       const bodyText = await page.locator('body').innerText();
@@ -149,7 +154,7 @@ test.describe('E2E Integration Tests', () => {
   });
 
   test.describe('API and UI Integration', () => {
-    test('should verify API data matches UI', async ({ page, request }) => {
+    test('should verify API data matches UI', async ({ request }) => {
       // Get data from API
       const apiResponse = await request.get('https://jsonplaceholder.typicode.com/posts/1');
       const apiPost = await apiResponse.json();
