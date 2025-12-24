@@ -1,11 +1,7 @@
-/**
- * Logger configuration
- *
- * Environment variables:
- * - LOG_LEVEL: Set logging level (default: 'info')
- * - LOG_TO_FILE: Set to 'false' to disable file logging (default: 'true')
- * - LOG_SILENT: Set to 'true' to disable all logging (useful for unit tests)
- */
+// Winston logger setup. Control via env vars:
+//   LOG_LEVEL=debug|info|warn|error (default: info)
+//   LOG_TO_FILE=false to skip file output
+//   LOG_SILENT=true to shut it up completely (handy for unit tests)
 import winston from 'winston';
 
 const { combine, timestamp, printf, colorize, json } = winston.format;
@@ -15,7 +11,6 @@ const consoleFormat = printf(({ level, message, timestamp, ...meta }) => {
   return `${timestamp} [${level}] ${message}${metaStr}`;
 });
 
-// Configuration from environment
 const logLevel = process.env.LOG_LEVEL || 'info';
 const logToFile = process.env.LOG_TO_FILE !== 'false';
 const logSilent = process.env.LOG_SILENT === 'true';

@@ -3,10 +3,6 @@ import { BasePage } from './base.page';
 import { BingLocators } from '../locators/search-engine.locators';
 import { settings } from '../config/settings';
 
-/**
- * Bing Search Engine Page Object
- * Equivalent to Python's pages/search_engine_page.py
- */
 export class SearchEnginePage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -39,13 +35,8 @@ export class SearchEnginePage extends BasePage {
     return this;
   }
 
-  /**
-   * Consolidated search method
-   * @param query - Search query string
-   * @param options - Search options
-   * @param options.waitForResults - Whether to wait for results to appear (default: true)
-   * @param options.timeout - Timeout for waiting for results (default: 15000)
-   */
+  // Type query and hit enter. By default waits for results, but Bing often
+  // throws up a CAPTCHA in automation so we swallow that timeout.
   async search(
     query: string,
     options: { waitForResults?: boolean; timeout?: number } = {},
@@ -60,7 +51,7 @@ export class SearchEnginePage extends BasePage {
       try {
         await this.waitForVisible(BingLocators.RESULT_ITEMS, timeout);
       } catch {
-        // Results may be blocked by CAPTCHA - this is expected in automation
+        // CAPTCHA blocked us - expected in headless
       }
     }
 
@@ -100,19 +91,11 @@ export class SearchEnginePage extends BasePage {
   }
 
   async waitForResults(): Promise<void> {
-    // Wait for results container like Python does
     await this.waitForVisible(BingLocators.RESULTS_CONTAINER);
   }
 
-  /**
-   * Assert that a search was at least attempted.
-   * This is resilient to CAPTCHA/blocking which is common with search engine automation.
-   *
-   * @returns Object with search status info:
-   *   - hasResults: true if actual search results were returned
-   *   - searchAttempted: true if search URL was reached (even if blocked)
-   *   - message: Human-readable status message
-   */
+  // Check if we at least tried to search. Bing blocks automation a lot,
+  // so this is more lenient than checking for actual results.
   async assertSearchAttempted(): Promise<{
     hasResults: boolean;
     searchAttempted: boolean;
@@ -130,7 +113,7 @@ export class SearchEnginePage extends BasePage {
     }
 
     if (url.includes('search')) {
-      console.log('⚠️ Search performed but results may be blocked by CAPTCHA - this is expected');
+      console.log('⚠️ Search performed but results may be blocked by CAPTCHA');
       return {
         hasResults: false,
         searchAttempted: true,
@@ -139,7 +122,7 @@ export class SearchEnginePage extends BasePage {
     }
 
     if (url.includes('bing.com')) {
-      console.log('⚠️ Search may not have submitted - this is expected in headless mode');
+      console.log('⚠️ Search may not have submitted - bot detection kicked in');
       return {
         hasResults: false,
         searchAttempted: false,

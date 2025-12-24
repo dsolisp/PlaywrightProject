@@ -2,16 +2,14 @@ import { Page, Locator } from '@playwright/test';
 import { TIMEOUTS } from '../config/constants';
 
 /**
- * BasePage provides common page-level operations and element interaction helpers.
+ * Base class for all page objects. Thin wrappers around Playwright's API.
  *
- * Design Decision: This class provides thin wrapper methods around Playwright's Locator API.
- * While Playwright's API is already clean, these wrappers:
- * - Ensure consistent selector-to-locator conversion across all page objects
- * - Provide a single place to add logging, error handling, or retry logic if needed
- * - Keep page object methods focused on business logic rather than selector handling
+ * Why wrappers? Playwright's API is already great, but these helpers give us:
+ * - Consistent selector → locator conversion everywhere
+ * - One place to add logging or custom error handling if we ever need it
+ * - Page objects stay focused on business logic, not boilerplate
  *
- * For simple interactions, prefer using `this.locator(selector).action()` directly.
- * Use the helper methods when you need consistent behavior across the framework.
+ * Feel free to use `this.locator(selector).click()` directly for one-offs.
  */
 export abstract class BasePage {
   protected readonly page: Page;
@@ -22,10 +20,7 @@ export abstract class BasePage {
 
   // ── Locator Access ─────────────────────────────────────────────────
 
-  /**
-   * Get a Locator for the given selector.
-   * Use this when you need to chain multiple Locator methods.
-   */
+  // Grab a locator for chaining: this.locator('.foo').first().click()
   protected locator(selector: string): Locator {
     return this.page.locator(selector);
   }

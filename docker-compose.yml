@@ -1,9 +1,9 @@
-# Docker Compose for Playwright TypeScript Test Framework
+# Run tests in containers. See usage examples at the bottom.
 version: '3.8'
 
 services:
   # ═══════════════════════════════════════════════════════════════════
-  # Test Runner
+  # Main test runner - runs everything
   # ═══════════════════════════════════════════════════════════════════
   playwright:
     build:
@@ -13,7 +13,8 @@ services:
     environment:
       - CI=true
       - HEADLESS=true
-      - BASE_URL=https://duckduckgo.com
+      - BASE_URL=https://www.bing.com
+      - SAUCE_DEMO_URL=https://www.saucedemo.com
       - API_BASE_URL=https://jsonplaceholder.typicode.com
     volumes:
       - ./test-results:/app/test-results
@@ -63,7 +64,7 @@ services:
     container_name: playwright-web-tests
     command: npm run test:web
     environment:
-      - BASE_URL=https://duckduckgo.com
+      - BASE_URL=https://www.bing.com
       - SAUCE_DEMO_URL=https://www.saucedemo.com
     volumes:
       - ./test-results:/app/test-results

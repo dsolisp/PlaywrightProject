@@ -2,6 +2,7 @@ import { test as base, expect } from '@playwright/test';
 import { SearchEnginePage } from '../pages/search-engine.page';
 import { LoginPage, InventoryPage, CartPage, CheckoutPage } from '../pages/sauce-demo.page';
 
+// Page objects we make available in tests
 type CustomFixtures = {
   searchPage: SearchEnginePage;
   loginPage: LoginPage;
@@ -10,41 +11,30 @@ type CustomFixtures = {
   checkoutPage: CheckoutPage;
 };
 
-// Extend base test with custom fixtures
+// Wire up all our page objects as fixtures
 export const test = base.extend<CustomFixtures>({
-  // Search engine page fixture
   searchPage: async ({ page }, use) => {
-    const searchPage = new SearchEnginePage(page);
-    await use(searchPage);
+    await use(new SearchEnginePage(page));
   },
-
-  // SauceDemo fixtures
   loginPage: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    await use(loginPage);
+    await use(new LoginPage(page));
   },
-
   inventoryPage: async ({ page }, use) => {
-    const inventoryPage = new InventoryPage(page);
-    await use(inventoryPage);
+    await use(new InventoryPage(page));
   },
-
   cartPage: async ({ page }, use) => {
-    const cartPage = new CartPage(page);
-    await use(cartPage);
+    await use(new CartPage(page));
   },
-
   checkoutPage: async ({ page }, use) => {
-    const checkoutPage = new CheckoutPage(page);
-    await use(checkoutPage);
+    await use(new CheckoutPage(page));
   },
 });
 
-// Re-export expect
 export { expect };
 
 // ═══════════════════════════════════════════════════════════════════
-// AUTHENTICATED FIXTURES
+// Pre-authenticated fixture - skips the login step
+// Use this when you don't care about testing login, just need to be logged in
 // ═══════════════════════════════════════════════════════════════════
 
 type AuthenticatedFixtures = CustomFixtures & {

@@ -3,9 +3,6 @@ import { BasePage } from '../base.page';
 import { CheckoutLocators } from '../../locators/sauce-demo.locators';
 import { CheckoutInfo } from '../../utils/test-data-factory';
 
-/**
- * SauceDemo Checkout Page Object
- */
 export class CheckoutPage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -17,9 +14,7 @@ export class CheckoutPage extends BasePage {
     await this.fill(CheckoutLocators.POSTAL_CODE, postalCode);
   }
 
-  /**
-   * Fill checkout information using a CheckoutInfo object from CheckoutFactory
-   */
+  // Use with CheckoutFactory.valid(), CheckoutFactory.missingFirstName(), etc.
   async fillWithInfo(info: CheckoutInfo): Promise<void> {
     await this.fillInformation(info.firstName, info.lastName, info.zipCode);
   }

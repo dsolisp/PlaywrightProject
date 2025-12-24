@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { URLS } from './src/config/constants';
 
 export default defineConfig({
   testDir: './tests',
@@ -20,12 +21,9 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    baseURL: 'https://www.bing.com',
-    // Align Playwright's getByTestId() with our data-test attributes
-    testIdAttribute: 'data-test',
-    // Set a common desktop UA and launch args to make headless runs look more
-    // like a real browser. These options are useful for CI where headless
-    // browsers may be fingerprinted and blocked by anti-bot systems.
+    baseURL: process.env.BASE_URL || URLS.BING,
+    testIdAttribute: 'data-test', // matches our data-test="..." attrs
+    // Desktop UA to look less like a bot in headless mode
     userAgent:
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   },

@@ -2,10 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { settings, resetSettings } from '../../src/config/settings';
 import { URLS, BROWSERS } from '../../src/config/constants';
 
-/**
- * Settings unit tests.
- */
-
 describe('Settings', () => {
   beforeEach(() => {
     resetSettings();

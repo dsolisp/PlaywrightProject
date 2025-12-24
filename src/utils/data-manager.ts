@@ -1,20 +1,4 @@
-/**
- * Data Manager - Utilities for loading test data from files
- *
- * Core functions (actively used):
- * - loadJson() - Load JSON files
- * - loadCsv() - Load CSV files
- * - loadData() - Auto-detect format and load
- * - generateTestData() - Factory for generating random test data
- * - clearCache() - Clear the data cache
- *
- * Convenience functions (available for future use):
- * - loadCsvTyped() - Load CSV with type casting
- * - loadCsvWithColumns() - Load CSV with custom column names
- * - filterCsv() - Filter CSV rows by predicate
- * - findCsvRow() - Find first matching CSV row
- * - loadYaml() - Load YAML files
- */
+// Load test data from JSON/CSV/YAML files. Results are cached for 5 min.
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -22,8 +6,7 @@ import { parse as csvParse } from 'csv-parse/sync';
 import { PATHS } from '../config/constants';
 
 const cache = new Map<string, { data: unknown; loadedAt: number }>();
-/** Cache TTL of 5 minutes - data is unlikely to change during test runs */
-const CACHE_TTL_MS = 300000;
+const CACHE_TTL_MS = 300000; // 5 min - data won't change mid-test
 
 // ── File Loading ─────────────────────────────────────────────────────
 

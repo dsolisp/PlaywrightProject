@@ -2,9 +2,6 @@ import { Page } from '@playwright/test';
 import { BasePage } from '../base.page';
 import { CartLocators } from '../../locators/sauce-demo.locators';
 
-/**
- * SauceDemo Cart Page Object
- */
 export class CartPage extends BasePage {
   constructor(page: Page) {
     super(page);

@@ -2,9 +2,6 @@ import { Page } from '@playwright/test';
 import { BasePage } from '../base.page';
 import { InventoryLocators } from '../../locators/sauce-demo.locators';
 
-/**
- * SauceDemo Inventory Page Object
- */
 export class InventoryPage extends BasePage {
   constructor(page: Page) {
     super(page);

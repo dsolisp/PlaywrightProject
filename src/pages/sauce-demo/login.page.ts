@@ -4,9 +4,6 @@ import { LoginLocators } from '../../locators/sauce-demo.locators';
 import { settings } from '../../config/settings';
 import { UserCredentials } from '../../utils/test-data-factory';
 
-/**
- * SauceDemo Login Page Object
- */
 export class LoginPage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -23,9 +20,7 @@ export class LoginPage extends BasePage {
     await this.click(LoginLocators.LOGIN_BUTTON);
   }
 
-  /**
-   * Login using a UserCredentials object from UserFactory
-   */
+  // Use with UserFactory.valid(), UserFactory.locked(), etc.
   async loginWithUser(user: UserCredentials): Promise<void> {
     await this.login(user.username, user.password);
   }

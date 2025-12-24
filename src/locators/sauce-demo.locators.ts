@@ -1,14 +1,5 @@
-/**
- * Locators for the Sauce Demo application
- *
- * Selector Strategy:
- * - Prefer [data-test="..."] selectors - these are stable and unlikely to change
- * - Use class selectors (.class) when data-test is not available
- * - Avoid xpath and complex structural selectors
- *
- * SauceDemo provides data-test attributes on most interactive elements,
- * but container/wrapper elements often only have class selectors.
- */
+// Selectors for SauceDemo. We prefer data-test attributes when available
+// (they're stable), but fall back to classes for containers and decorative stuff.
 
 // ═══════════════════════════════════════════════════════════════════
 // LOGIN PAGE
@@ -19,47 +10,43 @@ export const LoginLocators = {
   PASSWORD_INPUT: 'input[data-test="password"]',
   LOGIN_BUTTON: 'input[data-test="login-button"]',
   ERROR_MESSAGE: '[data-test="error"]',
-  // Class selector - no data-test available on this element
-  ERROR_BUTTON: '.error-button',
-  // Class selectors - decorative elements without data-test
+  ERROR_BUTTON: '.error-button', // no data-test on this one
   LOGO: '.login_logo',
   BOT_IMAGE: '.bot_column',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════
-// INVENTORY PAGE
+// INVENTORY PAGE (product listing)
 // ═══════════════════════════════════════════════════════════════════
 
 export const InventoryLocators = {
-  // Class selectors - container elements without data-test attributes
   INVENTORY_LIST: 'div.inventory_list',
   LOGOUT_BUTTON: 'a#logout_sidebar_link',
-  // data-test selectors - stable product-specific buttons
+
+  // Product-specific add buttons (stable data-test attrs)
   ADD_BACKPACK_BUTTON: 'button[data-test="add-to-cart-sauce-labs-backpack"]',
   ADD_BIKELIGHT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bike-light"]',
   ADD_SHIRT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]',
   CART_BADGE: 'span[data-test="shopping-cart-badge"]',
 
-  // Header - class selectors (no data-test on these elements)
+  // Header
   HEADER: '.header_container',
   MENU_BUTTON: '#react-burger-menu-btn',
   CART_LINK: '.shopping_cart_link',
 
-  // Products - class selectors for item containers and content
+  // Product cards
   INVENTORY_CONTAINER: '.inventory_container',
   INVENTORY_ITEMS: '.inventory_item',
   ITEM_NAME: '.inventory_item_name',
   ITEM_DESCRIPTION: '.inventory_item_desc',
   ITEM_PRICE: '.inventory_item_price',
   ITEM_IMAGE: '.inventory_item_img img',
-  // data-test with prefix matching for dynamic buttons
-  ADD_TO_CART_BUTTON: 'button[data-test^="add-to-cart"]',
+  ADD_TO_CART_BUTTON: 'button[data-test^="add-to-cart"]', // matches any add button
   REMOVE_BUTTON: 'button[data-test^="remove"]',
 
-  // Sorting
   SORT_DROPDOWN: '[data-test="product-sort-container"]',
 
-  // Footer - class selectors (decorative elements)
+  // Footer
   FOOTER: '.footer',
   SOCIAL_TWITTER: '.social_twitter',
   SOCIAL_FACEBOOK: '.social_facebook',
@@ -82,11 +69,11 @@ export const CartLocators = {
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════
-// CHECKOUT PAGE
+// CHECKOUT PAGE (3-step flow: info → overview → complete)
 // ═══════════════════════════════════════════════════════════════════
 
 export const CheckoutLocators = {
-  // Step 1: Information
+  // Step 1: Your info
   FIRST_NAME: '[data-test="firstName"]',
   LAST_NAME: '[data-test="lastName"]',
   POSTAL_CODE: '[data-test="postalCode"]',
@@ -94,14 +81,14 @@ export const CheckoutLocators = {
   CANCEL_BUTTON: '[data-test="cancel"]',
   ERROR_MESSAGE: '[data-test="error"]',
 
-  // Step 2: Overview
+  // Step 2: Order summary
   SUMMARY_INFO: '.summary_info',
   ITEM_TOTAL: '.summary_subtotal_label',
   TAX: '.summary_tax_label',
   TOTAL: '.summary_total_label',
   FINISH_BUTTON: '[data-test="finish"]',
 
-  // Complete
+  // Step 3: Done
   COMPLETE_HEADER: '.complete-header',
   COMPLETE_TEXT: '.complete-text',
   BACK_HOME: '[data-test="back-to-products"]',

@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { settings } from '../../src/config/settings';
+import { URLS } from '../../src/config/constants';
 
-/**
- * End-to-end integration tests that cover full user flows.
- */
+// Full user journey tests - login through checkout, etc.
 
 test.describe('E2E Integration Tests', () => {
   test.describe('SauceDemo Complete Purchase Flow', () => {
@@ -155,8 +154,8 @@ test.describe('E2E Integration Tests', () => {
 
   test.describe('API and UI Integration', () => {
     test('should verify API data matches UI', async ({ request }) => {
-      // Get data from API
-      const apiResponse = await request.get('https://jsonplaceholder.typicode.com/posts/1');
+      // Get data from API using centralized URL
+      const apiResponse = await request.get(`${URLS.JSON_PLACEHOLDER}/posts/1`);
       const apiPost = await apiResponse.json();
 
       // This is a conceptual test - in real scenario you'd verify
