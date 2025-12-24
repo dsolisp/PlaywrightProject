@@ -1,10 +1,7 @@
-/**
- * Search Engine Locators
- * Matching Python's locators/search_engine_locators.py exactly
- */
+// Locators for Bing and Google search
 
 // ═══════════════════════════════════════════════════════════════════
-// BING LOCATORS (matching Python)
+// BING LOCATORS
 // ═══════════════════════════════════════════════════════════════════
 
 export const BingLocators = {

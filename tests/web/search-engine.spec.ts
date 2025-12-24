@@ -1,11 +1,8 @@
 import { test, expect } from '../../src/fixtures/test-fixtures';
 
 /**
- * Bing Search Engine Web Tests
- * Equivalent to Python's tests/web/test_search_engine.py
- *
- * Migrated from DuckDuckGo to Bing for more stable DOM structure.
- * Tests are resilient to CAPTCHA/blocking - they verify search was attempted
+ * Bing search engine web tests.
+ * Tests are resilient to CAPTCHA/blocking and verify a search was attempted
  * even if results are blocked (common with search engine automation).
  */
 

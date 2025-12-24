@@ -3,10 +3,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 
 /**
- * Database Tests
- * Equivalent to Python's tests/database/test_database.py
- *
- * Tests against Chinook sample database
+ * Database tests against the Chinook sample database.
  */
 
 describe('Database Tests', () => {

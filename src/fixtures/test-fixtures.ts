@@ -2,12 +2,6 @@ import { test as base, expect } from '@playwright/test';
 import { SearchEnginePage } from '../pages/search-engine.page';
 import { LoginPage, InventoryPage, CartPage, CheckoutPage } from '../pages/sauce-demo.page';
 
-/**
- * Custom Test Fixtures
- * Equivalent to Python's conftest.py fixtures
- */
-
-// Define custom fixtures type
 type CustomFixtures = {
   searchPage: SearchEnginePage;
   loginPage: LoginPage;

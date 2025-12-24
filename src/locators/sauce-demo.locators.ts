@@ -1,17 +1,13 @@
-/**
- * SauceDemo Locators
- * Matching Python's locators/sauce_locators.py exactly
- */
+// Locators for the Sauce Demo application
 
 // ═══════════════════════════════════════════════════════════════════
-// LOGIN PAGE (matching Python SauceLocators)
+// LOGIN PAGE
 // ═══════════════════════════════════════════════════════════════════
 
 export const LoginLocators = {
-  // Matching Python exactly
-  USERNAME_INPUT: 'input[data-test="username"]', // USERNAME_INPUT xpath
-  PASSWORD_INPUT: 'input[data-test="password"]', // PASSWORD_INPUT xpath
-  LOGIN_BUTTON: 'input[data-test="login-button"]', // LOGIN_BUTTON xpath
+  USERNAME_INPUT: 'input[data-test="username"]',
+  PASSWORD_INPUT: 'input[data-test="password"]',
+  LOGIN_BUTTON: 'input[data-test="login-button"]',
   ERROR_MESSAGE: '[data-test="error"]',
   ERROR_BUTTON: '.error-button',
   LOGO: '.login_logo',
@@ -19,20 +15,15 @@ export const LoginLocators = {
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════
-// INVENTORY PAGE (matching Python SauceLocators)
+// INVENTORY PAGE
 // ═══════════════════════════════════════════════════════════════════
 
 export const InventoryLocators = {
-  // Matching Python exactly
-  INVENTORY_LIST: 'div.inventory_list', // INVENTORY_LIST xpath
-  LOGOUT_BUTTON: 'a#logout_sidebar_link', // LOGOUT_BUTTON xpath
-
-  // Product buttons (matching Python)
+  INVENTORY_LIST: 'div.inventory_list',
+  LOGOUT_BUTTON: 'a#logout_sidebar_link',
   ADD_BACKPACK_BUTTON: 'button[data-test="add-to-cart-sauce-labs-backpack"]',
   ADD_BIKELIGHT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bike-light"]',
   ADD_SHIRT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]',
-
-  // Cart (matching Python)
   CART_BADGE: 'span[data-test="shopping-cart-badge"]',
 
   // Header

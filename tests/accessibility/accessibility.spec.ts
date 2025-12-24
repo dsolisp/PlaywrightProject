@@ -5,8 +5,7 @@ import { CREDENTIALS } from '../../src/config/constants';
 import { LoginLocators } from '../../src/locators/sauce-demo.locators';
 
 /**
- * Accessibility Tests using Axe-core
- * Equivalent to Python's accessibility tests
+ * Accessibility tests using axe-core.
  */
 
 test.describe('Accessibility Tests', () => {

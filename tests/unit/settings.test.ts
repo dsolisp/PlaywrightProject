@@ -3,8 +3,7 @@ import { settings, resetSettings, getSettings } from '../../src/config/settings'
 import { URLS, BROWSERS } from '../../src/config/constants';
 
 /**
- * Settings Unit Tests
- * Equivalent to Python's tests/unit/test_settings.py
+ * Settings unit tests.
  */
 
 describe('Settings', () => {

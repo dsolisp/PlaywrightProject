@@ -2,11 +2,6 @@ import { Page } from '@playwright/test';
 import { BasePage } from './base.page';
 import { BingLocators } from '../locators/search-engine.locators';
 import { settings } from '../config/settings';
-
-/**
- * Bing Search Engine Page Object
- * Equivalent to Python's pages/search_engine_page.py
- */
 export class SearchEnginePage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -76,7 +71,6 @@ export class SearchEnginePage extends BasePage {
   }
 
   async getResultsCount(): Promise<number> {
-    // Match Python: RESULT_ITEMS = (By.CSS_SELECTOR, "#b_results .b_algo")
     return this.count(BingLocators.RESULT_ITEMS);
   }
 
@@ -100,7 +94,6 @@ export class SearchEnginePage extends BasePage {
   }
 
   async waitForResults(): Promise<void> {
-    // Wait for results container like Python does
     await this.waitForVisible(BingLocators.RESULTS_CONTAINER);
   }
 }

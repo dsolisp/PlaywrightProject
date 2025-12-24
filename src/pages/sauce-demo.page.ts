@@ -8,14 +8,9 @@ import {
 } from '../locators/sauce-demo.locators';
 import { settings } from '../config/settings';
 
-/**
- * SauceDemo Page Objects
- * Equivalent to Python's pages/sauce_demo_page.py
- */
+// Sauce Demo pages
 
-// ═══════════════════════════════════════════════════════════════════
-// LOGIN PAGE
-// ═══════════════════════════════════════════════════════════════════
+// ── Login ──────────────────────────────────────────────────────────
 
 export class LoginPage extends BasePage {
   constructor(page: Page) {
@@ -46,9 +41,7 @@ export class LoginPage extends BasePage {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// INVENTORY PAGE
-// ═══════════════════════════════════════════════════════════════════
+// ── Inventory ──────────────────────────────────────────────────────
 
 export class InventoryPage extends BasePage {
   constructor(page: Page) {
@@ -99,9 +92,7 @@ export class InventoryPage extends BasePage {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// CART PAGE
-// ═══════════════════════════════════════════════════════════════════
+// ── Cart ───────────────────────────────────────────────────────────
 
 export class CartPage extends BasePage {
   constructor(page: Page) {
@@ -129,9 +120,7 @@ export class CartPage extends BasePage {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// CHECKOUT PAGE
-// ═══════════════════════════════════════════════════════════════════
+// ── Checkout ───────────────────────────────────────────────────────
 
 export class CheckoutPage extends BasePage {
   constructor(page: Page) {

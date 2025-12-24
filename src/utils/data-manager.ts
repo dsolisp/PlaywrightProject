@@ -4,22 +4,11 @@ import yaml from 'js-yaml';
 import { parse as csvParse } from 'csv-parse/sync';
 import { PATHS } from '../config/constants';
 
-/**
- * Test Data Manager
- * Equivalent to Python's utils/test_data_manager.py
- */
-
-// Cache for loaded data
 const cache = new Map<string, { data: unknown; loadedAt: number }>();
-const CACHE_TTL_MS = 300000; // 5 minutes
+const CACHE_TTL_MS = 300000;
 
-// ═══════════════════════════════════════════════════════════════════
-// FILE LOADING
-// ═══════════════════════════════════════════════════════════════════
+// ── File Loading ─────────────────────────────────────────────────────
 
-/**
- * Load JSON file
- */
 export function loadJson<T = Record<string, unknown>>(filename: string): T {
   const cacheKey = `json:${filename}`;
   const cached = getFromCache<T>(cacheKey);
@@ -33,9 +22,6 @@ export function loadJson<T = Record<string, unknown>>(filename: string): T {
   return data;
 }
 
-/**
- * Load YAML file
- */
 export function loadYaml<T = Record<string, unknown>>(filename: string): T {
   const cacheKey = `yaml:${filename}`;
   const cached = getFromCache<T>(cacheKey);
@@ -49,9 +35,6 @@ export function loadYaml<T = Record<string, unknown>>(filename: string): T {
   return data;
 }
 
-/**
- * CSV parsing options for csv-parse library
- */
 interface CsvOptions {
   columns?: boolean | string[];
   skip_empty_lines?: boolean;
@@ -60,10 +43,6 @@ interface CsvOptions {
   delimiter?: string;
 }
 
-/**
- * Load CSV file as array of objects using csv-parse library
- * Supports quoted fields, escaped characters, and various delimiters
- */
 export function loadCsv<T = Record<string, string>>(
   filename: string,
   options: CsvOptions = {},
@@ -89,17 +68,10 @@ export function loadCsv<T = Record<string, string>>(
   return data;
 }
 
-/**
- * Load CSV file with automatic type casting
- * Converts numeric strings to numbers, 'true'/'false' to booleans
- */
 export function loadCsvTyped<T = Record<string, unknown>>(filename: string): T[] {
   return loadCsv<T>(filename, { cast: true });
 }
 
-/**
- * Load CSV file with custom column names
- */
 export function loadCsvWithColumns<T = Record<string, string>>(
   filename: string,
   columns: string[],
@@ -107,9 +79,6 @@ export function loadCsvWithColumns<T = Record<string, string>>(
   return loadCsv<T>(filename, { columns });
 }
 
-/**
- * Filter CSV data by a predicate function
- */
 export function filterCsv<T = Record<string, string>>(
   filename: string,
   predicate: (row: T) => boolean,
@@ -118,9 +87,6 @@ export function filterCsv<T = Record<string, string>>(
   return data.filter(predicate);
 }
 
-/**
- * Find first row matching a predicate
- */
 export function findCsvRow<T = Record<string, string>>(
   filename: string,
   predicate: (row: T) => boolean,
@@ -129,9 +95,6 @@ export function findCsvRow<T = Record<string, string>>(
   return data.find(predicate);
 }
 
-/**
- * Auto-detect file type and load
- */
 export function loadData<T = unknown>(filename: string): T {
   const ext = path.extname(filename).toLowerCase();
 
@@ -144,7 +107,6 @@ export function loadData<T = unknown>(filename: string): T {
     case '.csv':
       return loadCsv(filename) as T;
     default:
-      // Try JSON first, then YAML
       try {
         return loadJson<T>(filename);
       } catch {
@@ -153,13 +115,8 @@ export function loadData<T = unknown>(filename: string): T {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// DATA GENERATION
-// ═══════════════════════════════════════════════════════════════════
+// ── Data Generation ──────────────────────────────────────────────────
 
-/**
- * Generate test data
- */
 export function generateTestData() {
   return {
     email: () => `test_${Date.now()}@example.com`,
@@ -174,19 +131,15 @@ export function generateTestData() {
   };
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════════════════
+// ── Helpers ──────────────────────────────────────────────────────────
 
 function resolvePath(filename: string, ...extensions: string[]): string {
   const baseDir = PATHS.TEST_DATA;
 
-  // Check if file exists with given name
   if (fs.existsSync(path.join(baseDir, filename))) {
     return path.join(baseDir, filename);
   }
 
-  // Try with extensions
   for (const ext of extensions) {
     const fullPath = path.join(baseDir, filename + ext);
     if (fs.existsSync(fullPath)) {
@@ -194,7 +147,6 @@ function resolvePath(filename: string, ...extensions: string[]): string {
     }
   }
 
-  // Return with first extension as default
   return path.join(baseDir, filename + (extensions[0] || '.json'));
 }
 

@@ -1,34 +1,24 @@
 import winston from 'winston';
 
-/**
- * Structured Logger
- * Equivalent to Python's utils/structured_logger.py
- */
-
 const { combine, timestamp, printf, colorize, json } = winston.format;
 
-// Custom format for console output
 const consoleFormat = printf(({ level, message, timestamp, ...meta }) => {
   const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
   return `${timestamp} [${level}] ${message}${metaStr}`;
 });
 
-// Create logger instance
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }), json()),
   defaultMeta: { service: 'playwright-tests' },
   transports: [
-    // Console transport with colors
     new winston.transports.Console({
       format: combine(colorize(), timestamp({ format: 'HH:mm:ss.SSS' }), consoleFormat),
     }),
-    // File transport for all logs
     new winston.transports.File({
       filename: 'test-results/logs/test.log',
       format: combine(timestamp(), json()),
     }),
-    // File transport for errors only
     new winston.transports.File({
       filename: 'test-results/logs/error.log',
       level: 'error',
@@ -37,9 +27,7 @@ export const logger = winston.createLogger({
   ],
 });
 
-// ═══════════════════════════════════════════════════════════════════
-// STRUCTURED LOGGING HELPERS
-// ═══════════════════════════════════════════════════════════════════
+// ── Helpers ──────────────────────────────────────────────────────────
 
 export function logTestStart(testName: string, testType: string, browser?: string): void {
   logger.info('Test started', {

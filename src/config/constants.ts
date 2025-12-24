@@ -1,11 +1,4 @@
-/**
- * Application Constants
- * Equivalent to Python's config/constants.py and Java's Constants.java
- */
-
-// ═══════════════════════════════════════════════════════════════════
-// BROWSER CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════
+// ── Browser ──────────────────────────────────────────────────────────
 
 export const BROWSERS = {
   CHROMIUM: 'chromium',
@@ -28,9 +21,7 @@ export const USER_AGENTS = {
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1',
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// TIMEOUTS (in milliseconds)
-// ═══════════════════════════════════════════════════════════════════
+// ── Timeouts (ms) ────────────────────────────────────────────────────
 
 export const TIMEOUTS = {
   DEFAULT: 30000,
@@ -43,9 +34,7 @@ export const TIMEOUTS = {
   ANIMATION: 500,
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// RETRY CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════
+// ── Retry ────────────────────────────────────────────────────────────
 
 export const RETRY = {
   MAX_ATTEMPTS: 3,
@@ -53,9 +42,7 @@ export const RETRY = {
   BACKOFF_MULTIPLIER: 2,
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// URLs
-// ═══════════════════════════════════════════════════════════════════
+// ── URLs ─────────────────────────────────────────────────────────────
 
 export const URLS = {
   BING: 'https://www.bing.com',
@@ -65,12 +52,9 @@ export const URLS = {
   REQRES: 'https://reqres.in/api',
 } as const;
 
-// Convenience export for API tests
 export const API_BASE_URL = URLS.JSON_PLACEHOLDER;
 
-// ═══════════════════════════════════════════════════════════════════
-// TEST CREDENTIALS (Demo Only)
-// ═══════════════════════════════════════════════════════════════════
+// ── Test Credentials ─────────────────────────────────────────────────
 
 export const CREDENTIALS = {
   SAUCE: {
@@ -81,9 +65,7 @@ export const CREDENTIALS = {
   },
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// HTTP STATUS CODES
-// ═══════════════════════════════════════════════════════════════════
+// ── HTTP Status ──────────────────────────────────────────────────────
 
 export const HTTP_STATUS = {
   OK: 200,
@@ -96,9 +78,7 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// VIEWPORT SIZES
-// ═══════════════════════════════════════════════════════════════════
+// ── Viewports ────────────────────────────────────────────────────────
 
 export const VIEWPORTS = {
   DESKTOP: { width: 1920, height: 1080 },
@@ -107,9 +87,7 @@ export const VIEWPORTS = {
   MOBILE: { width: 375, height: 667 },
 } as const;
 
-// ═══════════════════════════════════════════════════════════════════
-// FILE PATHS
-// ═══════════════════════════════════════════════════════════════════
+// ── Paths ────────────────────────────────────────────────────────────
 
 export const PATHS = {
   SCREENSHOTS: './test-results/screenshots',

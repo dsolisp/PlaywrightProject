@@ -2,10 +2,7 @@ import { test, expect } from '@playwright/test';
 import { settings } from '../../src/config/settings';
 
 /**
- * End-to-End Integration Tests
- * Equivalent to Python's tests/integration/test_integration.py
- *
- * Tests complete user flows across multiple pages
+ * End-to-end integration tests that cover full user flows.
  */
 
 test.describe('E2E Integration Tests', () => {

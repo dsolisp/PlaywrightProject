@@ -3,8 +3,7 @@ import { authenticatedTest } from '../../src/fixtures/test-fixtures';
 import { CREDENTIALS } from '../../src/config/constants';
 
 /**
- * SauceDemo Web Tests
- * Equivalent to Python's tests/web/test_sauce_demo.py
+ * SauceDemo web tests.
  */
 
 test.describe('SauceDemo Login Tests', () => {
