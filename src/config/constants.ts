@@ -1,3 +1,11 @@
+/**
+ * Framework Constants
+ *
+ * This file contains constants used throughout the test framework.
+ * Some constants are actively used, others are available for future use
+ * (e.g., USER_AGENTS for cross-browser testing, VIEWPORTS for responsive testing).
+ */
+
 // ── Browser ──────────────────────────────────────────────────────────
 
 export const BROWSERS = {
@@ -6,15 +14,21 @@ export const BROWSERS = {
   WEBKIT: 'webkit',
 } as const;
 
+/**
+ * User agent strings for different browsers and devices.
+ * Available for custom browser context configuration and mobile testing.
+ */
 export const USER_AGENTS = {
   CHROME_WINDOWS:
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   CHROME_MAC:
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  /** Available for Firefox-specific testing */
   FIREFOX_WINDOWS:
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
   SAFARI_MAC:
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+  /** Available for Android mobile testing */
   MOBILE_ANDROID:
     'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
   MOBILE_IOS:
@@ -34,11 +48,16 @@ export const TIMEOUTS = {
   ANIMATION: 500,
 } as const;
 
+/**
+ * Retry configuration for flaky operations.
+ * BACKOFF_MULTIPLIER is available for exponential backoff retry patterns.
+ */
 // ── Retry ────────────────────────────────────────────────────────────
 
 export const RETRY = {
   MAX_ATTEMPTS: 3,
   DELAY_MS: 1000,
+  /** Available for exponential backoff retry patterns */
   BACKOFF_MULTIPLIER: 2,
 } as const;
 
@@ -78,10 +97,15 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
+/**
+ * Common viewport sizes for responsive testing.
+ * DESKTOP is used by default in settings. LAPTOP available for testing smaller screens.
+ */
 // ── Viewports ────────────────────────────────────────────────────────
 
 export const VIEWPORTS = {
   DESKTOP: { width: 1920, height: 1080 },
+  /** Available for testing on smaller laptop screens */
   LAPTOP: { width: 1366, height: 768 },
   TABLET: { width: 768, height: 1024 },
   MOBILE: { width: 375, height: 667 },

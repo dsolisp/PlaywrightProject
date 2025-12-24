@@ -1,4 +1,8 @@
-// Locators for Bing and Google search
+/**
+ * Locators for Bing search engine
+ * Currently only Bing is used in tests. Google locators have been removed
+ * as Google actively blocks automation and requires different approaches.
+ */
 
 // ═══════════════════════════════════════════════════════════════════
 // BING LOCATORS
@@ -26,32 +30,4 @@ export const BingLocators = {
 
   // Screenshot locator
   MAIN_SEARCH_INPUT: '#sb_form',
-} as const;
-
-// ═══════════════════════════════════════════════════════════════════
-// GOOGLE LOCATORS
-// ═══════════════════════════════════════════════════════════════════
-
-export const GoogleLocators = {
-  // Search form
-  SEARCH_INPUT: 'textarea[name="q"], input[name="q"]',
-  SEARCH_BUTTON: 'input[name="btnK"], button[aria-label="Google Search"]',
-  FEELING_LUCKY: 'input[name="btnI"]',
-
-  // Results
-  RESULTS_CONTAINER: '#search',
-  RESULT_ITEMS: 'div.g',
-  RESULT_TITLES: 'div.g h3',
-  RESULT_SNIPPETS: 'div.g div[data-sncf]',
-
-  // Navigation
-  NEXT_PAGE: '#pnnext',
-  PREV_PAGE: '#pnprev',
-  PAGE_NUMBERS: 'td.YyVfkd',
-
-  // Suggestions
-  SUGGESTIONS: 'ul[role="listbox"] li',
-
-  // Knowledge panel
-  KNOWLEDGE_PANEL: 'div.kp-wholepage',
 } as const;

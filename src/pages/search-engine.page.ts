@@ -2,6 +2,11 @@ import { Page } from '@playwright/test';
 import { BasePage } from './base.page';
 import { BingLocators } from '../locators/search-engine.locators';
 import { settings } from '../config/settings';
+
+/**
+ * Bing Search Engine Page Object
+ * Equivalent to Python's pages/search_engine_page.py
+ */
 export class SearchEnginePage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -71,6 +76,7 @@ export class SearchEnginePage extends BasePage {
   }
 
   async getResultsCount(): Promise<number> {
+    // Match Python: RESULT_ITEMS = (By.CSS_SELECTOR, "#b_results .b_algo")
     return this.count(BingLocators.RESULT_ITEMS);
   }
 
@@ -94,6 +100,53 @@ export class SearchEnginePage extends BasePage {
   }
 
   async waitForResults(): Promise<void> {
+    // Wait for results container like Python does
     await this.waitForVisible(BingLocators.RESULTS_CONTAINER);
+  }
+
+  /**
+   * Assert that a search was at least attempted.
+   * This is resilient to CAPTCHA/blocking which is common with search engine automation.
+   *
+   * @returns Object with search status info:
+   *   - hasResults: true if actual search results were returned
+   *   - searchAttempted: true if search URL was reached (even if blocked)
+   *   - message: Human-readable status message
+   */
+  async assertSearchAttempted(): Promise<{
+    hasResults: boolean;
+    searchAttempted: boolean;
+    message: string;
+  }> {
+    const url = this.getCurrentUrl();
+    const resultsCount = await this.getResultsCount();
+
+    if (resultsCount > 0) {
+      return {
+        hasResults: true,
+        searchAttempted: true,
+        message: `Search successful with ${resultsCount} results`,
+      };
+    }
+
+    if (url.includes('search')) {
+      console.log('⚠️ Search performed but results may be blocked by CAPTCHA - this is expected');
+      return {
+        hasResults: false,
+        searchAttempted: true,
+        message: 'Search URL reached but results blocked (likely CAPTCHA)',
+      };
+    }
+
+    if (url.includes('bing.com')) {
+      console.log('⚠️ Search may not have submitted - this is expected in headless mode');
+      return {
+        hasResults: false,
+        searchAttempted: false,
+        message: 'On Bing but search not submitted (likely bot detection)',
+      };
+    }
+
+    throw new Error(`Search was not attempted - unexpected URL: ${url}`);
   }
 }

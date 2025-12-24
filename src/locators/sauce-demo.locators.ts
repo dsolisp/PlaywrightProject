@@ -1,4 +1,14 @@
-// Locators for the Sauce Demo application
+/**
+ * Locators for the Sauce Demo application
+ *
+ * Selector Strategy:
+ * - Prefer [data-test="..."] selectors - these are stable and unlikely to change
+ * - Use class selectors (.class) when data-test is not available
+ * - Avoid xpath and complex structural selectors
+ *
+ * SauceDemo provides data-test attributes on most interactive elements,
+ * but container/wrapper elements often only have class selectors.
+ */
 
 // ═══════════════════════════════════════════════════════════════════
 // LOGIN PAGE
@@ -9,7 +19,9 @@ export const LoginLocators = {
   PASSWORD_INPUT: 'input[data-test="password"]',
   LOGIN_BUTTON: 'input[data-test="login-button"]',
   ERROR_MESSAGE: '[data-test="error"]',
+  // Class selector - no data-test available on this element
   ERROR_BUTTON: '.error-button',
+  // Class selectors - decorative elements without data-test
   LOGO: '.login_logo',
   BOT_IMAGE: '.bot_column',
 } as const;
@@ -19,32 +31,35 @@ export const LoginLocators = {
 // ═══════════════════════════════════════════════════════════════════
 
 export const InventoryLocators = {
+  // Class selectors - container elements without data-test attributes
   INVENTORY_LIST: 'div.inventory_list',
   LOGOUT_BUTTON: 'a#logout_sidebar_link',
+  // data-test selectors - stable product-specific buttons
   ADD_BACKPACK_BUTTON: 'button[data-test="add-to-cart-sauce-labs-backpack"]',
   ADD_BIKELIGHT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bike-light"]',
   ADD_SHIRT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]',
   CART_BADGE: 'span[data-test="shopping-cart-badge"]',
 
-  // Header
+  // Header - class selectors (no data-test on these elements)
   HEADER: '.header_container',
   MENU_BUTTON: '#react-burger-menu-btn',
   CART_LINK: '.shopping_cart_link',
 
-  // Products
+  // Products - class selectors for item containers and content
   INVENTORY_CONTAINER: '.inventory_container',
   INVENTORY_ITEMS: '.inventory_item',
   ITEM_NAME: '.inventory_item_name',
   ITEM_DESCRIPTION: '.inventory_item_desc',
   ITEM_PRICE: '.inventory_item_price',
   ITEM_IMAGE: '.inventory_item_img img',
+  // data-test with prefix matching for dynamic buttons
   ADD_TO_CART_BUTTON: 'button[data-test^="add-to-cart"]',
   REMOVE_BUTTON: 'button[data-test^="remove"]',
 
   // Sorting
   SORT_DROPDOWN: '[data-test="product-sort-container"]',
 
-  // Footer
+  // Footer - class selectors (decorative elements)
   FOOTER: '.footer',
   SOCIAL_TWITTER: '.social_twitter',
   SOCIAL_FACEBOOK: '.social_facebook',
