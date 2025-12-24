@@ -1,15 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { TIMEOUTS } from '../config/constants';
 
-/**
- * Base Page Object - Modernized for Playwright 2025
- *
- * Design principles:
- * - Thin wrapper: Only methods that add value over native Playwright
- * - No logging: Playwright's trace provides better debugging
- * - Direct Locator access: Use locator() for advanced chaining
- * - YAGNI: Only includes methods actually used by child pages
- */
 export abstract class BasePage {
   protected readonly page: Page;
 
@@ -17,29 +8,32 @@ export abstract class BasePage {
     this.page = page;
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // LOCATOR ACCESS - Use for advanced Playwright features
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Locator Access ─────────────────────────────────────────────────
 
-  /**
-   * Get a Locator for advanced operations like .filter(), .first(), .getByRole()
-   * Prefer this over wrapper methods when you need Playwright's full API
-   */
   protected locator(selector: string): Locator {
     return this.page.locator(selector);
   }
 
-  // Alias for backward compatibility
   protected getLocator(selector: string): Locator {
     return this.locator(selector);
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // NAVIGATION
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Navigation ─────────────────────────────────────────────────────
 
   async navigateTo(url: string): Promise<void> {
     await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+  }
+
+  async reload(): Promise<void> {
+    await this.page.reload({ waitUntil: 'domcontentloaded' });
+  }
+
+  async goBack(): Promise<void> {
+    await this.page.goBack();
+  }
+
+  async goForward(): Promise<void> {
+    await this.page.goForward();
   }
 
   getCurrentUrl(): string {
@@ -50,16 +44,30 @@ export abstract class BasePage {
     return this.page.title();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // ELEMENT INTERACTIONS - Direct Playwright calls, no wrapper overhead
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Element Interactions ───────────────────────────────────────────
 
   protected async click(selector: string): Promise<void> {
     await this.locator(selector).click();
   }
 
+  protected async doubleClick(selector: string): Promise<void> {
+    await this.locator(selector).dblclick();
+  }
+
+  protected async hover(selector: string): Promise<void> {
+    await this.locator(selector).hover();
+  }
+
   protected async fill(selector: string, text: string): Promise<void> {
     await this.locator(selector).fill(text);
+  }
+
+  protected async type(selector: string, text: string): Promise<void> {
+    await this.locator(selector).pressSequentially(text);
+  }
+
+  protected async clear(selector: string): Promise<void> {
+    await this.locator(selector).clear();
   }
 
   protected async pressKey(key: string): Promise<void> {
@@ -70,20 +78,46 @@ export abstract class BasePage {
     await this.locator(selector).selectOption(value);
   }
 
+  protected async check(selector: string): Promise<void> {
+    await this.locator(selector).check();
+  }
+
+  protected async uncheck(selector: string): Promise<void> {
+    await this.locator(selector).uncheck();
+  }
+
   protected async clickNth(selector: string, index: number): Promise<void> {
     await this.locator(selector).nth(index).click();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // ELEMENT STATE - Simple getters, no transformation needed
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Element State ──────────────────────────────────────────────────
 
   protected async getText(selector: string): Promise<string> {
     return (await this.locator(selector).textContent()) ?? '';
   }
 
+  protected async getNthText(selector: string, index: number): Promise<string> {
+    return (await this.locator(selector).nth(index).textContent()) ?? '';
+  }
+
+  protected async getAttribute(selector: string, attribute: string): Promise<string | null> {
+    return this.locator(selector).getAttribute(attribute);
+  }
+
+  protected async getValue(selector: string): Promise<string> {
+    return this.locator(selector).inputValue();
+  }
+
   protected async isVisible(selector: string): Promise<boolean> {
     return this.locator(selector).isVisible();
+  }
+
+  protected async isEnabled(selector: string): Promise<boolean> {
+    return this.locator(selector).isEnabled();
+  }
+
+  protected async isChecked(selector: string): Promise<boolean> {
+    return this.locator(selector).isChecked();
   }
 
   protected async count(selector: string): Promise<number> {
@@ -94,22 +128,38 @@ export abstract class BasePage {
     return this.locator(selector).allTextContents();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // WAITS - Only the commonly used ones
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Waits ──────────────────────────────────────────────────────────
 
-  protected async waitForVisible(
-    selector: string,
-    timeout: number = TIMEOUTS.DEFAULT,
-  ): Promise<Locator> {
+  protected async waitForVisible(selector: string, timeout = TIMEOUTS.DEFAULT): Promise<Locator> {
     const loc = this.locator(selector);
     await loc.waitFor({ state: 'visible', timeout });
     return loc;
+  }
+
+  protected async waitForHidden(selector: string, timeout = TIMEOUTS.DEFAULT): Promise<void> {
+    await this.locator(selector).waitFor({ state: 'hidden', timeout });
+  }
+
+  protected async waitForUrl(
+    urlOrRegex: string | RegExp,
+    timeout = TIMEOUTS.NAVIGATION,
+  ): Promise<void> {
+    await this.page.waitForURL(urlOrRegex, { timeout });
   }
 
   protected async waitForLoadState(
     state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded',
   ): Promise<void> {
     await this.page.waitForLoadState(state);
+  }
+
+  // ── Screenshots ────────────────────────────────────────────────────
+
+  async takeScreenshot(name: string): Promise<Buffer> {
+    return this.page.screenshot({ path: `test-results/screenshots/${name}.png`, fullPage: true });
+  }
+
+  async takeElementScreenshot(selector: string, name: string): Promise<Buffer> {
+    return this.locator(selector).screenshot({ path: `test-results/screenshots/${name}.png` });
   }
 }

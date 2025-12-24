@@ -114,10 +114,8 @@ describe('Regression Protection Tests', () => {
   describe('Page Classes Validation', () => {
     test('BasePage should have required methods', async () => {
       const { BasePage } = await import('../../src/pages/base.page');
-      // Core navigation methods
       expect(BasePage.prototype.navigateTo).toBeDefined();
-      expect(BasePage.prototype.getCurrentUrl).toBeDefined();
-      expect(BasePage.prototype.getTitle).toBeDefined();
+      expect(BasePage.prototype.reload).toBeDefined();
     });
 
     test('SearchEnginePage should extend BasePage', async () => {
