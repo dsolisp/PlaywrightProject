@@ -142,7 +142,10 @@ export abstract class BasePage {
 
   // ── Waits ──────────────────────────────────────────────────────────
 
-  protected async waitForVisible(selector: string, timeout = TIMEOUTS.DEFAULT): Promise<Locator> {
+  protected async waitForVisible(
+    selector: string,
+    timeout: number = TIMEOUTS.DEFAULT,
+  ): Promise<Locator> {
     const loc = this.locator(selector);
     await loc.waitFor({ state: 'visible', timeout });
     return loc;
