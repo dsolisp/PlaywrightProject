@@ -92,12 +92,17 @@ PlaywrightProject/
 │   │   └── search-engine.locators.ts
 │   ├── pages/                    # Page Object Model classes
 │   │   ├── base.page.ts          # Abstract base page
-│   │   ├── sauce-demo.page.ts    # SauceDemo page objects
+│   │   ├── sauce-demo/           # SauceDemo pages (split by page)
+│   │   │   ├── index.ts          # Barrel exports
+│   │   │   ├── login.page.ts     # Login page
+│   │   │   ├── inventory.page.ts # Inventory page
+│   │   │   ├── cart.page.ts      # Cart page
+│   │   │   └── checkout.page.ts  # Checkout page
 │   │   └── search-engine.page.ts # Bing search page object
 │   └── utils/                    # Utility modules
 │       ├── data-manager.ts       # Test data loading (CSV, JSON, YAML)
 │       ├── database.ts           # SQLite database helper
-│       ├── logger.ts             # Pino-based structured logging
+│       ├── logger.ts             # Winston-based structured logging
 │       └── test-data-factory.ts  # Factory pattern for test data
 │
 ├── tests/                        # All test files
@@ -160,6 +165,14 @@ npx playwright test --debug
 
 # Update visual snapshots
 npm run playwright:update-snapshots
+
+# Run by test tag
+npx playwright test --grep @smoke        # Quick validation tests
+npx playwright test --grep @regression   # Full regression suite
+npx playwright test --grep @auth         # Authentication tests
+npx playwright test --grep @cart         # Shopping cart tests
+npx playwright test --grep @checkout     # Checkout flow tests
+npx playwright test --grep @search       # Search engine tests
 ```
 
 ### BDD Tests (Separate Config)
@@ -222,7 +235,9 @@ Create a `.env` file (see `.env.example`):
 # Optional - defaults are provided
 BASE_URL=https://www.bing.com
 SAUCE_DEMO_URL=https://www.saucedemo.com
-LOG_LEVEL=info
+LOG_LEVEL=info              # debug, info, warn, error
+LOG_TO_FILE=true            # Set to 'false' to disable file logging
+LOG_SILENT=false            # Set to 'true' to disable all logging
 ```
 
 ---
