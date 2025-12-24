@@ -1,16 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { API_BASE_URL } from '../../src/config/constants';
 
-/**
- * API Contract Tests
- * Equivalent to Java's Pact contract tests
- * Validates API response structure matches expected schema
- */
+// Contract tests - make sure the API returns what we expect.
+// Think of these as lightweight Pact tests: we're validating response shapes,
+// not business logic.
 
-// Use API base URL for all requests
 test.use({ baseURL: API_BASE_URL });
 
-// Schema definitions
 interface Post {
   id: number;
   userId: number;
@@ -51,11 +47,9 @@ interface Comment {
 }
 
 test.describe('API Contract Tests', () => {
-  const baseUrl = 'https://jsonplaceholder.typicode.com';
-
   test.describe('Posts Contract', () => {
     test('GET /posts should match Post schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/posts`);
+      const response = await request.get('/posts');
       expect(response.status()).toBe(200);
 
       const posts = (await response.json()) as Post[];
@@ -73,7 +67,7 @@ test.describe('API Contract Tests', () => {
     });
 
     test('GET /posts/:id should match Post schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/posts/1`);
+      const response = await request.get('/posts/1');
       expect(response.status()).toBe(200);
 
       const post = (await response.json()) as Post;
@@ -91,7 +85,7 @@ test.describe('API Contract Tests', () => {
         userId: 1,
       };
 
-      const response = await request.post(`${baseUrl}/posts`, { data: newPost });
+      const response = await request.post('/posts', { data: newPost });
       expect(response.status()).toBe(201);
 
       const post = (await response.json()) as Post;
@@ -105,7 +99,7 @@ test.describe('API Contract Tests', () => {
 
   test.describe('Users Contract', () => {
     test('GET /users should match User schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/users`);
+      const response = await request.get('/users');
       expect(response.status()).toBe(200);
 
       const users = (await response.json()) as User[];
@@ -126,7 +120,7 @@ test.describe('API Contract Tests', () => {
     });
 
     test('GET /users/:id should match User schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/users/1`);
+      const response = await request.get('/users/1');
       expect(response.status()).toBe(200);
 
       const user = (await response.json()) as User;
@@ -140,7 +134,7 @@ test.describe('API Contract Tests', () => {
 
   test.describe('Comments Contract', () => {
     test('GET /comments should match Comment schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/comments`);
+      const response = await request.get('/comments');
       expect(response.status()).toBe(200);
 
       const comments = (await response.json()) as Comment[];
@@ -154,7 +148,7 @@ test.describe('API Contract Tests', () => {
     });
 
     test('GET /posts/:id/comments should match Comment schema', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/posts/1/comments`);
+      const response = await request.get('/posts/1/comments');
       expect(response.status()).toBe(200);
 
       const comments = (await response.json()) as Comment[];
@@ -165,7 +159,7 @@ test.describe('API Contract Tests', () => {
 
   test.describe('Error Responses Contract', () => {
     test('GET /posts/99999 should return 404', async ({ request }) => {
-      const response = await request.get(`${baseUrl}/posts/99999`);
+      const response = await request.get('/posts/99999');
       expect(response.status()).toBe(404);
     });
   });

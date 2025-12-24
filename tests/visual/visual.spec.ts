@@ -3,9 +3,7 @@ import { authenticatedTest } from '../../src/fixtures/test-fixtures';
 import { settings } from '../../src/config/settings';
 import { InventoryLocators, CartLocators } from '../../src/locators/sauce-demo.locators';
 
-/**
- * Visual regression tests using Playwright's screenshot comparison.
- */
+// Screenshot comparison tests. Run `npx playwright test --update-snapshots` to update baselines.
 
 test.describe('Visual Regression Tests', () => {
   test.describe('Bing Visual Tests', () => {

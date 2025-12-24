@@ -8,10 +8,7 @@ import {
   CheckoutLocators,
 } from '../../src/locators/sauce-demo.locators';
 
-/**
- * Framework Integration Tests
- * Tests that framework components work together correctly
- */
+// Make sure all the framework pieces (settings, locators, data factories) play nice together
 
 test.describe('Framework Integration Tests', () => {
   test.describe('Data Manager Integration', () => {

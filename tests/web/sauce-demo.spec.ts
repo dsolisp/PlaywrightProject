@@ -2,19 +2,7 @@ import { test, expect } from '../../src/fixtures/test-fixtures';
 import { authenticatedTest } from '../../src/fixtures/test-fixtures';
 import { UserFactory, CheckoutFactory } from '../../src/utils/test-data-factory';
 
-/**
- * SauceDemo web tests.
- * Uses UserFactory and CheckoutFactory for consistent test data.
- *
- * Tags:
- * - @smoke: Critical path tests for quick validation
- * - @regression: Full regression suite
- * - @auth: Authentication-related tests
- * - @cart: Shopping cart tests
- * - @checkout: Checkout flow tests
- *
- * Run with: npx playwright test --grep @smoke
- */
+// SauceDemo e2e tests. Run specific tags with: npx playwright test --grep @smoke
 
 test.describe('SauceDemo Login Tests @auth @regression', () => {
   test.beforeEach(async ({ loginPage }) => {

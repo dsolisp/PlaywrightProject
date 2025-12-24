@@ -4,9 +4,7 @@ import { settings } from '../../src/config/settings';
 import { CREDENTIALS } from '../../src/config/constants';
 import { LoginLocators } from '../../src/locators/sauce-demo.locators';
 
-/**
- * Accessibility tests using axe-core.
- */
+// a11y checks with axe-core. We're lenient on external sites (Bing) but stricter on our own pages.
 
 test.describe('Accessibility Tests', () => {
   test.describe('Bing Accessibility', () => {

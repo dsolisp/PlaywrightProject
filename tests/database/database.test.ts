@@ -2,9 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import Database from 'better-sqlite3';
 import path from 'path';
 
-/**
- * Database tests against the Chinook sample database.
- */
+// Tests against the Chinook sample SQLite database
 
 describe('Database Tests', () => {
   let db: Database.Database;

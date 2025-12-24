@@ -1,16 +1,7 @@
 import { test, expect } from '../../src/fixtures/test-fixtures';
 
-/**
- * Bing search engine web tests.
- * Tests use assertSearchAttempted() for resilience to CAPTCHA/blocking
- * which is common with search engine automation.
- *
- * Tags:
- * - @search: Search engine tests
- * - @external: Tests against external sites (may be flaky)
- *
- * Run with: npx playwright test --grep @search
- */
+// Bing search tests. These use assertSearchAttempted() because Bing often
+// blocks automation with CAPTCHAs. Run with: npx playwright test --grep @search
 
 test.describe('Search Engine Tests @search @external', () => {
   test.beforeEach(async ({ searchPage }) => {

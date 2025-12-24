@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { settings } from '../../src/config/settings';
+import { URLS } from '../../src/config/constants';
 
-/**
- * Basic performance checks for key pages.
- */
+// Basic perf checks - load times, Core Web Vitals, API response times
 
 test.describe('Performance Tests', () => {
   test.describe('Page Load Performance', () => {
@@ -94,10 +93,12 @@ test.describe('Performance Tests', () => {
   });
 
   test.describe('API Performance', () => {
+    const apiBaseUrl = URLS.JSON_PLACEHOLDER;
+
     test('API responses should be fast', async ({ request }) => {
       const startTime = Date.now();
 
-      const response = await request.get('https://jsonplaceholder.typicode.com/posts');
+      const response = await request.get(`${apiBaseUrl}/posts`);
 
       const responseTime = Date.now() - startTime;
       console.info(`API response time: ${responseTime}ms`);
@@ -111,11 +112,11 @@ test.describe('Performance Tests', () => {
 
       // Make 5 concurrent requests
       const promises = [
-        request.get('https://jsonplaceholder.typicode.com/posts/1'),
-        request.get('https://jsonplaceholder.typicode.com/posts/2'),
-        request.get('https://jsonplaceholder.typicode.com/posts/3'),
-        request.get('https://jsonplaceholder.typicode.com/users/1'),
-        request.get('https://jsonplaceholder.typicode.com/comments?postId=1'),
+        request.get(`${apiBaseUrl}/posts/1`),
+        request.get(`${apiBaseUrl}/posts/2`),
+        request.get(`${apiBaseUrl}/posts/3`),
+        request.get(`${apiBaseUrl}/users/1`),
+        request.get(`${apiBaseUrl}/comments?postId=1`),
       ];
 
       const responses = await Promise.all(promises);

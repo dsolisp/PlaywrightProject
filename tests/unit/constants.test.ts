@@ -1,7 +1,4 @@
-/**
- * Unit tests for constants validation.
- * Equivalent to C#'s ConstantsTests.cs - ensures framework constants are correctly defined.
- */
+// Make sure our constants are sane (positive timeouts, valid URLs, etc.)
 import { describe, test, expect } from 'vitest';
 import {
   BROWSERS,

@@ -2,11 +2,7 @@ import { test, expect } from '@playwright/test';
 import { HTTP_STATUS, API_BASE_URL } from '../../src/config/constants';
 import { logApiRequest } from '../../src/utils/logger';
 
-/**
- * API tests using Playwright's built-in request context.
- */
-
-// Use API base URL for all requests
+// API tests against JSONPlaceholder
 test.use({ baseURL: API_BASE_URL });
 
 test.describe('API Tests - JSONPlaceholder', () => {

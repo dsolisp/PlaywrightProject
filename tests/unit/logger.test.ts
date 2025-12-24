@@ -9,10 +9,6 @@ import {
   logError,
 } from '../../src/utils/logger';
 
-/**
- * Structured logger unit tests.
- */
-
 describe('StructuredLogger', () => {
   let infoSpy: ReturnType<typeof vi.spyOn>;
   let debugSpy: ReturnType<typeof vi.spyOn>;

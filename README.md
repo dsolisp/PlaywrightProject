@@ -232,13 +232,33 @@ This framework tests two applications:
 Create a `.env` file (see `.env.example`):
 
 ```bash
-# Optional - defaults are provided
-BASE_URL=https://www.bing.com
-SAUCE_DEMO_URL=https://www.saucedemo.com
+# URL Configuration (all URLs are centralized in src/config/constants.ts)
+BASE_URL=https://www.bing.com                    # Search engine for web tests
+SAUCE_DEMO_URL=https://www.saucedemo.com         # E-commerce demo app
+API_BASE_URL=https://jsonplaceholder.typicode.com # REST API for testing
+
+# Logging
 LOG_LEVEL=info              # debug, info, warn, error
 LOG_TO_FILE=true            # Set to 'false' to disable file logging
 LOG_SILENT=false            # Set to 'true' to disable all logging
+
+# Browser
+HEADLESS=true               # Set to 'false' for headed mode
+BROWSER=chromium            # chromium, firefox, webkit
 ```
+
+### URL Configuration
+
+All URLs are defined in `src/config/constants.ts` as the single source of truth:
+
+| URL Constant            | Default                              | Environment Variable | Purpose             |
+| ----------------------- | ------------------------------------ | -------------------- | ------------------- |
+| `URLS.BING`             | https://www.bing.com                 | `BASE_URL`           | Search engine tests |
+| `URLS.SAUCE_DEMO`       | https://www.saucedemo.com            | `SAUCE_DEMO_URL`     | E-commerce UI tests |
+| `URLS.JSON_PLACEHOLDER` | https://jsonplaceholder.typicode.com | `API_BASE_URL`       | API tests           |
+| `URLS.REQRES`           | https://reqres.in/api                | -                    | Auth API (optional) |
+
+To change URLs for different environments, set the environment variables in `.env` or pass them at runtime.
 
 ---
 
