@@ -273,7 +273,6 @@ LOG_SILENT=false            # Set to 'true' to disable all logging
 ## 📚 Documentation
 
 - [ZERO-TO-HERO.md](ZERO-TO-HERO.md) - Complete guide to recreate this project from scratch
-- [.github/prompts/playwright.prompt.md](.github/prompts/playwright.prompt.md) - AI prompt used to generate this project
 
 ---
 
