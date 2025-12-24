@@ -1,8 +1,5 @@
 /**
- * Regression protection tests to ensure framework stability.
- * Equivalent to Python's test_regression_protection.py and Java's RegressionProtectionTest.java
- *
- * These tests catch breaking changes early in the CI pipeline.
+ * Regression protection tests to catch breaking changes early in CI.
  */
 import { describe, test, expect } from 'vitest';
 import * as fs from 'fs';

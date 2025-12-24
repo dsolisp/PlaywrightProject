@@ -1,31 +1,33 @@
 import { test, expect } from '../../src/fixtures/test-fixtures';
 import { authenticatedTest } from '../../src/fixtures/test-fixtures';
-import { CREDENTIALS } from '../../src/config/constants';
+import { UserFactory, CheckoutFactory } from '../../src/utils/test-data-factory';
 
 /**
- * SauceDemo Web Tests
- * Equivalent to Python's tests/web/test_sauce_demo.py
+ * SauceDemo web tests.
+ * Uses UserFactory and CheckoutFactory for consistent test data.
+ *
+ * Tags:
+ * - @smoke: Critical path tests for quick validation
+ * - @regression: Full regression suite
+ * - @auth: Authentication-related tests
+ * - @cart: Shopping cart tests
+ * - @checkout: Checkout flow tests
+ *
+ * Run with: npx playwright test --grep @smoke
  */
 
-test.describe('SauceDemo Login Tests', () => {
+test.describe('SauceDemo Login Tests @auth @regression', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.open();
   });
 
-  test('should login with valid credentials', async ({ loginPage, inventoryPage }) => {
-    await loginPage.login(
-      CREDENTIALS.SAUCE.STANDARD_USER.username,
-      CREDENTIALS.SAUCE.STANDARD_USER.password,
-    );
-
+  test('should login with valid credentials @smoke', async ({ loginPage, inventoryPage }) => {
+    await loginPage.loginWithUser(UserFactory.valid());
     expect(await inventoryPage.isLoaded()).toBe(true);
   });
 
   test('should show error for locked out user', async ({ loginPage }) => {
-    await loginPage.login(
-      CREDENTIALS.SAUCE.LOCKED_USER.username,
-      CREDENTIALS.SAUCE.LOCKED_USER.password,
-    );
+    await loginPage.loginWithUser(UserFactory.locked());
 
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMessage = await loginPage.getErrorMessage();
@@ -33,7 +35,7 @@ test.describe('SauceDemo Login Tests', () => {
   });
 
   test('should show error for invalid credentials', async ({ loginPage }) => {
-    await loginPage.login('invalid_user', 'wrong_password');
+    await loginPage.loginWithUser(UserFactory.invalid());
 
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMessage = await loginPage.getErrorMessage();
@@ -41,7 +43,8 @@ test.describe('SauceDemo Login Tests', () => {
   });
 
   test('should show error for empty username', async ({ loginPage }) => {
-    await loginPage.login('', 'secret_sauce');
+    const emptyUser = UserFactory.empty();
+    await loginPage.login(emptyUser.username, 'secret_sauce');
 
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMessage = await loginPage.getErrorMessage();
@@ -49,7 +52,8 @@ test.describe('SauceDemo Login Tests', () => {
   });
 
   test('should show error for empty password', async ({ loginPage }) => {
-    await loginPage.login('standard_user', '');
+    const validUser = UserFactory.valid();
+    await loginPage.login(validUser.username, '');
 
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMessage = await loginPage.getErrorMessage();
@@ -57,8 +61,8 @@ test.describe('SauceDemo Login Tests', () => {
   });
 });
 
-test.describe('SauceDemo Inventory Tests', () => {
-  authenticatedTest('should display products', async ({ authenticatedPage }) => {
+test.describe('SauceDemo Inventory Tests @cart @regression', () => {
+  authenticatedTest('should display products @smoke', async ({ authenticatedPage }) => {
     const itemCount = await authenticatedPage.getItemCount();
     expect(itemCount).toBe(6);
   });
@@ -75,7 +79,7 @@ test.describe('SauceDemo Inventory Tests', () => {
     expect(prices[0]).toMatch(/\$\d+\.\d{2}/);
   });
 
-  authenticatedTest('should add item to cart', async ({ authenticatedPage }) => {
+  authenticatedTest('should add item to cart @smoke', async ({ authenticatedPage }) => {
     await authenticatedPage.addToCart(0);
     const badgeCount = await authenticatedPage.getCartBadgeCount();
     expect(badgeCount).toBe(1);
@@ -106,9 +110,9 @@ test.describe('SauceDemo Inventory Tests', () => {
   });
 });
 
-test.describe('SauceDemo Checkout Flow', () => {
+test.describe('SauceDemo Checkout Flow @checkout @regression', () => {
   authenticatedTest(
-    'should complete checkout',
+    'should complete checkout @smoke',
     async ({ authenticatedPage, cartPage, checkoutPage }) => {
       // Add item
       await authenticatedPage.addToCart(0);
@@ -118,9 +122,9 @@ test.describe('SauceDemo Checkout Flow', () => {
       const cartItems = await cartPage.getItemCount();
       expect(cartItems).toBe(1);
 
-      // Checkout
+      // Checkout using factory data
       await cartPage.checkout();
-      await checkoutPage.fillInformation('John', 'Doe', '12345');
+      await checkoutPage.fillWithInfo(CheckoutFactory.valid());
       await checkoutPage.continue();
       await checkoutPage.finish();
 

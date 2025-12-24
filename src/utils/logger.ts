@@ -1,45 +1,57 @@
-import winston from 'winston';
-
 /**
- * Structured Logger
- * Equivalent to Python's utils/structured_logger.py
+ * Logger configuration
+ *
+ * Environment variables:
+ * - LOG_LEVEL: Set logging level (default: 'info')
+ * - LOG_TO_FILE: Set to 'false' to disable file logging (default: 'true')
+ * - LOG_SILENT: Set to 'true' to disable all logging (useful for unit tests)
  */
+import winston from 'winston';
 
 const { combine, timestamp, printf, colorize, json } = winston.format;
 
-// Custom format for console output
 const consoleFormat = printf(({ level, message, timestamp, ...meta }) => {
   const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
   return `${timestamp} [${level}] ${message}${metaStr}`;
 });
 
-// Create logger instance
-export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
-  format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }), json()),
-  defaultMeta: { service: 'playwright-tests' },
-  transports: [
-    // Console transport with colors
-    new winston.transports.Console({
-      format: combine(colorize(), timestamp({ format: 'HH:mm:ss.SSS' }), consoleFormat),
-    }),
-    // File transport for all logs
+// Configuration from environment
+const logLevel = process.env.LOG_LEVEL || 'info';
+const logToFile = process.env.LOG_TO_FILE !== 'false';
+const logSilent = process.env.LOG_SILENT === 'true';
+
+// Build transports array based on configuration
+const transports: winston.transport[] = [
+  new winston.transports.Console({
+    format: combine(colorize(), timestamp({ format: 'HH:mm:ss.SSS' }), consoleFormat),
+    silent: logSilent,
+  }),
+];
+
+// Add file transports only if LOG_TO_FILE is enabled (default)
+if (logToFile && !logSilent) {
+  transports.push(
     new winston.transports.File({
       filename: 'test-results/logs/test.log',
       format: combine(timestamp(), json()),
     }),
-    // File transport for errors only
     new winston.transports.File({
       filename: 'test-results/logs/error.log',
       level: 'error',
       format: combine(timestamp(), json()),
     }),
-  ],
+  );
+}
+
+export const logger = winston.createLogger({
+  level: logLevel,
+  format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }), json()),
+  defaultMeta: { service: 'playwright-tests' },
+  transports,
+  silent: logSilent,
 });
 
-// ═══════════════════════════════════════════════════════════════════
-// STRUCTURED LOGGING HELPERS
-// ═══════════════════════════════════════════════════════════════════
+// ── Helpers ──────────────────────────────────────────────────────────
 
 export function logTestStart(testName: string, testType: string, browser?: string): void {
   logger.info('Test started', {

@@ -1,76 +1,54 @@
 import { test, expect } from '../../src/fixtures/test-fixtures';
 
 /**
- * Bing Search Engine Web Tests
- * Equivalent to Python's tests/web/test_search_engine.py
+ * Bing search engine web tests.
+ * Tests use assertSearchAttempted() for resilience to CAPTCHA/blocking
+ * which is common with search engine automation.
  *
- * Migrated from DuckDuckGo to Bing for more stable DOM structure.
- * Tests are resilient to CAPTCHA/blocking - they verify search was attempted
- * even if results are blocked (common with search engine automation).
+ * Tags:
+ * - @search: Search engine tests
+ * - @external: Tests against external sites (may be flaky)
+ *
+ * Run with: npx playwright test --grep @search
  */
 
-test.describe('Search Engine Tests', () => {
+test.describe('Search Engine Tests @search @external', () => {
   test.beforeEach(async ({ searchPage }) => {
     await searchPage.open();
   });
 
-  test('should display search input on homepage', async ({ searchPage }) => {
+  test('should display search input on homepage @smoke', async ({ searchPage }) => {
     expect(await searchPage.isSearchInputVisible()).toBe(true);
   });
 
-  test('should search for a term and display results', async ({ searchPage, page }) => {
+  test('should search for a term and display results', async ({ searchPage }) => {
     await searchPage.search('playwright testing');
 
-    // Check if we got results or were blocked
-    const currentUrl = page.url();
-    const resultsCount = await searchPage.getResultsCount();
-
-    if (resultsCount > 0) {
-      expect(resultsCount).toBeGreaterThan(0);
-    } else if (currentUrl.includes('search')) {
-      // Search was performed but results may be blocked
-      console.log('⚠️ Search performed but results may be blocked - this is expected');
-      expect(currentUrl).toContain('search');
-    } else {
-      // Fallback - just verify we're on Bing
-      expect(currentUrl).toContain('bing.com');
-      console.log('⚠️ Search may not have submitted - this is expected in headless mode');
-    }
+    // Use the resilient search assertion helper
+    const result = await searchPage.assertSearchAttempted();
+    expect(result.searchAttempted || result.hasResults).toBe(true);
   });
 
-  test('should display relevant results', async ({ searchPage, page }) => {
+  test('should display relevant results', async ({ searchPage }) => {
     await searchPage.search('selenium webdriver');
 
-    const currentUrl = page.url();
+    const result = await searchPage.assertSearchAttempted();
 
-    try {
+    if (result.hasResults) {
       const titles = await searchPage.getResultTitles();
-      if (titles.length > 0) {
-        expect(titles.length).toBeGreaterThan(0);
-      } else if (currentUrl.includes('search')) {
-        console.log('⚠️ Search performed but results may be blocked - this is expected');
-        expect(currentUrl).toContain('search');
-      } else {
-        expect(currentUrl).toContain('bing.com');
-        console.log('⚠️ Search may not have submitted - this is expected in headless mode');
-      }
-    } catch {
-      // Navigation may have occurred - just verify we're on Bing
-      expect(page.url()).toContain('bing.com');
-      console.log('⚠️ Page navigation occurred during test - this is expected');
+      expect(titles.length).toBeGreaterThan(0);
+    } else {
+      // Search was attempted but blocked - acceptable in automation
+      expect(result.searchAttempted).toBe(true);
     }
   });
 
-  test('should allow searching with Enter key', async ({ searchPage, page }) => {
+  test('should allow searching with Enter key', async ({ searchPage }) => {
     await searchPage.search('javascript testing');
 
-    const hasResults = await searchPage.hasResults();
-    const currentUrl = page.url();
-
-    // Either we have results, URL shows search was attempted, or we're on Bing (CAPTCHA)
-    const searchAttempted =
-      hasResults || currentUrl.includes('search') || currentUrl.includes('bing.com');
-    expect(searchAttempted).toBe(true);
+    // Use the resilient assertion helper
+    const result = await searchPage.assertSearchAttempted();
+    expect(result.searchAttempted || result.hasResults).toBe(true);
   });
 
   test('should navigate to result page when clicked', async ({ searchPage, page }) => {
@@ -79,10 +57,9 @@ test.describe('Search Engine Tests', () => {
     // eslint-disable-next-line playwright/no-wait-for-timeout
     await page.waitForTimeout(1000);
 
-    const currentUrl = page.url();
-    const hasResults = await searchPage.hasResults();
+    const result = await searchPage.assertSearchAttempted();
 
-    if (hasResults) {
+    if (result.hasResults) {
       const initialUrl = page.url();
       await searchPage.clickResult(0);
 
@@ -92,11 +69,9 @@ test.describe('Search Engine Tests', () => {
 
       expect(newUrl).not.toBe(initialUrl);
     } else {
-      // If blocked or search didn't submit, verify we at least tried
-      // Accept either search URL or homepage (flaky test scenario)
-      const isSearchPage = currentUrl.includes('search') || currentUrl.includes('bing.com');
-      expect(isSearchPage).toBe(true);
-      console.log('⚠️ Search performed but results may be blocked - skipping click test');
+      // Search was attempted but blocked - acceptable in automation
+      expect(result.searchAttempted).toBe(true);
+      console.log('⚠️ Search blocked - skipping click test');
     }
   });
 

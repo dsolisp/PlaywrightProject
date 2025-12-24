@@ -3,16 +3,8 @@ import path from 'path';
 import { settings } from '../config/settings';
 import { logger } from './logger';
 
-/**
- * SQLite Database Connection
- * Equivalent to Python's utils/sql_connection.py
- */
-
 let db: Database.Database | null = null;
 
-/**
- * Get database connection
- */
 export function getDatabase(): Database.Database {
   if (!db) {
     const dbPath = path.resolve(settings().databasePath);

@@ -21,6 +21,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     baseURL: 'https://www.bing.com',
+    // Align Playwright's getByTestId() with our data-test attributes
+    testIdAttribute: 'data-test',
     // Set a common desktop UA and launch args to make headless runs look more
     // like a real browser. These options are useful for CI where headless
     // browsers may be fingerprinted and blocked by anti-bot systems.

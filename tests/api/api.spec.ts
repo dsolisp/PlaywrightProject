@@ -3,8 +3,7 @@ import { HTTP_STATUS, API_BASE_URL } from '../../src/config/constants';
 import { logApiRequest } from '../../src/utils/logger';
 
 /**
- * API Tests using Playwright's built-in request context
- * Equivalent to Python's tests/api/test_api.py
+ * API tests using Playwright's built-in request context.
  */
 
 // Use API base URL for all requests

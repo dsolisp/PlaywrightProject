@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { settings, resetSettings, getSettings } from '../../src/config/settings';
+import { settings, resetSettings } from '../../src/config/settings';
 import { URLS, BROWSERS } from '../../src/config/constants';
 
 /**
- * Settings Unit Tests
- * Equivalent to Python's tests/unit/test_settings.py
+ * Settings unit tests.
  */
 
 describe('Settings', () => {

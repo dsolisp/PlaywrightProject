@@ -10,8 +10,7 @@ import {
 } from '../../src/utils/logger';
 
 /**
- * Structured Logger Unit Tests
- * Equivalent to Python's tests/unit/test_structured_logger.py
+ * Structured logger unit tests.
  */
 
 describe('StructuredLogger', () => {

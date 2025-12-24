@@ -5,8 +5,7 @@ import { CREDENTIALS } from '../../src/config/constants';
 import { LoginLocators } from '../../src/locators/sauce-demo.locators';
 
 /**
- * Accessibility Tests using Axe-core
- * Equivalent to Python's accessibility tests
+ * Accessibility tests using axe-core.
  */
 
 test.describe('Accessibility Tests', () => {
@@ -28,11 +27,6 @@ test.describe('Accessibility Tests', () => {
           console.info(`    Help: ${violation.helpUrl}`);
         }
       }
-
-      // Filter critical violations
-      const criticalViolations = results.violations.filter(
-        (v) => v.impact === 'critical' || v.impact === 'serious',
-      );
 
       // Allow up to 10 violations for external sites (audit mode)
       expect(results.violations.length).toBeLessThanOrEqual(10);
@@ -93,11 +87,6 @@ test.describe('Accessibility Tests', () => {
   test.describe('Color Contrast', () => {
     test('should have sufficient color contrast on homepage', async ({ page }) => {
       await page.goto(settings().baseUrl);
-
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2aa'])
-        .disableRules(['color-contrast']) // Run separately
-        .analyze();
 
       // Run color contrast check
       const contrastResults = await new AxeBuilder({ page })

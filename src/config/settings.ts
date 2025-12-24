@@ -3,10 +3,6 @@ import { URLS, TIMEOUTS, BROWSERS, VIEWPORTS } from './constants';
 
 dotenv.config();
 
-/**
- * Application Settings
- * Equivalent to Python's config/settings.py and Java's Settings.java
- */
 export interface Settings {
   // URLs
   baseUrl: string;
@@ -45,9 +41,6 @@ export interface Settings {
   env: string;
 }
 
-/**
- * Get settings from environment variables with defaults
- */
 export function getSettings(): Settings {
   return {
     // URLs
@@ -88,12 +81,8 @@ export function getSettings(): Settings {
   };
 }
 
-// Singleton instance
 let settingsInstance: Settings | null = null;
 
-/**
- * Get singleton settings instance
- */
 export function settings(): Settings {
   if (!settingsInstance) {
     settingsInstance = getSettings();
@@ -101,9 +90,6 @@ export function settings(): Settings {
   return settingsInstance;
 }
 
-/**
- * Reset settings (for testing)
- */
 export function resetSettings(): void {
   settingsInstance = null;
 }

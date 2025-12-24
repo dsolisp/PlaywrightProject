@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 import { settings } from '../../src/config/settings';
 
 /**
- * Performance Tests
- * Equivalent to Python's tests/performance/test_performance.py
+ * Basic performance checks for key pages.
  */
 
 test.describe('Performance Tests', () => {

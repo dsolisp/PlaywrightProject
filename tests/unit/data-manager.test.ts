@@ -3,14 +3,12 @@ import {
   generateTestData,
   clearCache,
   loadCsv,
-  loadCsvTyped,
   filterCsv,
   findCsvRow,
 } from '../../src/utils/data-manager';
 
 /**
- * Data Manager Unit Tests
- * Equivalent to Python's tests/unit/test_data_manager.py
+ * Data manager unit tests.
  */
 
 // Type for test users CSV

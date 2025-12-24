@@ -4,10 +4,7 @@ import { settings } from '../../src/config/settings';
 import { InventoryLocators, CartLocators } from '../../src/locators/sauce-demo.locators';
 
 /**
- * Visual Regression Tests
- * Equivalent to Python's tests/visual/test_visual_regression.py
- *
- * Uses Playwright's built-in screenshot comparison
+ * Visual regression tests using Playwright's screenshot comparison.
  */
 
 test.describe('Visual Regression Tests', () => {
