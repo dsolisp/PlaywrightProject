@@ -28,6 +28,7 @@ export const InventoryLocators = {
   ADD_BIKELIGHT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bike-light"]',
   ADD_SHIRT_BUTTON: 'button[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]',
   CART_BADGE: 'span[data-test="shopping-cart-badge"]',
+  BACK_TO_PRODUCTS: '[data-test="back-to-products"]',
 
   // Header
   HEADER: '.header_container',
