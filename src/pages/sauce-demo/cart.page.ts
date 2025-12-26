@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { BasePage } from '../base.page';
-import { CartLocators } from '../../locators/sauce-demo.locators';
+import { CartLocators, InventoryLocators } from '../../locators/sauce-demo.locators';
 
 export class CartPage extends BasePage {
   constructor(page: Page) {
@@ -9,6 +9,14 @@ export class CartPage extends BasePage {
 
   async getItemCount(): Promise<number> {
     return this.count(CartLocators.CART_ITEMS);
+  }
+
+  async getCartBadgeCount(): Promise<number> {
+    if (!(await this.isVisible(InventoryLocators.CART_BADGE))) {
+      return 0;
+    }
+    const text = await this.getText(InventoryLocators.CART_BADGE);
+    return parseInt(text, 10) || 0;
   }
 
   async getItemNames(): Promise<string[]> {
