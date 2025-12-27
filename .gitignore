@@ -18,3 +18,4 @@ tmp/
 # Keep most media artifacts ignored, but track the canonical visual baseline used
 # for CI comparisons.
 !src/tests/visual/duckduckgo_baseline.png
+data/results/playwright-results.json

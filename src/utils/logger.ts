@@ -48,30 +48,6 @@ export const logger = winston.createLogger({
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
-export function logTestStart(testName: string, testType: string, browser?: string): void {
-  logger.info('Test started', {
-    event: 'test_start',
-    testName,
-    testType,
-    browser,
-    timestamp: new Date().toISOString(),
-  });
-}
-
-export function logTestEnd(
-  testName: string,
-  status: 'passed' | 'failed' | 'skipped',
-  durationMs: number,
-): void {
-  logger.info('Test completed', {
-    event: 'test_end',
-    testName,
-    status,
-    durationMs,
-    timestamp: new Date().toISOString(),
-  });
-}
-
 export function logApiRequest(
   method: string,
   url: string,
@@ -84,32 +60,6 @@ export function logApiRequest(
     url,
     status,
     durationMs,
-  });
-}
-
-export function logPageNavigation(url: string, durationMs: number): void {
-  logger.info('Page navigation', {
-    event: 'navigation',
-    url,
-    durationMs,
-  });
-}
-
-export function logAction(action: string, element: string, value?: string): void {
-  logger.debug('User action', {
-    event: 'action',
-    action,
-    element,
-    value,
-  });
-}
-
-export function logError(message: string, error: Error, context?: Record<string, unknown>): void {
-  logger.error(message, {
-    event: 'error',
-    errorMessage: error.message,
-    errorStack: error.stack,
-    ...context,
   });
 }
 

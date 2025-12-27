@@ -12,11 +12,6 @@ export interface CheckoutInfo {
   zipCode: string;
 }
 
-export interface SearchQuery {
-  term: string;
-  expectedResults?: number;
-}
-
 // ═══════════════════════════════════════════════════════════════════
 // USER FACTORY - all the SauceDemo test accounts
 // ═══════════════════════════════════════════════════════════════════
@@ -105,31 +100,5 @@ export const CheckoutFactory = {
     firstName: data.firstName ?? 'John',
     lastName: data.lastName ?? 'Doe',
     zipCode: data.zipCode ?? '12345',
-  }),
-};
-
-// ═══════════════════════════════════════════════════════════════════
-// SEARCH FACTORY - search terms for Bing tests
-// ═══════════════════════════════════════════════════════════════════
-
-export const SearchFactory = {
-  playwright: (): SearchQuery => ({
-    term: 'playwright automation',
-    expectedResults: 10,
-  }),
-
-  typescript: (): SearchQuery => ({
-    term: 'typescript tutorial',
-    expectedResults: 10,
-  }),
-
-  empty: (): SearchQuery => ({
-    term: '',
-    expectedResults: 0,
-  }),
-
-  custom: (term: string, expectedResults = 10): SearchQuery => ({
-    term,
-    expectedResults,
   }),
 };

@@ -1,95 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  generateTestData,
-  clearCache,
-  loadCsv,
-  filterCsv,
-  findCsvRow,
-} from '../../src/utils/data-manager';
+import { describe, it, expect } from 'vitest';
+import { generateTestData, clearCache } from '../../src/utils/data-manager';
 
 /**
- * Data manager unit tests.
+ * Data manager unit tests - test data generation utilities.
  */
 
-// Type for test users CSV
-interface TestUser {
-  username: string;
-  password: string;
-  email: string;
-  role: string;
-  enabled: string;
-}
-
 describe('DataManager', () => {
-  beforeEach(() => {
-    clearCache();
-  });
-
-  describe('CSV Data Loading', () => {
-    it('should load CSV file as array of objects', () => {
-      const users = loadCsv<TestUser>('test_users.csv');
-
-      expect(users).toBeInstanceOf(Array);
-      expect(users.length).toBeGreaterThanOrEqual(5);
-      expect(users[0]).toHaveProperty('username');
-      expect(users[0]).toHaveProperty('password');
-      expect(users[0]).toHaveProperty('email');
-      expect(users[0]).toHaveProperty('role');
-      expect(users[0]).toHaveProperty('enabled');
-    });
-
-    it('should correctly parse CSV values', () => {
-      const users = loadCsv<TestUser>('test_users.csv');
-      const standardUser = users.find((u) => u.username === 'standard_user');
-
-      expect(standardUser).toBeDefined();
-      expect(standardUser?.password).toBe('secret_sauce');
-      expect(standardUser?.email).toBe('standard@example.com');
-      expect(standardUser?.role).toBe('user');
-      expect(standardUser?.enabled).toBe('true');
-    });
-
-    it('should handle different user roles', () => {
-      const users = loadCsv<TestUser>('test_users.csv');
-      const adminUsers = users.filter((u) => u.role === 'admin');
-      const regularUsers = users.filter((u) => u.role === 'user');
-
-      expect(adminUsers.length).toBeGreaterThanOrEqual(1);
-      expect(regularUsers.length).toBeGreaterThanOrEqual(4);
-    });
-
-    it('should cache CSV data', () => {
-      const users1 = loadCsv<TestUser>('test_users.csv');
-      const users2 = loadCsv<TestUser>('test_users.csv');
-
-      expect(users1).toEqual(users2);
-    });
-
-    it('should filter CSV data with predicate', () => {
-      const enabledUsers = filterCsv<TestUser>('test_users.csv', (u) => u.enabled === 'true');
-
-      expect(enabledUsers.length).toBeGreaterThanOrEqual(4);
-      expect(enabledUsers.every((u) => u.enabled === 'true')).toBe(true);
-    });
-
-    it('should find single row matching predicate', () => {
-      const adminUser = findCsvRow<TestUser>('test_users.csv', (u) => u.role === 'admin');
-
-      expect(adminUser).toBeDefined();
-      expect(adminUser?.username).toBe('admin_user');
-      expect(adminUser?.email).toBe('admin@example.com');
-    });
-
-    it('should return undefined when no row matches', () => {
-      const nonExistent = findCsvRow<TestUser>(
-        'test_users.csv',
-        (u) => u.username === 'nonexistent',
-      );
-
-      expect(nonExistent).toBeUndefined();
-    });
-  });
-
   describe('Test Data Generation', () => {
     it('should generate unique emails', async () => {
       const gen = generateTestData();

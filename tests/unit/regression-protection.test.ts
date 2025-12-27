@@ -83,7 +83,6 @@ describe('Regression Protection Tests', () => {
       expect(constants.BROWSERS).toBeDefined();
       expect(constants.TIMEOUTS).toBeDefined();
       expect(constants.URLS).toBeDefined();
-      expect(constants.USER_AGENTS).toBeDefined();
     });
 
     test('timeouts should have positive values', async () => {
@@ -96,15 +95,14 @@ describe('Regression Protection Tests', () => {
   describe('Data Manager Validation', () => {
     test('DataManager functions should be importable', async () => {
       const dm = await import('../../src/utils/data-manager');
-      expect(dm.loadJson).toBeDefined();
-      expect(dm.loadData).toBeDefined();
+      expect(dm.generateTestData).toBeDefined();
+      expect(dm.clearCache).toBeDefined();
     });
 
     test('DataManager should have required functions', async () => {
       const dm = await import('../../src/utils/data-manager');
-      expect(typeof dm.loadJson).toBe('function');
-      expect(typeof dm.loadData).toBe('function');
       expect(typeof dm.generateTestData).toBe('function');
+      expect(typeof dm.clearCache).toBe('function');
     });
   });
 
