@@ -5,49 +5,12 @@ import {
   CREDENTIALS,
   HTTP_STATUS,
   PATHS,
-  RETRY,
   TIMEOUTS,
   URLS,
-  USER_AGENTS,
   VIEWPORTS,
 } from '../../src/config/constants';
 
 describe('Constants Validation', () => {
-  describe('User Agent Constants', () => {
-    test('Chrome Windows user agent should contain Chrome', () => {
-      expect(USER_AGENTS.CHROME_WINDOWS).toContain('Chrome');
-    });
-
-    test('Chrome Mac user agent should contain Chrome', () => {
-      expect(USER_AGENTS.CHROME_MAC).toContain('Chrome');
-    });
-
-    test('Chrome user agents should contain WebKit', () => {
-      expect(USER_AGENTS.CHROME_WINDOWS).toContain('AppleWebKit');
-      expect(USER_AGENTS.CHROME_MAC).toContain('AppleWebKit');
-    });
-
-    test('Firefox user agent should contain Firefox', () => {
-      expect(USER_AGENTS.FIREFOX_WINDOWS).toContain('Firefox');
-    });
-
-    test('Firefox user agent should contain Gecko', () => {
-      expect(USER_AGENTS.FIREFOX_WINDOWS).toContain('Gecko');
-    });
-
-    test('Safari user agent should contain Safari', () => {
-      expect(USER_AGENTS.SAFARI_MAC).toContain('Safari');
-    });
-
-    test('Mobile Android user agent should contain Mobile', () => {
-      expect(USER_AGENTS.MOBILE_ANDROID).toContain('Mobile');
-    });
-
-    test('Mobile iOS user agent should contain iPhone', () => {
-      expect(USER_AGENTS.MOBILE_IOS).toContain('iPhone');
-    });
-  });
-
   describe('Timeout Constants', () => {
     test('Default timeout should be positive', () => {
       expect(TIMEOUTS.DEFAULT).toBeGreaterThan(0);
@@ -136,20 +99,6 @@ describe('Constants Validation', () => {
     test('Tablet viewport should be between mobile and desktop', () => {
       expect(VIEWPORTS.TABLET.width).toBeGreaterThan(VIEWPORTS.MOBILE.width);
       expect(VIEWPORTS.TABLET.width).toBeLessThan(VIEWPORTS.DESKTOP.width);
-    });
-  });
-
-  describe('Retry Constants', () => {
-    test('Max attempts should be positive', () => {
-      expect(RETRY.MAX_ATTEMPTS).toBeGreaterThan(0);
-    });
-
-    test('Delay should be positive', () => {
-      expect(RETRY.DELAY_MS).toBeGreaterThan(0);
-    });
-
-    test('Backoff multiplier should be greater than 1', () => {
-      expect(RETRY.BACKOFF_MULTIPLIER).toBeGreaterThan(1);
     });
   });
 

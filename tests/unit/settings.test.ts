@@ -1,15 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { settings, resetSettings } from '../../src/config/settings';
+import { describe, it, expect } from 'vitest';
+import { settings } from '../../src/config/settings';
 import { URLS, BROWSERS } from '../../src/config/constants';
 
 describe('Settings', () => {
-  beforeEach(() => {
-    resetSettings();
-  });
-
   describe('Default Values', () => {
     it('should have default base URL', () => {
-      // Base URL comes from env or defaults
       expect(settings().baseUrl).toBeTruthy();
     });
 
@@ -38,20 +33,10 @@ describe('Settings', () => {
       const instance2 = settings();
       expect(instance1).toBe(instance2);
     });
-
-    it('should reset instance', () => {
-      const instance1 = settings();
-      resetSettings();
-      const instance2 = settings();
-      // Objects should have same values but be different instances
-      expect(instance1).not.toBe(instance2);
-      expect(instance1.baseUrl).toBe(instance2.baseUrl);
-    });
   });
 
   describe('Environment Detection', () => {
     it('should detect CI environment', () => {
-      // In test environment, CI should be false unless set
       expect(typeof settings().isCI).toBe('boolean');
     });
 

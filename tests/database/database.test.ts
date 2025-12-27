@@ -37,23 +37,23 @@ describe('Database Tests', () => {
 
       expect(tables.length).toBeGreaterThan(0);
       const tableNames = tables.map((t) => t.name);
-      expect(tableNames).toContain('albums');
-      expect(tableNames).toContain('artists');
-      expect(tableNames).toContain('tracks');
+      expect(tableNames).toContain('Album');
+      expect(tableNames).toContain('Artist');
+      expect(tableNames).toContain('Track');
     });
   });
 
-  describe('Artists Table', () => {
+  describe('Artist Table', () => {
     it('should query all artists', () => {
       if (!db) return;
-      const artists = db.prepare('SELECT * FROM artists').all();
+      const artists = db.prepare('SELECT * FROM Artist').all();
 
       expect(artists.length).toBeGreaterThan(0);
     });
 
     it('should query artist by ID', () => {
       if (!db) return;
-      const artist = db.prepare('SELECT * FROM artists WHERE ArtistId = ?').get(1) as {
+      const artist = db.prepare('SELECT * FROM Artist WHERE ArtistId = ?').get(1) as {
         ArtistId: number;
         Name: string;
       };
@@ -65,7 +65,7 @@ describe('Database Tests', () => {
 
     it('should search artists by name', () => {
       if (!db) return;
-      const artists = db.prepare('SELECT * FROM artists WHERE Name LIKE ?').all('%Black%') as {
+      const artists = db.prepare('SELECT * FROM Artist WHERE Name LIKE ?').all('%Black%') as {
         Name: string;
       }[];
 
@@ -74,15 +74,15 @@ describe('Database Tests', () => {
     });
   });
 
-  describe('Albums Table', () => {
+  describe('Album Table', () => {
     it('should query albums with artist join', () => {
       if (!db) return;
       const albums = db
         .prepare(
           `
           SELECT a.AlbumId, a.Title, ar.Name as ArtistName
-          FROM albums a
-          JOIN artists ar ON a.ArtistId = ar.ArtistId
+          FROM Album a
+          JOIN Artist ar ON a.ArtistId = ar.ArtistId
           LIMIT 10
         `,
         )
@@ -99,8 +99,8 @@ describe('Database Tests', () => {
         .prepare(
           `
           SELECT ar.Name, COUNT(*) as AlbumCount
-          FROM albums a
-          JOIN artists ar ON a.ArtistId = ar.ArtistId
+          FROM Album a
+          JOIN Artist ar ON a.ArtistId = ar.ArtistId
           GROUP BY ar.ArtistId
           ORDER BY AlbumCount DESC
           LIMIT 5
@@ -113,16 +113,16 @@ describe('Database Tests', () => {
     });
   });
 
-  describe('Tracks Table', () => {
+  describe('Track Table', () => {
     it('should query tracks with album and artist', () => {
       if (!db) return;
       const tracks = db
         .prepare(
           `
           SELECT t.Name as TrackName, a.Title as AlbumTitle, ar.Name as ArtistName
-          FROM tracks t
-          JOIN albums a ON t.AlbumId = a.AlbumId
-          JOIN artists ar ON a.ArtistId = ar.ArtistId
+          FROM Track t
+          JOIN Album a ON t.AlbumId = a.AlbumId
+          JOIN Artist ar ON a.ArtistId = ar.ArtistId
           LIMIT 10
         `,
         )
@@ -137,7 +137,7 @@ describe('Database Tests', () => {
     it('should calculate total track duration', () => {
       if (!db) return;
       const result = db
-        .prepare('SELECT SUM(Milliseconds) / 1000.0 / 60.0 as TotalMinutes FROM tracks')
+        .prepare('SELECT SUM(Milliseconds) / 1000.0 / 60.0 as TotalMinutes FROM Track')
         .get() as { TotalMinutes: number };
 
       expect(result.TotalMinutes).toBeGreaterThan(0);
@@ -151,8 +151,8 @@ describe('Database Tests', () => {
         .prepare(
           `
           SELECT g.Name as Genre, COUNT(*) as TrackCount
-          FROM tracks t
-          JOIN genres g ON t.GenreId = g.GenreId
+          FROM Track t
+          JOIN Genre g ON t.GenreId = g.GenreId
           GROUP BY g.GenreId
           ORDER BY TrackCount DESC
         `,
@@ -167,10 +167,10 @@ describe('Database Tests', () => {
       const totals = db
         .prepare(
           `
-          SELECT 
+          SELECT
             strftime('%Y', InvoiceDate) as Year,
             SUM(Total) as YearlyTotal
-          FROM invoices
+          FROM Invoice
           GROUP BY Year
           ORDER BY Year
         `,
