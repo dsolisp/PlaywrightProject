@@ -14,11 +14,12 @@ This tutorial walks you through recreating this entire test automation framework
 6. [Page Object Model](#6-page-object-model)
 7. [Custom Fixtures](#7-custom-fixtures)
 8. [Unit Testing with Vitest](#8-unit-testing-with-vitest)
-9. [Visual Regression Testing](#9-visual-regression-testing)
-10. [Accessibility Testing](#10-accessibility-testing)
-11. [BDD with Cucumber](#11-bdd-with-cucumber)
-12. [CI/CD Pipeline](#12-cicd-pipeline)
-13. [Best Practices](#13-best-practices)
+9. [Database Testing](#9-database-testing)
+10. [Visual Regression Testing](#10-visual-regression-testing)
+11. [Accessibility Testing](#11-accessibility-testing)
+12. [BDD with Cucumber](#12-bdd-with-cucumber)
+13. [CI/CD Pipeline](#13-cicd-pipeline)
+14. [Best Practices](#14-best-practices)
 
 ---
 
@@ -300,12 +301,25 @@ A well-organized project structure makes code:
 ### Create Directories
 
 ```bash
-# Source code directories
-mkdir -p src/config src/fixtures src/locators src/pages src/utils
+# E2E test directories (Playwright best practice: 1:1 page object + locator pattern)
+mkdir -p e2e/fixtures e2e/page-objects e2e/specs
 
-# Test directories by type
-mkdir -p tests/unit tests/web tests/api tests/visual tests/accessibility
-mkdir -p tests/integration tests/performance tests/bdd tests/contract tests/database
+# Page objects by application
+mkdir -p e2e/page-objects/sauce-demo e2e/page-objects/search-engine
+
+# E2E spec directories by type
+mkdir -p e2e/specs/sauce-demo e2e/specs/search-engine
+mkdir -p e2e/specs/api e2e/specs/visual e2e/specs/accessibility
+mkdir -p e2e/specs/integration e2e/specs/performance e2e/specs/contract
+
+# Library code (shared across tests)
+mkdir -p lib/config lib/utils
+
+# Source utilities
+mkdir -p src/utils
+
+# Non-E2E tests
+mkdir -p tests/unit tests/database tests/bdd
 
 # Supporting directories
 mkdir -p test-data .github/workflows
@@ -313,19 +327,17 @@ mkdir -p test-data .github/workflows
 
 ### Directory Purposes
 
-| Directory              | Purpose                                |
-| ---------------------- | -------------------------------------- |
-| `src/config/`          | Configuration and environment settings |
-| `src/fixtures/`        | Playwright custom fixtures             |
-| `src/locators/`        | Element selectors (centralized)        |
-| `src/pages/`           | Page Object Model classes              |
-| `src/utils/`           | Helper utilities (logger, data, etc.)  |
-| `tests/unit/`          | Unit tests (Vitest)                    |
-| `tests/web/`           | Browser E2E tests                      |
-| `tests/api/`           | API tests                              |
-| `tests/visual/`        | Screenshot comparison tests            |
-| `tests/accessibility/` | WCAG compliance tests                  |
-| `tests/bdd/`           | Cucumber/Gherkin tests                 |
+| Directory           | Purpose                                |
+| ------------------- | -------------------------------------- |
+| `e2e/fixtures/`     | Playwright custom fixtures             |
+| `e2e/page-objects/` | Page Object Model with paired locators |
+| `e2e/specs/`        | All E2E test specifications            |
+| `lib/config/`       | Configuration and environment settings |
+| `lib/utils/`        | Shared utilities (factories, etc.)     |
+| `src/utils/`        | Core utilities (logger, data, db)      |
+| `tests/unit/`       | Unit tests (Vitest)                    |
+| `tests/database/`   | Database tests (Vitest)                |
+| `tests/bdd/`        | Cucumber/Gherkin tests                 |
 
 ---
 
@@ -340,71 +352,77 @@ Page Object Model (POM) is a design pattern that:
 - **Improves maintainability** - UI changes only affect page class
 - **Increases readability** - Tests read like user stories
 
-### Base Page Class (src/pages/base.page.ts)
+**Best Practice: 1:1 Page Object + Locator Pattern**
+
+Each page object file has a paired locator file in the same directory:
+
+```
+e2e/page-objects/sauce-demo/
+├── login.page.ts         # Page object with methods
+├── login.locators.ts     # Locator definitions
+├── inventory.page.ts
+├── inventory.locators.ts
+└── index.ts              # Barrel exports
+```
+
+### Locator File (e2e/page-objects/sauce-demo/login.locators.ts)
+
+```typescript
+/**
+ * Locators for the SauceDemo login page.
+ * Single source of truth for all login-related selectors.
+ */
+export const LoginLocators = {
+  usernameInput: '[data-test="username"]',
+  passwordInput: '[data-test="password"]',
+  loginButton: '[data-test="login-button"]',
+  errorMessage: '[data-test="error"]',
+} as const;
+```
+
+### Base Page Class (e2e/page-objects/base.page.ts)
 
 ```typescript
 import { Page, Locator } from '@playwright/test';
-import { logger } from '../utils/logger';
+import { logger } from '../../src/utils/logger.js';
 
 /**
  * Abstract base class for all page objects.
  * Provides common functionality like navigation, waiting, and logging.
  */
 export abstract class BasePage {
-  // Each child class must define its URL
   abstract readonly url: string;
 
   constructor(protected readonly page: Page) {}
 
-  /**
-   * Navigate to this page's URL
-   */
   async open(): Promise<void> {
     const startTime = Date.now();
     await this.page.goto(this.url);
     const duration = Date.now() - startTime;
-
-    logger.info(`Navigated to ${this.url}`, {
-      event: 'navigation',
-      url: this.url,
-      durationMs: duration,
-    });
+    logger.info(`Navigated to ${this.url}`, { durationMs: duration });
   }
 
-  /**
-   * Get page title
-   */
   async getTitle(): Promise<string> {
     return this.page.title();
   }
 
-  /**
-   * Wait for element to be visible
-   */
-  async waitForVisible(locator: Locator, timeout: number = 5000): Promise<void> {
+  async waitForVisible(locator: Locator, timeout = 5000): Promise<void> {
     await locator.waitFor({ state: 'visible', timeout });
-  }
-
-  /**
-   * Take screenshot of current page
-   */
-  async screenshot(name: string): Promise<Buffer> {
-    return this.page.screenshot({ path: `screenshots/${name}.png` });
   }
 }
 ```
 
-### Concrete Page Class (src/pages/sauce-demo.page.ts)
+### Concrete Page Class (e2e/page-objects/sauce-demo/login.page.ts)
 
 ```typescript
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base.page';
-import { SAUCE_DEMO_LOCATORS } from '../locators/sauce-demo.locators';
+import { BasePage } from '../base.page.js';
+import { LoginLocators } from './login.locators.js';
 
 export class LoginPage extends BasePage {
   readonly url = 'https://www.saucedemo.com';
 
-  // Locators as class properties
+  // Locators as class properties using paired locator file
   private readonly usernameInput: Locator;
   private readonly passwordInput: Locator;
   private readonly loginButton: Locator;
@@ -412,26 +430,18 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-
-    // Initialize locators
-    this.usernameInput = page.locator(SAUCE_DEMO_LOCATORS.login.username);
-    this.passwordInput = page.locator(SAUCE_DEMO_LOCATORS.login.password);
-    this.loginButton = page.locator(SAUCE_DEMO_LOCATORS.login.loginButton);
-    this.errorMessage = page.locator(SAUCE_DEMO_LOCATORS.login.errorMessage);
+    this.usernameInput = page.locator(LoginLocators.usernameInput);
+    this.passwordInput = page.locator(LoginLocators.passwordInput);
+    this.loginButton = page.locator(LoginLocators.loginButton);
+    this.errorMessage = page.locator(LoginLocators.errorMessage);
   }
 
-  /**
-   * Perform login with credentials
-   */
   async login(username: string, password: string): Promise<void> {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
   }
 
-  /**
-   * Check if error message is displayed
-   */
   async getErrorMessage(): Promise<string> {
     return this.errorMessage.textContent() ?? '';
   }
@@ -451,54 +461,67 @@ Playwright fixtures provide:
 - **Reusability** - Share setup across tests
 - **Isolation** - Each test gets fresh state
 
-### Creating Custom Fixtures (src/fixtures/test-fixtures.ts)
+### Creating Custom Fixtures (e2e/fixtures/test.fixture.ts)
 
 ```typescript
 import { test as base } from '@playwright/test';
-import { LoginPage, InventoryPage } from '../pages/sauce-demo.page';
-import { SearchEnginePage } from '../pages/search-engine.page';
-import { CREDENTIALS } from '../config/constants';
+import {
+  LoginPage,
+  InventoryPage,
+  CartPage,
+  CheckoutPage,
+} from '../page-objects/sauce-demo/index.js';
+import { SearchPage } from '../page-objects/search-engine/index.js';
+import { CREDENTIALS } from '../../lib/config/constants.js';
 
 // Define custom fixture types
 type MyFixtures = {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
-  searchPage: SearchEnginePage;
+  cartPage: CartPage;
+  checkoutPage: CheckoutPage;
+  searchPage: SearchPage;
   authenticatedPage: InventoryPage; // Pre-logged in
 };
 
 // Extend base test with custom fixtures
 export const test = base.extend<MyFixtures>({
-  // Simple page fixture
   loginPage: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    await use(loginPage);
+    await use(new LoginPage(page));
   },
 
-  // Fixture with authentication
+  inventoryPage: async ({ page }, use) => {
+    await use(new InventoryPage(page));
+  },
+
+  cartPage: async ({ page }, use) => {
+    await use(new CartPage(page));
+  },
+
+  checkoutPage: async ({ page }, use) => {
+    await use(new CheckoutPage(page));
+  },
+
+  searchPage: async ({ page }, use) => {
+    await use(new SearchPage(page));
+  },
+
+  // Authenticated fixture - pre-logged in
   authenticatedPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await loginPage.open();
     await loginPage.login(CREDENTIALS.STANDARD_USER, CREDENTIALS.PASSWORD);
-
-    const inventoryPage = new InventoryPage(page);
-    await use(inventoryPage);
-  },
-
-  searchPage: async ({ page }, use) => {
-    const searchPage = new SearchEnginePage(page);
-    await use(searchPage);
+    await use(new InventoryPage(page));
   },
 });
 
-// Re-export expect for convenience
 export { expect } from '@playwright/test';
 ```
 
 ### Using Fixtures in Tests
 
 ```typescript
-import { test, expect } from '../src/fixtures/test-fixtures';
+import { test, expect } from '../../fixtures/test.fixture.js';
 
 test.describe('Inventory Tests', () => {
   // Uses authenticatedPage fixture - already logged in!
@@ -575,7 +598,95 @@ npm pkg set scripts.test:unit="vitest run tests/unit/"
 
 ---
 
-## 9. Visual Regression Testing
+## 9. Database Testing
+
+### What & Why
+
+Database testing validates:
+
+- **Data integrity** - Queries return expected results
+- **Schema correctness** - Tables and columns exist as expected
+- **CRUD operations** - Create, Read, Update, Delete work correctly
+- **Edge cases** - NULL handling, empty results, large datasets
+
+### Installation
+
+```bash
+# Install better-sqlite3 (synchronous SQLite for Node.js)
+npm install --save-dev better-sqlite3 @types/better-sqlite3
+
+# Download sample database (Chinook - music store)
+curl -L -o test-data/chinook.db \
+  https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite
+```
+
+### Database Helper (src/utils/database.ts)
+
+```typescript
+import Database from 'better-sqlite3';
+import path from 'path';
+
+export function createDatabaseConnection(dbPath?: string): Database.Database {
+  const resolvedPath = dbPath || process.env.DATABASE_PATH || './test-data/chinook.db';
+  return new Database(path.resolve(resolvedPath));
+}
+
+export function closeDatabase(db: Database.Database): void {
+  db.close();
+}
+```
+
+### Writing Database Tests
+
+```typescript
+// tests/database/chinook.test.ts
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import Database from 'better-sqlite3';
+import { createDatabaseConnection } from '../../src/utils/database';
+
+describe('Chinook Database', () => {
+  let db: Database.Database;
+
+  beforeAll(() => {
+    db = createDatabaseConnection();
+  });
+
+  afterAll(() => {
+    db.close();
+  });
+
+  it('should query artists', () => {
+    const artists = db.prepare('SELECT * FROM Artist LIMIT 5').all();
+    expect(artists).toHaveLength(5);
+    expect(artists[0]).toHaveProperty('Name');
+  });
+
+  it('should find albums by artist', () => {
+    const albums = db
+      .prepare(
+        `
+      SELECT Album.Title, Artist.Name
+      FROM Album
+      JOIN Artist ON Album.ArtistId = Artist.ArtistId
+      WHERE Artist.Name = ?
+    `,
+      )
+      .all('AC/DC');
+
+    expect(albums.length).toBeGreaterThan(0);
+  });
+});
+```
+
+### Add Script
+
+```bash
+npm pkg set scripts.test:db="vitest run tests/database/"
+```
+
+---
+
+## 10. Visual Regression Testing
 
 ### What & Why
 
@@ -590,7 +701,7 @@ Playwright has built-in visual comparison (no need for pixelmatch).
 ### Writing Visual Tests
 
 ```typescript
-// tests/visual/visual.spec.ts
+// e2e/specs/visual/visual.spec.ts
 import { test, expect } from '@playwright/test';
 
 test.describe('Visual Regression', () => {
@@ -616,15 +727,15 @@ test.describe('Visual Regression', () => {
 
 ```bash
 # Run visual tests (compares to baselines)
-npx playwright test tests/visual/
+npx playwright test specs/visual/
 
 # Update baselines after intentional changes
-npx playwright test tests/visual/ --update-snapshots
+npx playwright test specs/visual/ --update-snapshots
 ```
 
 ---
 
-## 10. Accessibility Testing
+## 11. Accessibility Testing
 
 ### What & Why
 
@@ -645,7 +756,7 @@ npm install --save-dev @axe-core/playwright
 ### Writing Accessibility Tests
 
 ```typescript
-// tests/accessibility/accessibility.spec.ts
+// e2e/specs/accessibility/accessibility.spec.ts
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -674,7 +785,7 @@ test.describe('Accessibility', () => {
 
 ---
 
-## 11. BDD with Cucumber
+## 12. BDD with Cucumber
 
 ### What & Why
 
@@ -757,7 +868,7 @@ npx playwright test     # Run generated tests
 
 ---
 
-## 12. CI/CD Pipeline
+## 13. CI/CD Pipeline
 
 ### What & Why
 
@@ -819,7 +930,7 @@ jobs:
 
 ---
 
-## 13. Best Practices
+## 14. Best Practices
 
 ### Locator Strategy (Priority Order)
 

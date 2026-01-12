@@ -1,11 +1,11 @@
 import { createBdd } from 'playwright-bdd';
 import { expect } from '@playwright/test';
-import { settings } from '../../../src/config/settings';
+import { settings } from '../../../lib/config/settings';
 import {
   LoginLocators,
   InventoryLocators,
   CartLocators,
-} from '../../../src/locators/sauce-demo.locators';
+} from '../../../e2e/page-objects/sauce-demo';
 
 const { Given, When, Then } = createBdd();
 

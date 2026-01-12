@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-import { URLS } from './src/config/constants';
+import { URLS } from './lib/config/constants';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './e2e',
   testIgnore: ['**/unit/**', '**/tests/unit/**', '**/database/**', '**/bdd/**'],
   timeout: 30000,
   expect: {
