@@ -4,7 +4,7 @@ import {
   InventoryLocators,
   CartLocators,
   CheckoutLocators,
-} from '../../../src/locators/sauce-demo.locators';
+} from '../../../e2e/page-objects/sauce-demo';
 
 const { Given, When, Then } = createBdd();
 

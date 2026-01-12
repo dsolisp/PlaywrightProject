@@ -8,12 +8,13 @@ A modern, portfolio-quality test automation framework demonstrating industry bes
 
 ## 📊 Test Coverage
 
-| Test Type     | Count   | Framework      |
-| ------------- | ------- | -------------- |
-| Unit Tests    | 98      | Vitest         |
-| E2E/Web Tests | 78      | Playwright     |
-| BDD Tests     | 13      | playwright-bdd |
-| **Total**     | **189** |                |
+| Test Type      | Count   | Framework      |
+| -------------- | ------- | -------------- |
+| Unit Tests     | 68      | Vitest         |
+| Database Tests | 11      | Vitest         |
+| E2E Tests      | 78      | Playwright     |
+| BDD Tests      | 13      | playwright-bdd |
+| **Total**      | **170** |                |
 
 ---
 
@@ -49,23 +50,22 @@ npm test
 
 ### 🧪 Testing Capabilities
 
-| Feature               | Technology           | Description                                   |
-| --------------------- | -------------------- | --------------------------------------------- |
-| **E2E Web Testing**   | Playwright           | Page Object Model with base class inheritance |
-| **API Testing**       | Axios + Playwright   | REST API validation and contract testing      |
-| **Visual Regression** | Playwright Snapshots | Automated screenshot comparison               |
-| **Accessibility**     | axe-core             | WCAG 2.1 AA compliance checking               |
-| **BDD Testing**       | playwright-bdd       | Cucumber-style Gherkin syntax                 |
-| **Unit Testing**      | Vitest               | Fast, modern unit test runner                 |
-| **Performance**       | Playwright Metrics   | Page load and Core Web Vitals                 |
+| Feature               | Technology           | Description                                |
+| --------------------- | -------------------- | ------------------------------------------ |
+| **E2E Web Testing**   | Playwright           | Page Object Model with 1:1 locator pairing |
+| **API Testing**       | Playwright Request   | REST API validation and contract testing   |
+| **Visual Regression** | Playwright Snapshots | Automated screenshot comparison            |
+| **Accessibility**     | axe-core             | WCAG 2.1 AA compliance checking            |
+| **BDD Testing**       | playwright-bdd       | Cucumber-style Gherkin syntax              |
+| **Unit Testing**      | Vitest               | Fast, modern unit test runner              |
+| **Performance**       | Playwright Metrics   | Page load and Core Web Vitals              |
 
 ### 🏗️ Architecture Patterns
 
-- **Page Object Model (POM)** - Centralized page interactions
+- **Page Object Model (POM)** - 1:1 Page + Locator file pairing
 - **Fixture Pattern** - Reusable test setup with authentication
 - **Factory Pattern** - Dynamic test data generation
-- **Centralized Locators** - Single source of truth for selectors
-- **Configuration Management** - Environment-based settings
+- **Configuration Management** - Environment-based settings in `lib/config/`
 
 ### 🔧 Developer Experience
 
@@ -81,52 +81,60 @@ npm test
 
 ```
 PlaywrightProject/
-├── src/                          # Source code
+├── e2e/                          # End-to-end test code
+│   ├── fixtures/                 # Playwright test fixtures
+│   │   └── test.fixture.ts       # Custom fixtures with auth
+│   ├── page-objects/             # Page Object Model classes
+│   │   ├── base.page.ts          # Abstract base page
+│   │   ├── sauce-demo/           # SauceDemo pages (1:1 pattern)
+│   │   │   ├── login.page.ts + login.locators.ts
+│   │   │   ├── inventory.page.ts + inventory.locators.ts
+│   │   │   ├── cart.page.ts + cart.locators.ts
+│   │   │   ├── checkout.page.ts + checkout.locators.ts
+│   │   │   └── index.ts          # Barrel exports
+│   │   └── search-engine/        # Search engine pages
+│   │       ├── search.page.ts + search.locators.ts
+│   │       └── index.ts
+│   └── specs/                    # All E2E test specs
+│       ├── sauce-demo/           # SauceDemo tests
+│       ├── search-engine/        # Search engine tests
+│       ├── accessibility/        # WCAG accessibility tests
+│       ├── api/                  # API integration tests
+│       ├── contract/             # API contract tests
+│       ├── integration/          # E2E integration tests
+│       ├── performance/          # Performance metrics tests
+│       └── visual/               # Visual regression tests
+│
+├── lib/                          # Shared library code
 │   ├── config/                   # Configuration management
 │   │   ├── constants.ts          # Application constants & credentials
 │   │   └── settings.ts           # Environment settings loader
-│   ├── fixtures/                 # Playwright test fixtures
-│   │   └── test-fixtures.ts      # Custom fixtures with auth
-│   ├── locators/                 # Centralized element selectors
-│   │   ├── sauce-demo.locators.ts
-│   │   └── search-engine.locators.ts
-│   ├── pages/                    # Page Object Model classes
-│   │   ├── base.page.ts          # Abstract base page
-│   │   ├── sauce-demo/           # SauceDemo pages (split by page)
-│   │   │   ├── index.ts          # Barrel exports
-│   │   │   ├── login.page.ts     # Login page
-│   │   │   ├── inventory.page.ts # Inventory page
-│   │   │   ├── cart.page.ts      # Cart page
-│   │   │   └── checkout.page.ts  # Checkout page
-│   │   └── search-engine.page.ts # Bing search page object
-│   └── utils/                    # Utility modules
-│       ├── data-manager.ts       # Test data loading (CSV, JSON, YAML)
-│       ├── database.ts           # SQLite database helper
-│       ├── logger.ts             # Winston-based structured logging
+│   └── utils/                    # Shared utilities
 │       └── test-data-factory.ts  # Factory pattern for test data
 │
-├── tests/                        # All test files
-│   ├── accessibility/            # WCAG accessibility tests
-│   ├── api/                      # API integration tests
+├── src/                          # Source utilities
+│   └── utils/                    # Core utilities
+│       ├── data-manager.ts       # Test data loading (CSV, JSON)
+│       ├── database.ts           # SQLite database helper
+│       └── logger.ts             # Winston-based structured logging
+│
+├── tests/                        # Non-E2E tests
 │   ├── bdd/                      # Cucumber BDD tests
 │   │   ├── features/             # Gherkin feature files
-│   │   └── steps/                # Step definitions
-│   ├── contract/                 # API contract tests
-│   ├── database/                 # Database tests
-│   ├── integration/              # E2E integration tests
-│   ├── performance/              # Performance metrics tests
-│   ├── unit/                     # Unit tests (Vitest)
-│   ├── visual/                   # Visual regression tests
-│   └── web/                      # Web E2E tests
+│   │   ├── steps/                # Step definitions
+│   │   └── playwright.config.ts  # BDD-specific config
+│   ├── database/                 # Database tests (Vitest)
+│   └── unit/                     # Unit tests (Vitest)
 │
 ├── test-data/                    # Test data files
+│   ├── chinook.db                # SQLite database for database tests
 │   ├── users.json                # User test data
 │   └── test_users.csv            # CSV test data
 │
 ├── .github/workflows/            # CI/CD pipelines
 │   └── ci.yml                    # GitHub Actions workflow
 │
-├── playwright.config.ts          # Playwright configuration
+├── playwright.config.ts          # Playwright configuration (testDir: ./e2e)
 ├── vitest.config.ts              # Vitest configuration
 ├── eslint.config.js              # ESLint flat config
 ├── tsconfig.json                 # TypeScript configuration
@@ -150,7 +158,7 @@ npm run test:unit
 npx playwright test
 
 # Specific test file
-npx playwright test tests/web/sauce-demo.spec.ts
+npx playwright test specs/sauce-demo/sauce-demo.spec.ts
 
 # Specific browser
 npx playwright test --project=chromium
@@ -220,10 +228,10 @@ This framework tests two applications:
 | -------------------------------- | ---------------------------------------- |
 | `playwright.config.ts`           | Browser config, timeouts, reporters      |
 | `vitest.config.ts`               | Unit test runner configuration           |
-| `src/fixtures/test-fixtures.ts`  | Custom Playwright fixtures with auth     |
-| `src/pages/base.page.ts`         | Abstract base class for all pages        |
-| `src/config/settings.ts`         | Environment configuration loader         |
-| `src/utils/test-data-factory.ts` | Factory pattern for generating test data |
+| `e2e/fixtures/test.fixture.ts`   | Custom Playwright fixtures with auth     |
+| `e2e/page-objects/base.page.ts`  | Abstract base class for all pages        |
+| `lib/config/settings.ts`         | Environment configuration loader         |
+| `lib/utils/test-data-factory.ts` | Factory pattern for generating test data |
 
 ---
 
@@ -232,10 +240,13 @@ This framework tests two applications:
 Create a `.env` file (see `.env.example`):
 
 ```bash
-# URL Configuration (all URLs are centralized in src/config/constants.ts)
+# URL Configuration (all URLs are centralized in lib/config/constants.ts)
 BASE_URL=https://www.bing.com                    # Search engine for web tests
 SAUCE_DEMO_URL=https://www.saucedemo.com         # E-commerce demo app
 API_BASE_URL=https://jsonplaceholder.typicode.com # REST API for testing
+
+# Database
+DATABASE_PATH=./test-data/chinook.db             # SQLite database for tests
 
 # Logging
 LOG_LEVEL=info              # debug, info, warn, error
@@ -249,7 +260,7 @@ BROWSER=chromium            # chromium, firefox, webkit
 
 ### URL Configuration
 
-All URLs are defined in `src/config/constants.ts` as the single source of truth:
+All URLs are defined in `lib/config/constants.ts` as the single source of truth:
 
 | URL Constant            | Default                              | Environment Variable | Purpose             |
 | ----------------------- | ------------------------------------ | -------------------- | ------------------- |
@@ -271,8 +282,8 @@ To change URLs for different environments, set the environment variables in `.en
 
 ### Code Style
 
-- Follow Page Object Model for new pages
-- Add locators to centralized locator files
+- Follow Page Object Model with 1:1 locator pairing
+- Add new pages to `e2e/page-objects/<app>/`
 - Include unit tests for new utilities
 - Update documentation for new features
 
@@ -280,13 +291,15 @@ To change URLs for different environments, set the environment variables in `.en
 
 ## 🐛 Troubleshooting
 
-| Issue                 | Solution                                             |
-| --------------------- | ---------------------------------------------------- |
-| Browser not installed | `npx playwright install --with-deps`                 |
-| Tests timeout on Bing | Normal - CAPTCHA protection, tests handle gracefully |
-| Visual tests fail     | Run `npm run playwright:update-snapshots`            |
-| TypeScript errors     | Run `npx tsc --noEmit` to check                      |
-| ESLint errors         | Run `npm run lint` to see issues                     |
+| Issue                     | Solution                                                                                                                                                        |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Browser not installed     | `npx playwright install --with-deps`                                                                                                                            |
+| Tests timeout on Bing     | Normal - CAPTCHA protection, tests handle gracefully                                                                                                            |
+| Visual tests fail         | Run `npm run playwright:update-snapshots`                                                                                                                       |
+| TypeScript errors         | Run `npx tsc --noEmit` to check                                                                                                                                 |
+| ESLint errors             | Run `npm run lint` to see issues                                                                                                                                |
+| Database tests skip       | Download Chinook DB: `curl -L -o test-data/chinook.db https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite` |
+| better-sqlite3 build fail | Ensure you have C++ build tools: macOS: `xcode-select --install`, Linux: `apt install build-essential`                                                          |
 
 ---
 
@@ -300,7 +313,7 @@ To change URLs for different environments, set the environment variables in `.en
 
 This project demonstrates:
 
-✅ **Modern Architecture** - POM, fixtures, factories, centralized config
+✅ **Modern Architecture** - 1:1 POM + Locator pattern, fixtures, factories
 ✅ **Multi-Layer Testing** - Unit, integration, E2E, visual, accessibility, BDD
 ✅ **Type Safety** - Full TypeScript with strict mode
 ✅ **CI/CD Ready** - GitHub Actions with Allure reporting

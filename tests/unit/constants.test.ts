@@ -1,14 +1,7 @@
 // Make sure our constants are sane (positive timeouts, valid URLs, etc.)
 import { describe, test, expect } from 'vitest';
-import {
-  BROWSERS,
-  CREDENTIALS,
-  HTTP_STATUS,
-  PATHS,
-  TIMEOUTS,
-  URLS,
-  VIEWPORTS,
-} from '../../src/config/constants';
+import { HTTP_STATUS, PATHS, TIMEOUTS, URLS, VIEWPORTS } from '../../lib/config/constants';
+import { UserFactory } from '../../lib/utils/test-data-factory';
 
 describe('Constants Validation', () => {
   describe('Timeout Constants', () => {
@@ -34,20 +27,6 @@ describe('Constants Validation', () => {
 
     test('Animation timeout should be positive', () => {
       expect(TIMEOUTS.ANIMATION).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Browser Constants', () => {
-    test('Chromium browser should be chromium', () => {
-      expect(BROWSERS.CHROMIUM).toBe('chromium');
-    });
-
-    test('Firefox browser should be firefox', () => {
-      expect(BROWSERS.FIREFOX).toBe('firefox');
-    });
-
-    test('WebKit browser should be webkit', () => {
-      expect(BROWSERS.WEBKIT).toBe('webkit');
     });
   });
 
@@ -102,15 +81,17 @@ describe('Constants Validation', () => {
     });
   });
 
-  describe('Credentials Constants', () => {
-    test('Sauce standard user should have username and password', () => {
-      expect(CREDENTIALS.SAUCE.STANDARD_USER.username).toBeTruthy();
-      expect(CREDENTIALS.SAUCE.STANDARD_USER.password).toBeTruthy();
+  describe('UserFactory Credentials', () => {
+    test('Valid user should have username and password', () => {
+      const user = UserFactory.valid();
+      expect(user.username).toBeTruthy();
+      expect(user.password).toBeTruthy();
     });
 
-    test('Sauce locked user should have username and password', () => {
-      expect(CREDENTIALS.SAUCE.LOCKED_USER.username).toBeTruthy();
-      expect(CREDENTIALS.SAUCE.LOCKED_USER.password).toBeTruthy();
+    test('Locked user should have username and password', () => {
+      const user = UserFactory.locked();
+      expect(user.username).toBeTruthy();
+      expect(user.password).toBeTruthy();
     });
   });
 

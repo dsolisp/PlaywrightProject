@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { generateTestData, clearCache } from '../../src/utils/data-manager';
+import { generateTestData, UserFactory, CheckoutFactory } from '../../lib/utils/test-data-factory';
 
 /**
- * Data manager unit tests - test data generation utilities.
+ * Test data factory unit tests - test data generation utilities.
  */
 
-describe('DataManager', () => {
-  describe('Test Data Generation', () => {
+describe('Test Data Factory', () => {
+  describe('Random Data Generation', () => {
     it('should generate unique emails', async () => {
       const gen = generateTestData();
       const email1 = gen.email();
@@ -72,10 +72,37 @@ describe('DataManager', () => {
     });
   });
 
-  describe('Cache Management', () => {
-    it('should clear cache', () => {
-      // This just verifies the function doesn't throw
-      expect(() => clearCache()).not.toThrow();
+  describe('UserFactory', () => {
+    it('should create valid user credentials', () => {
+      const user = UserFactory.valid();
+      expect(user.username).toBe('standard_user');
+      expect(user.password).toBe('secret_sauce');
+    });
+
+    it('should create locked user credentials', () => {
+      const user = UserFactory.locked();
+      expect(user.username).toBe('locked_out_user');
+    });
+
+    it('should create random user credentials', () => {
+      const user = UserFactory.random();
+      expect(user.username).toMatch(/^user_\d+$/);
+      expect(user.password).toMatch(/^pass_[a-z0-9]+$/);
+    });
+  });
+
+  describe('CheckoutFactory', () => {
+    it('should create valid checkout info', () => {
+      const info = CheckoutFactory.valid();
+      expect(info.firstName).toBe('John');
+      expect(info.lastName).toBe('Doe');
+      expect(info.zipCode).toBe('12345');
+    });
+
+    it('should create custom checkout info', () => {
+      const info = CheckoutFactory.custom({ firstName: 'Jane' });
+      expect(info.firstName).toBe('Jane');
+      expect(info.lastName).toBe('Doe'); // default
     });
   });
 });

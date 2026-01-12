@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { settings } from '../../src/config/settings';
-import { URLS, BROWSERS } from '../../src/config/constants';
+import { settings } from '../../lib/config/settings';
+import { URLS } from '../../lib/config/constants';
 
 describe('Settings', () => {
   describe('Default Values', () => {
@@ -13,7 +13,7 @@ describe('Settings', () => {
     });
 
     it('should have default browser', () => {
-      expect(settings().browser).toBe(BROWSERS.CHROMIUM);
+      expect(settings().browser).toBe('chromium');
     });
 
     it('should have headless true by default', () => {
