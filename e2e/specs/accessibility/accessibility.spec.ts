@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { settings } from '../../../lib/config/settings';
 import { UserFactory } from '../../../lib/utils/test-data-factory';
-import { LoginLocators } from '../../page-objects/sauce-demo';
 
 // a11y checks with axe-core. We're lenient on external sites (Bing) but stricter on our own pages.
+// GEMINI Style: Use semantic locators directly
 
 test.describe('Accessibility Tests', () => {
   test.describe('Bing Accessibility', () => {
@@ -61,15 +61,15 @@ test.describe('Accessibility Tests', () => {
     });
 
     test('should have accessible inventory page', async ({ page }) => {
-      // Login first
+      // Login first - GEMINI style semantic locators
       const user = UserFactory.valid();
       await page.goto(settings().sauceDemoUrl);
-      await page.fill(LoginLocators.USERNAME_INPUT, user.username);
-      await page.fill(LoginLocators.PASSWORD_INPUT, user.password);
-      await page.click(LoginLocators.LOGIN_BUTTON);
+      await page.getByPlaceholder('Username').fill(user.username);
+      await page.getByPlaceholder('Password').fill(user.password);
+      await page.getByRole('button', { name: 'Login' }).click();
 
       // Wait for inventory page
-      await page.waitForSelector('.inventory_container');
+      await expect(page.locator('.inventory_container')).toBeVisible();
 
       const results = await new AxeBuilder({ page })
         .include('.inventory_container')

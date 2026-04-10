@@ -1,45 +1,56 @@
-import { Page } from '@playwright/test';
-import { BasePage } from '../base.page';
-import { SearchLocators } from './search.locators';
+import { Page, Locator, expect } from '@playwright/test';
 import { settings } from '../../../lib/config/settings';
 
 /**
- * Search Engine Page Object
+ * Search Engine Page Object - GEMINI Style
  * Handles Bing search interactions with CAPTCHA resilience
  */
-export class SearchEnginePage extends BasePage {
+export class SearchEnginePage {
+  readonly page: Page;
+
+  // Search elements - use getByRole/getByPlaceholder where possible
+  readonly searchInput: Locator;
+  readonly resultItems: Locator;
+  readonly resultTitles: Locator;
+  readonly resultsContainer: Locator;
+
   constructor(page: Page) {
-    super(page);
+    this.page = page;
+
+    // Bing search input - use name attribute (most reliable for Bing)
+    this.searchInput = page.locator('input[name="q"], textarea[name="q"]');
+
+    // Results - these vary by search engine, use generic selectors
+    this.resultItems = page.locator('#b_results .b_algo, .g');
+    this.resultTitles = page.locator('#b_results .b_algo h2, .g h3');
+    this.resultsContainer = page.locator('#b_results, #search');
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // NAVIGATION
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Navigation ─────────────────────────────────────────────────────
 
   async open(): Promise<this> {
-    await this.navigateTo(settings().baseUrl);
+    await this.page.goto(settings().baseUrl);
     return this;
   }
 
   async openUrl(url: string): Promise<this> {
-    await this.navigateTo(url);
+    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+    await this.page.goto(fullUrl);
     return this;
   }
 
-  override async getTitle(): Promise<string> {
-    return super.getTitle();
+  async getTitle(): Promise<string> {
+    return this.page.title();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // SEARCH ACTIONS
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Search Actions ─────────────────────────────────────────────────
 
   async isSearchInputVisible(): Promise<boolean> {
-    return this.isVisible(SearchLocators.SEARCH_INPUT);
+    return this.searchInput.isVisible();
   }
 
   async enterSearchQuery(query: string): Promise<this> {
-    await this.fill(SearchLocators.SEARCH_INPUT, query);
+    await this.searchInput.fill(query);
     return this;
   }
 
@@ -50,12 +61,12 @@ export class SearchEnginePage extends BasePage {
     const { waitForResults = true, timeout = 15000 } = options;
 
     await this.enterSearchQuery(query);
-    await this.pressKey('Enter');
-    await this.waitForLoadState('domcontentloaded');
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForLoadState('domcontentloaded');
 
     if (waitForResults) {
       try {
-        await this.waitForVisible(SearchLocators.RESULT_ITEMS, timeout);
+        await expect(this.resultItems.first()).toBeVisible({ timeout });
       } catch {
         // CAPTCHA blocked us - expected in headless
       }
@@ -64,30 +75,26 @@ export class SearchEnginePage extends BasePage {
     return this;
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // RESULTS
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Results ────────────────────────────────────────────────────────
 
   async hasResults(): Promise<boolean> {
     return (await this.getResultsCount()) > 0;
   }
 
   async getResultsCount(): Promise<number> {
-    return this.count(SearchLocators.RESULT_ITEMS);
+    return this.resultItems.count();
   }
 
   async getResultTitles(): Promise<string[]> {
-    return this.getAllTextContents(SearchLocators.RESULT_TITLES);
+    return this.resultTitles.allTextContents();
   }
 
   async clickResult(index: number): Promise<void> {
-    await this.waitForLoadState('networkidle');
-    await this.clickNth(`${SearchLocators.RESULT_TITLES} a`, index);
+    await this.page.waitForLoadState('networkidle');
+    await this.resultTitles.nth(index).locator('a').click();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // VERIFICATION
-  // ═══════════════════════════════════════════════════════════════════
+  // ── Verification ───────────────────────────────────────────────────
 
   async verifyResultsContain(text: string): Promise<boolean> {
     const titles = await this.getResultTitles();
@@ -96,7 +103,7 @@ export class SearchEnginePage extends BasePage {
   }
 
   async waitForResults(): Promise<void> {
-    await this.waitForVisible(SearchLocators.RESULTS_CONTAINER);
+    await expect(this.resultsContainer).toBeVisible();
   }
 
   async assertSearchAttempted(): Promise<{
@@ -104,7 +111,7 @@ export class SearchEnginePage extends BasePage {
     searchAttempted: boolean;
     message: string;
   }> {
-    const url = this.getCurrentUrl();
+    const url = this.page.url();
     const resultsCount = await this.getResultsCount();
 
     if (resultsCount > 0) {
@@ -124,15 +131,18 @@ export class SearchEnginePage extends BasePage {
       };
     }
 
-    if (url.includes('bing.com')) {
+    if (url.includes('bing.com') || url.includes('google.com')) {
       console.log('⚠️ Search may not have submitted - bot detection kicked in');
       return {
         hasResults: false,
         searchAttempted: false,
-        message: 'On Bing but search not submitted (likely bot detection)',
+        message: 'On search page but search not submitted (likely bot detection)',
       };
     }
 
     throw new Error(`Search was not attempted - unexpected URL: ${url}`);
   }
 }
+
+// Export alias for backward compatibility
+export { SearchEnginePage as SearchPage };

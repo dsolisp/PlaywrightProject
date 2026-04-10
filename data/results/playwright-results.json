@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "reporter": [
@@ -41,7 +41,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "chromium",
         "name": "chromium",
@@ -55,14 +55,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/danielsolis/Documents/GitHub/Personal/PlaywrightProject/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "firefox",
         "name": "firefox",
@@ -76,14 +76,14 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       },
       {
         "outputDir": "/Users/danielsolis/Documents/GitHub/Personal/PlaywrightProject/test-results",
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "webkit",
         "name": "webkit",
@@ -97,423 +97,68 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 0
       }
     ],
     "shard": null,
     "tags": [],
-    "updateSnapshots": "changed",
-    "updateSourceMethod": "patch",
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "3way",
     "version": "1.57.0",
-    "workers": 4,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
     {
-      "title": "specs/visual/visual.spec.ts",
-      "file": "specs/visual/visual.spec.ts",
+      "title": "specs/search-engine/search-engine.spec.ts",
+      "file": "specs/search-engine/search-engine.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Visual Regression Tests",
-          "file": "specs/visual/visual.spec.ts",
-          "line": 8,
+          "title": "Search Engine Tests @search @external",
+          "file": "specs/search-engine/search-engine.spec.ts",
+          "line": 6,
           "column": 6,
-          "specs": [],
-          "suites": [
+          "specs": [
             {
-              "title": "Bing Visual Tests",
-              "file": "specs/visual/visual.spec.ts",
-              "line": 9,
-              "column": 8,
-              "specs": [
+              "title": "should display search input on homepage @smoke",
+              "ok": true,
+              "tags": [
+                "search",
+                "external",
+                "smoke"
+              ],
+              "tests": [
                 {
-                  "title": "homepage should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
                     {
-                      "timeout": 30000,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2883,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-04-10T13:28:27.279Z",
                       "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 0,
-                          "parallelIndex": 0,
-                          "status": "passed",
-                          "duration": 9830,
-                          "errors": [],
-                          "stdout": [
-                            {
-                              "text": "/Users/danielsolis/Documents/GitHub/Personal/PlaywrightProject/e2e/specs/visual/visual.spec.ts-snapshots/bing-homepage-chromium-darwin.png is re-generated, writing actual.\n"
-                            }
-                          ],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:43.002Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
+                      "attachments": []
                     }
                   ],
-                  "id": "43e080e244e7592f85f8-3a15019041716bb1750f",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 10,
-                  "column": 5
-                },
-                {
-                  "title": "search results should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 1,
-                          "parallelIndex": 1,
-                          "status": "passed",
-                          "duration": 9015,
-                          "errors": [],
-                          "stdout": [
-                            {
-                              "text": "/Users/danielsolis/Documents/GitHub/Personal/PlaywrightProject/e2e/specs/visual/visual.spec.ts-snapshots/bing-search-results-chromium-darwin.png is re-generated, writing actual.\n"
-                            }
-                          ],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:42.995Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-3160000e554c97e514b6",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 21,
-                  "column": 5
+                  "status": "expected"
                 }
-              ]
-            },
-            {
-              "title": "SauceDemo Visual Tests",
-              "file": "specs/visual/visual.spec.ts",
-              "line": 35,
-              "column": 8,
-              "specs": [
-                {
-                  "title": "login page should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
-                          "status": "passed",
-                          "duration": 2761,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:42.990Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-1773fd278626352655da",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 36,
-                  "column": 5
-                }
-              ]
-            },
-            {
-              "title": "SauceDemo Authenticated Visual Tests",
-              "file": "specs/visual/visual.spec.ts",
-              "line": 47,
-              "column": 21,
-              "specs": [
-                {
-                  "title": "inventory page should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
-                          "status": "passed",
-                          "duration": 2968,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:42.989Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-e8f87082faed78f85f80",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 48,
-                  "column": 5
-                },
-                {
-                  "title": "product cards should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
-                          "status": "passed",
-                          "duration": 2910,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:46.272Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-4c2c3afdfc1ff4ecb61a",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 61,
-                  "column": 5
-                },
-                {
-                  "title": "cart with items should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
-                          "status": "passed",
-                          "duration": 3146,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:46.677Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-6d38d029aaf10834bb50",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 73,
-                  "column": 5
-                }
-              ]
-            },
-            {
-              "title": "Element Screenshots",
-              "file": "specs/visual/visual.spec.ts",
-              "line": 90,
-              "column": 8,
-              "specs": [
-                {
-                  "title": "search input should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
-                          "status": "passed",
-                          "duration": 1440,
-                          "errors": [],
-                          "stdout": [
-                            {
-                              "text": "/Users/danielsolis/Documents/GitHub/Personal/PlaywrightProject/e2e/specs/visual/visual.spec.ts-snapshots/search-input-chromium-darwin.png is re-generated, writing actual.\n"
-                            }
-                          ],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:49.251Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-b9657c61d6c5381dd5dd",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 91,
-                  "column": 5
-                },
-                {
-                  "title": "login button should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
-                          "status": "passed",
-                          "duration": 1294,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:49.957Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-0270b00f3afdf023e563",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 99,
-                  "column": 5
-                }
-              ]
-            },
-            {
-              "title": "Responsive Visual Tests",
-              "file": "specs/visual/visual.spec.ts",
-              "line": 107,
-              "column": 8,
-              "specs": [
-                {
-                  "title": "mobile viewport should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
-                          "status": "passed",
-                          "duration": 1949,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:50.714Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-7d7fc05e5f59009896fa",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 108,
-                  "column": 5
-                },
-                {
-                  "title": "tablet viewport should match baseline",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 30000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
-                      "projectId": "chromium",
-                      "projectName": "chromium",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
-                          "status": "passed",
-                          "duration": 1778,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-01-12T16:13:51.289Z",
-                          "annotations": [],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "expected"
-                    }
-                  ],
-                  "id": "43e080e244e7592f85f8-6e8e65646aac57d9f7ad",
-                  "file": "specs/visual/visual.spec.ts",
-                  "line": 118,
-                  "column": 5
-                }
-              ]
+              ],
+              "id": "dd1af676f1691fe0fd73-51e3b25a260aededb568",
+              "file": "specs/search-engine/search-engine.spec.ts",
+              "line": 11,
+              "column": 3
             }
           ]
         }
@@ -522,9 +167,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-01-12T16:13:42.290Z",
-    "duration": 11062.071,
-    "expected": 10,
+    "startTime": "2026-04-10T13:28:22.164Z",
+    "duration": 12914.84,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

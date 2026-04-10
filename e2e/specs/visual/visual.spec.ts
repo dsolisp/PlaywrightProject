@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { authenticatedTest } from '../../fixtures/test.fixture';
 import { settings } from '../../../lib/config/settings';
-import { InventoryLocators, CartLocators } from '../../page-objects/sauce-demo';
 
 // Screenshot comparison tests. Run `npx playwright test --update-snapshots` to update baselines.
+// GEMINI Style: Use semantic locators directly
 
 test.describe('Visual Regression Tests', () => {
   test.describe('Bing Visual Tests', () => {
@@ -20,8 +20,8 @@ test.describe('Visual Regression Tests', () => {
 
     test('search results should match baseline', async ({ page }) => {
       await page.goto(settings().baseUrl);
-      await page.fill('#sb_form_q', 'playwright');
-      await page.click('#search_icon');
+      await page.locator('input[name="q"], textarea[name="q"]').fill('playwright');
+      await page.keyboard.press('Enter');
       await page.waitForLoadState('networkidle');
 
       // Mask dynamic content (ads, personalized results)
@@ -50,7 +50,7 @@ test.describe('Visual Regression Tests', () => {
       async ({ authenticatedPage, page }) => {
         // authenticatedPage fixture handles login, we just verify we're on inventory
         await expect(authenticatedPage.isLoaded()).resolves.toBe(true);
-        await page.locator(InventoryLocators.INVENTORY_CONTAINER).waitFor();
+        await expect(page.locator('.inventory_item').first()).toBeVisible();
 
         await expect(page).toHaveScreenshot('saucedemo-inventory.png', {
           maxDiffPixels: 100,
@@ -62,11 +62,11 @@ test.describe('Visual Regression Tests', () => {
       'product cards should match baseline',
       async ({ authenticatedPage, page }) => {
         await expect(authenticatedPage.isLoaded()).resolves.toBe(true);
-        await page.locator(InventoryLocators.INVENTORY_ITEMS).first().waitFor();
+        const inventoryItems = page.locator('.inventory_item');
+        await expect(inventoryItems.first()).toBeVisible();
 
         // Screenshot first product card
-        const firstItem = page.locator(InventoryLocators.INVENTORY_ITEMS).first();
-        await expect(firstItem).toHaveScreenshot('saucedemo-product-card.png');
+        await expect(inventoryItems.first()).toHaveScreenshot('saucedemo-product-card.png');
       },
     );
 
@@ -78,7 +78,7 @@ test.describe('Visual Regression Tests', () => {
         await authenticatedPage.addToCart(1);
         await authenticatedPage.goToCart();
 
-        await page.locator(CartLocators.CART_LIST).waitFor();
+        await expect(page.locator('.cart_list')).toBeVisible();
 
         await expect(page).toHaveScreenshot('saucedemo-cart.png', {
           maxDiffPixels: 50,

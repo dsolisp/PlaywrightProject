@@ -12,6 +12,13 @@ test.describe('Search Engine Tests @search @external', () => {
     expect(await searchPage.isSearchInputVisible()).toBe(true);
   });
 
+  test('should display search button on homepage d @smoke', async ({ searchPage, page }) => {
+    //basic tests no page object use
+    await searchPage.openUrl('https://www.google.com');
+    const searchButton = await page.locator('button[type="submit"], input[type="submit"]');
+    await expect(searchButton).toBeVisible();
+  });
+
   test('should search for a term and display results', async ({ searchPage }) => {
     await searchPage.search('playwright testing');
 

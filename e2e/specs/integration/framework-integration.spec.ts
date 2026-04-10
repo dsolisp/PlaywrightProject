@@ -1,14 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { settings } from '../../../lib/config/settings';
 import { generateTestData } from '../../../lib/utils/test-data-factory';
-import {
-  LoginLocators,
-  InventoryLocators,
-  CartLocators,
-  CheckoutLocators,
-} from '../../page-objects/sauce-demo';
 
-// Make sure all the framework pieces (settings, locators, data factories) play nice together
+// Make sure all the framework pieces (settings, data factories) play nice together
+// GEMINI Style: Use semantic locators directly, no imported locator constants
 
 test.describe('Framework Integration Tests', () => {
   test.describe('Data Factory Integration', () => {
@@ -26,23 +21,23 @@ test.describe('Framework Integration Tests', () => {
       expect(userData.firstName).toBeTruthy();
       expect(userData.lastName).toBeTruthy();
 
-      // Use generated data in a form
+      // Use generated data in a form - GEMINI style semantic locators
       await page.goto(settings().sauceDemoUrl);
-      await page.fill(LoginLocators.USERNAME_INPUT, 'standard_user');
-      await page.fill(LoginLocators.PASSWORD_INPUT, 'secret_sauce');
-      await page.click(LoginLocators.LOGIN_BUTTON);
+      await page.getByPlaceholder('Username').fill('standard_user');
+      await page.getByPlaceholder('Password').fill('secret_sauce');
+      await page.getByRole('button', { name: 'Login' }).click();
 
-      // Navigate to checkout
-      await page.click(InventoryLocators.ADD_BACKPACK_BUTTON);
-      await page.click(InventoryLocators.CART_LINK);
-      await page.click(CartLocators.CHECKOUT_BUTTON);
+      // Navigate to checkout - GEMINI style
+      await page.getByTestId('add-to-cart-sauce-labs-backpack').click();
+      await page.locator('.shopping_cart_link').click();
+      await page.getByRole('button', { name: 'Checkout' }).click();
 
       // Use generated data in checkout form
-      await page.fill(CheckoutLocators.FIRST_NAME, userData.firstName);
-      await page.fill(CheckoutLocators.LAST_NAME, userData.lastName);
-      await page.fill(CheckoutLocators.POSTAL_CODE, userData.zipCode);
+      await page.getByPlaceholder('First Name').fill(userData.firstName);
+      await page.getByPlaceholder('Last Name').fill(userData.lastName);
+      await page.getByPlaceholder('Zip/Postal Code').fill(userData.zipCode);
 
-      await page.click(CheckoutLocators.CONTINUE_BUTTON);
+      await page.getByRole('button', { name: 'Continue' }).click();
       await expect(page).toHaveURL(/checkout-step-two/);
     });
 
@@ -85,16 +80,17 @@ test.describe('Framework Integration Tests', () => {
     });
   });
 
-  test.describe('Locators Integration', () => {
-    test('should use centralized locators for login flow', async ({ page }) => {
+  test.describe('Semantic Locators Integration', () => {
+    test('should use semantic locators for login flow', async ({ page }) => {
       await page.goto(settings().sauceDemoUrl);
 
-      // Use centralized locators
-      await page.fill(LoginLocators.USERNAME_INPUT, 'standard_user');
-      await page.fill(LoginLocators.PASSWORD_INPUT, 'secret_sauce');
-      await page.click(LoginLocators.LOGIN_BUTTON);
+      // GEMINI style - use semantic locators
+      await page.getByPlaceholder('Username').fill('standard_user');
+      await page.getByPlaceholder('Password').fill('secret_sauce');
+      await page.getByRole('button', { name: 'Login' }).click();
 
-      await expect(page.locator(InventoryLocators.INVENTORY_CONTAINER)).toBeVisible();
+      // Verify inventory is visible
+      await expect(page.locator('.inventory_item').first()).toBeVisible();
     });
   });
 });

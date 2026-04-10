@@ -1,3 +1,2 @@
-// Search Engine Page Objects - barrel export
-export { SearchEnginePage } from './search.page';
-export { SearchLocators } from './search.locators';
+// Search Engine Page Objects - barrel export (GEMINI Style)
+export { SearchEnginePage, SearchPage } from './search.page';

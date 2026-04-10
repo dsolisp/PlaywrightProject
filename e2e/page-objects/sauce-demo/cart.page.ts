@@ -1,42 +1,71 @@
-import { Page } from '@playwright/test';
-import { BasePage } from '../base.page';
-import { CartLocators } from './cart.locators';
-import { InventoryLocators } from './inventory.locators';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * Cart Page Object
- * Handles shopping cart interactions
+ * Cart Page Object - GEMINI Style
+ * Uses semantic locators (getByRole, getByTestId)
  */
-export class CartPage extends BasePage {
+export class CartPage {
+  readonly page: Page;
+
+  // Cart elements
+  readonly cartItems: Locator;
+  readonly itemNames: Locator;
+  readonly cartBadge: Locator;
+
+  // Buttons
+  readonly checkoutButton: Locator;
+  readonly continueShoppingButton: Locator;
+  readonly removeButtons: Locator;
+
   constructor(page: Page) {
-    super(page);
+    this.page = page;
+
+    // Cart items
+    this.cartItems = page.locator('.cart_item');
+    this.itemNames = page.locator('.inventory_item_name');
+    this.cartBadge = page.getByTestId('shopping-cart-badge');
+
+    // Buttons - use getByRole for semantic access
+    this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
+    this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
+    this.removeButtons = page.getByRole('button', { name: /remove/i });
   }
 
+  // ── Assertions ─────────────────────────────────────────────────────
+
+  async expectItemCount(count: number): Promise<void> {
+    await expect(this.cartItems).toHaveCount(count);
+  }
+
+  // ── Getters ────────────────────────────────────────────────────────
+
   async getItemCount(): Promise<number> {
-    return this.count(CartLocators.CART_ITEMS);
+    return this.cartItems.count();
   }
 
   async getCartBadgeCount(): Promise<number> {
-    if (!(await this.isVisible(InventoryLocators.CART_BADGE))) {
+    if (!(await this.cartBadge.isVisible())) {
       return 0;
     }
-    const text = await this.getText(InventoryLocators.CART_BADGE);
-    return parseInt(text, 10) || 0;
+    const text = await this.cartBadge.textContent();
+    return parseInt(text ?? '0', 10) || 0;
   }
 
   async getItemNames(): Promise<string[]> {
-    return this.getAllTextContents(CartLocators.ITEM_NAME);
+    return this.itemNames.allTextContents();
   }
 
+  // ── Actions ────────────────────────────────────────────────────────
+
   async removeItem(index: number): Promise<void> {
-    await this.clickNth(CartLocators.REMOVE_BUTTON, index);
+    await this.removeButtons.nth(index).click();
   }
 
   async checkout(): Promise<void> {
-    await this.click(CartLocators.CHECKOUT_BUTTON);
+    await this.checkoutButton.click();
   }
 
   async continueShopping(): Promise<void> {
-    await this.click(CartLocators.CONTINUE_SHOPPING);
+    await this.continueShoppingButton.click();
   }
 }

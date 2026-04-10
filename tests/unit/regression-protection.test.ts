@@ -19,16 +19,14 @@ describe('Regression Protection Tests', () => {
     });
 
     test('page objects should be importable', async () => {
-      await expect(import('../../e2e/page-objects/base.page')).resolves.toBeDefined();
+      await expect(import('../../e2e/page-objects/sauce-demo/login.page')).resolves.toBeDefined();
       await expect(
         import('../../e2e/page-objects/search-engine/search.page'),
       ).resolves.toBeDefined();
     });
 
-    test('locators should be importable', async () => {
-      await expect(
-        import('../../e2e/page-objects/search-engine/search.locators'),
-      ).resolves.toBeDefined();
+    test('page object index should be importable', async () => {
+      await expect(import('../../e2e/page-objects/index')).resolves.toBeDefined();
     });
   });
 
@@ -114,24 +112,26 @@ describe('Regression Protection Tests', () => {
   });
 
   describe('Page Classes Validation', () => {
-    test('BasePage should have required methods', async () => {
-      const { BasePage } = await import('../../e2e/page-objects/base.page');
-      expect(BasePage.prototype.navigateTo).toBeDefined();
-      expect(BasePage.prototype.reload).toBeDefined();
+    test('LoginPage should have required methods', async () => {
+      const { LoginPage } = await import('../../e2e/page-objects/sauce-demo/login.page');
+      expect(LoginPage.prototype.open).toBeDefined();
+      expect(LoginPage.prototype.login).toBeDefined();
     });
 
-    test('SearchEnginePage should extend BasePage', async () => {
-      const { BasePage } = await import('../../e2e/page-objects/base.page');
+    test('SearchEnginePage should have required methods', async () => {
       const { SearchEnginePage } = await import('../../e2e/page-objects/search-engine/search.page');
-      expect(SearchEnginePage.prototype instanceof BasePage).toBe(true);
+      expect(SearchEnginePage.prototype.open).toBeDefined();
+      expect(SearchEnginePage.prototype.search).toBeDefined();
     });
   });
 
-  describe('Locators Validation', () => {
-    test('SearchLocators should have required locators', async () => {
-      const locators = await import('../../e2e/page-objects/search-engine/search.locators');
-      expect(locators.SearchLocators).toBeDefined();
-      expect(locators.SearchLocators.SEARCH_INPUT).toBeDefined();
+  describe('Page Objects Validation', () => {
+    test('SearchEnginePage should have required properties', async () => {
+      const { SearchEnginePage } = await import('../../e2e/page-objects/search-engine/search.page');
+      expect(SearchEnginePage).toBeDefined();
+      // Verify it has the expected constructor signature
+      expect(SearchEnginePage.prototype.open).toBeDefined();
+      expect(SearchEnginePage.prototype.search).toBeDefined();
     });
   });
 });

@@ -1,72 +1,121 @@
-import { Page } from '@playwright/test';
-import { BasePage } from '../base.page';
-import { InventoryLocators } from './inventory.locators';
+import { Page, Locator, expect } from '@playwright/test';
 
 /**
- * Inventory Page Object
- * Handles product listing and cart interactions
+ * Inventory Page Object - GEMINI Style
+ * Uses semantic locators (getByRole, getByText, getByTestId)
  */
-export class InventoryPage extends BasePage {
+export class InventoryPage {
+  readonly page: Page;
+
+  // Container & List
+  readonly inventoryContainer: Locator;
+  readonly inventoryItems: Locator;
+
+  // Product elements
+  readonly itemNames: Locator;
+  readonly itemPrices: Locator;
+
+  // Cart
+  readonly cartLink: Locator;
+  readonly cartBadge: Locator;
+
+  // Sorting
+  readonly sortDropdown: Locator;
+
   constructor(page: Page) {
-    super(page);
+    this.page = page;
+
+    // Use getByTestId for containers (no semantic alternative)
+    this.inventoryContainer = page.getByTestId('inventory-container');
+    this.inventoryItems = page.locator('.inventory_item'); // No test-id available
+
+    // Product elements
+    this.itemNames = page.locator('.inventory_item_name');
+    this.itemPrices = page.locator('.inventory_item_price');
+
+    // Cart - use locator for cart link (it's an anchor with class, no accessible name)
+    this.cartLink = page.locator('.shopping_cart_link');
+    this.cartBadge = page.getByTestId('shopping-cart-badge');
+
+    // Sorting dropdown
+    this.sortDropdown = page.getByTestId('product-sort-container');
   }
 
+  // ── Assertions ─────────────────────────────────────────────────────
+
+  async expectLoaded(): Promise<void> {
+    await expect(this.inventoryItems.first()).toBeVisible();
+  }
+
+  // ── Getters ────────────────────────────────────────────────────────
+
   async isLoaded(): Promise<boolean> {
-    return this.isVisible(InventoryLocators.INVENTORY_CONTAINER);
+    return this.inventoryItems.first().isVisible();
   }
 
   async getItemCount(): Promise<number> {
-    return this.count(InventoryLocators.INVENTORY_ITEMS);
+    return this.inventoryItems.count();
   }
 
   async getItemNames(): Promise<string[]> {
-    return this.getAllTextContents(InventoryLocators.ITEM_NAME);
+    return this.itemNames.allTextContents();
   }
 
   async getItemPrices(): Promise<string[]> {
-    return this.getAllTextContents(InventoryLocators.ITEM_PRICE);
-  }
-
-  async addToCart(index: number): Promise<void> {
-    await this.clickNth(InventoryLocators.ADD_TO_CART_BUTTON, index);
-  }
-
-  async addBackpack(): Promise<void> {
-    await this.click(InventoryLocators.ADD_BACKPACK_BUTTON);
-  }
-
-  async addBikeLight(): Promise<void> {
-    await this.click(InventoryLocators.ADD_BIKELIGHT_BUTTON);
-  }
-
-  async clickProductName(index = 0): Promise<void> {
-    await this.clickNth(InventoryLocators.ITEM_NAME, index);
-  }
-
-  async clickBackToProducts(): Promise<void> {
-    await this.click(InventoryLocators.BACK_TO_PRODUCTS);
-  }
-
-  async addAllToCart(): Promise<void> {
-    const itemCount = await this.count(InventoryLocators.ADD_TO_CART_BUTTON);
-    for (let i = 0; i < itemCount; i++) {
-      await this.clickNth(InventoryLocators.ADD_TO_CART_BUTTON, i);
-    }
+    return this.itemPrices.allTextContents();
   }
 
   async getCartBadgeCount(): Promise<number> {
-    if (!(await this.isVisible(InventoryLocators.CART_BADGE))) {
+    if (!(await this.cartBadge.isVisible())) {
       return 0;
     }
-    const text = await this.getText(InventoryLocators.CART_BADGE);
-    return parseInt(text, 10) || 0;
+    const text = await this.cartBadge.textContent();
+    return parseInt(text ?? '0', 10) || 0;
+  }
+
+  // ── Actions ────────────────────────────────────────────────────────
+
+  async addToCart(index: number): Promise<void> {
+    // Use getByRole for buttons with dynamic names
+    const addButtons = this.page.getByRole('button', { name: /add to cart/i });
+    await addButtons.nth(index).click();
+  }
+
+  async addBackpack(): Promise<void> {
+    await this.page
+      .getByRole('button', { name: 'Add to cart', exact: false })
+      .filter({
+        has: this.page.locator('[data-test="add-to-cart-sauce-labs-backpack"]'),
+      })
+      .or(this.page.getByTestId('add-to-cart-sauce-labs-backpack'))
+      .click();
+  }
+
+  async addBikeLight(): Promise<void> {
+    await this.page.getByTestId('add-to-cart-sauce-labs-bike-light').click();
+  }
+
+  async clickProductName(index = 0): Promise<void> {
+    await this.itemNames.nth(index).click();
+  }
+
+  async clickBackToProducts(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Back to products' }).click();
+  }
+
+  async addAllToCart(): Promise<void> {
+    const addButtons = this.page.getByRole('button', { name: /add to cart/i });
+    const count = await addButtons.count();
+    for (let i = 0; i < count; i++) {
+      await addButtons.nth(i).click();
+    }
   }
 
   async goToCart(): Promise<void> {
-    await this.click(InventoryLocators.CART_LINK);
+    await this.cartLink.click();
   }
 
   async sortBy(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
-    await this.selectOption(InventoryLocators.SORT_DROPDOWN, option);
+    await this.sortDropdown.selectOption(option);
   }
 }
