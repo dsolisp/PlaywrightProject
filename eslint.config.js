@@ -67,4 +67,56 @@ export default [
       'playwright/prefer-web-first-assertions': 'warn',
     },
   },
+
+  // ── Law 3: Zero raw selectors in spec files ───────────────────────
+  {
+    files: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.object.name="page"][callee.property.name=/^(locator|getByRole|getByText|getByLabel|getByPlaceholder|getByTestId|getByAltText|getByTitle|fill|click|type)$/]',
+          message: '❌ Law 3: No raw selectors in specs. Use page object methods instead.',
+        },
+      ],
+    },
+  },
+
+  // ── Law 2: No assertions in page objects ─────────────────────────
+  {
+    files: ['pages/**/*.ts', 'components/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@playwright/test',
+              importNames: ['expect'],
+              message: '❌ Law 2: No assertions in pages/components. Return values; let tests assert.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // ── Law 2: No assertions in locator files ────────────────────────
+  {
+    files: ['locators/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@playwright/test',
+              importNames: ['expect'],
+              message: '❌ Law 2: No assertions in locators.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];

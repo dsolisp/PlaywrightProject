@@ -15,6 +15,7 @@ export default defineConfig({
     viewport: { width: 1280, height: 720 },
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
+    testIdAttribute: 'data-test', // SauceDemo uses data-test instead of data-testid
   },
   projects: [
     {
