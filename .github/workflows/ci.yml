@@ -7,8 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-unit:
+  quality-and-unit:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
@@ -23,10 +24,14 @@ jobs:
           node-version: 24
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Lint
         run: pnpm run lint
+      - name: Format Check
+        run: pnpm run format:check
       - name: Typecheck
         run: pnpm exec tsc --noEmit
+      - name: Audit (Dependency Cruise)
+        run: pnpm run depcruise
       - name: Run unit tests
         run: pnpm run test:unit
