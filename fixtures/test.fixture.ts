@@ -57,7 +57,7 @@ export const test = base.extend<CustomFixtures>({
             const jaegerUi = process.env.JAEGER_UI_URL; // e.g. http://localhost:16686
             if (jaegerUi) {
               await testInfo.attach('otel.jaeger_trace_url', {
-                body: `${jaegerUi.replace(/\\/$/, '')}/trace/${traceId}`,
+                body: `${jaegerUi.replace(/\/$/, '')}/trace/${traceId}`,
                 contentType: 'text/plain',
               });
             }
