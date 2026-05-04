@@ -14,7 +14,11 @@ export function seed(db: SeedDb) {
     'standard_user',
     'customer',
   );
-  db.prepare('INSERT INTO users (id, username, role) VALUES (?, ?, ?)').run(2, 'admin_user', 'admin');
+  db.prepare('INSERT INTO users (id, username, role) VALUES (?, ?, ?)').run(
+    2,
+    'admin_user',
+    'admin',
+  );
 
   db.exec('CREATE TABLE products (id INT, name TEXT, price REAL)');
   db.prepare('INSERT INTO products (id, name, price) VALUES (?, ?, ?)').run(
@@ -32,7 +36,5 @@ export function seedSqliteFile(dbPath: string) {
   } finally {
     db.close();
   }
-  // eslint-disable-next-line no-console
   console.log('✅ Playwright Database Seeded.');
 }
-
