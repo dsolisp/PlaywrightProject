@@ -83,7 +83,7 @@ test.describe('Performance Tests', () => {
 
       // Wait for interactive elements
       await loginPage.loginButtonLocator().waitFor({ state: 'visible' });
-      expect(await loginPage.loginButtonLocator().isVisible()).toBe(true);
+      await expect(loginPage.loginButtonLocator()).toBeVisible();
 
       const tti = Date.now() - startTime;
       console.info(`Time to Interactive (approx): ${tti}ms`);

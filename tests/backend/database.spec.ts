@@ -1,8 +1,6 @@
-import { test, expect, authenticatedTest } from '../../fixtures/test.fixture';
+import { test, expect } from '../../fixtures/test.fixture';
 import Database from 'better-sqlite3';
 import path from 'path';
-import fs from 'fs';
-import { execSync } from 'child_process';
 import { PATHS } from '../../config/constants';
 
 // Hybrid DB Testing Patterns
@@ -61,15 +59,14 @@ test.describe('Hybrid DB Testing Patterns @db', () => {
   });
 
   // ── Example 4: Data-Driven Login (Iterate from DB) ───────────────────
-  test('Example 4: Logs in with every customer-role user from DB', async ({ loginPage, page }) => {
+  test('Example 4: Logs in with every customer-role user from DB', async ({ loginPage, inventoryPage, page }) => {
     const users = db.prepare('SELECT * FROM users WHERE role = ? AND username != ?').all('customer', 'db_user') as { username: string }[];
 
     for (const user of users) {
       await loginPage.open();
       await loginPage.login(user.username, 'secret_sauce');
       await expect(page).toHaveURL(/.*inventory.html/);
-      await page.locator('#react-burger-menu-btn').click();
-      await page.locator('#logout_sidebar_link').click();
+      await inventoryPage.header.logout();
     }
   });
 

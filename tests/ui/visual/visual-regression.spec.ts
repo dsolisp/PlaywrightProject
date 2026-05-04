@@ -1,5 +1,4 @@
 import { test, expect, authenticatedTest } from '../../../fixtures/test.fixture';
-import { settings } from '../../../config/settings';
 
 // Screenshot comparison tests. Run `npx playwright test --update-snapshots` to update baselines.
 // Law 3: all locators accessed via POM methods — no raw page.locator() in specs.
@@ -37,9 +36,9 @@ test.describe('Visual Regression Testing @visual', () => {
       await expect(page).toHaveScreenshot('inventory-page-full.png', { fullPage: true });
     });
 
-    authenticatedTest('should match baseline ignoring cart badge (dynamic content)', async ({ page }) => {
+    authenticatedTest('should match baseline ignoring cart badge (dynamic content)', async ({ authenticatedPage, page }) => {
       await expect(page).toHaveScreenshot('inventory-page-clean.png', {
-        mask: [page.locator('.shopping_cart_badge')]
+        mask: [authenticatedPage.header.cartBadgeLocator()]
       });
     });
   });
