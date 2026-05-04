@@ -1,6 +1,6 @@
-name: "⚖️ Parity Violation"
-description: "A canonical test scenario is missing or divergent in one or more stacks"
-labels: ["parity-violation"]
+name: '⚖️ Parity Violation'
+description: 'A canonical test scenario is missing or divergent in one or more stacks'
+labels: ['parity-violation']
 body:
   - type: markdown
     attributes:
@@ -11,47 +11,47 @@ body:
   - type: input
     id: canonical-id
     attributes:
-      label: "Canonical ID"
-      description: "The scenario ID from TEST_PARITY.md (e.g. ADV-E3, SAUCE-07)"
-      placeholder: "ADV-E3"
+      label: 'Canonical ID'
+      description: 'The scenario ID from TEST_PARITY.md (e.g. ADV-E3, SAUCE-07)'
+      placeholder: 'ADV-E3'
     validations:
       required: true
 
   - type: checkboxes
     id: affected-stacks
     attributes:
-      label: "Affected stacks"
+      label: 'Affected stacks'
       options:
-        - label: "Python"
-        - label: "Playwright"
-        - label: "Cypress"
-        - label: "Java"
-        - label: "C#"
+        - label: 'Python'
+        - label: 'Playwright'
+        - label: 'Cypress'
+        - label: 'Java'
+        - label: 'C#'
 
   - type: textarea
     id: violation-description
     attributes:
-      label: "Violation description"
-      description: "What is missing or divergent?"
+      label: 'Violation description'
+      description: 'What is missing or divergent?'
     validations:
       required: true
 
   - type: textarea
     id: fix-plan
     attributes:
-      label: "Fix plan"
-      description: "Link PRs or describe the planned fix for each affected stack"
+      label: 'Fix plan'
+      description: 'Link PRs or describe the planned fix for each affected stack'
     validations:
       required: false
 
   - type: dropdown
     id: detected-by
     attributes:
-      label: "Detected by"
+      label: 'Detected by'
       options:
-        - "check_parity.sh (CI)"
-        - "cross_repo_audit.sh (local)"
-        - "Manual review"
-        - "Recruiter / external review"
+        - 'check_parity.sh (CI)'
+        - 'cross_repo_audit.sh (local)'
+        - 'Manual review'
+        - 'Recruiter / external review'
     validations:
       required: true

@@ -18,7 +18,10 @@ test.describe('Practice App — New Window / Tab @practice @smoke', () => {
       await expect(windowsPage.tabLink()).toHaveAttribute('href', /\/windows\/new/);
     });
 
-    test('should open the new window page in a new tab and verify content', async ({ windowsPage, context }) => {
+    test('should open the new window page in a new tab and verify content', async ({
+      windowsPage,
+      context,
+    }) => {
       const [newPage] = await Promise.all([
         context.waitForEvent('page'),
         windowsPage.tabLink().click(),
@@ -35,7 +38,10 @@ test.describe('Practice App — New Window / Tab @practice @smoke', () => {
 
   // ── ADV-E6: window.open() ────────────────────────────────────────────
   test.describe('ADV-E6: Open via window.open()', () => {
-    test('should open a new tab via window.open() and verify content', async ({ windowsPage, context }) => {
+    test('should open a new tab via window.open() and verify content', async ({
+      windowsPage,
+      context,
+    }) => {
       const [newPage] = await Promise.all([
         context.waitForEvent('page'),
         windowsPage.tabButton().click(),

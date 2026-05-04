@@ -35,8 +35,16 @@ export class DropdownPage extends BasePage {
   }
 
   // ── Getters ───────────────────────────────────────────────────────────
-  staticDropdown()  { return this.locators.staticDropdown; }
-  staticStatus()    { return this.locators.staticStatus; }
-  dynamicDropdown() { return this.locators.dynamicDropdown; }
-  dynamicStatus()   { return this.locators.dynamicStatus; }
+  staticDropdown() {
+    return this.locators.staticDropdown;
+  }
+  staticStatus() {
+    return this.locators.staticStatus;
+  }
+  dynamicDropdown() {
+    return this.locators.dynamicDropdown;
+  }
+  dynamicStatus() {
+    return this.locators.dynamicStatus;
+  }
 }

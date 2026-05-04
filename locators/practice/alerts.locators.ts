@@ -8,8 +8,16 @@ import type { Page } from '@playwright/test';
 export class AlertsLocators {
   constructor(private readonly page: Page) {}
 
-  get triggerAlert()   { return this.page.getByTestId('trigger-alert'); }
-  get triggerConfirm() { return this.page.getByTestId('trigger-confirm'); }
-  get triggerPrompt()  { return this.page.getByTestId('trigger-prompt'); }
-  get resultText()     { return this.page.getByTestId('result-text'); }
+  get triggerAlert() {
+    return this.page.getByTestId('trigger-alert');
+  }
+  get triggerConfirm() {
+    return this.page.getByTestId('trigger-confirm');
+  }
+  get triggerPrompt() {
+    return this.page.getByTestId('trigger-prompt');
+  }
+  get resultText() {
+    return this.page.getByTestId('result-text');
+  }
 }

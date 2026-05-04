@@ -60,11 +60,14 @@ test.describe('SauceDemo Inventory Tests @cart @regression', () => {
     expect(names[0]).toBeTruthy();
   });
 
-  authenticatedTest('should add item to cart and update badge @smoke', async ({ authenticatedPage }) => {
-    await authenticatedPage.addToCart(0);
-    const badgeCount = await authenticatedPage.getCartBadgeCount();
-    expect(badgeCount).toBe(1);
-  });
+  authenticatedTest(
+    'should add item to cart and update badge @smoke',
+    async ({ authenticatedPage }) => {
+      await authenticatedPage.addToCart(0);
+      const badgeCount = await authenticatedPage.getCartBadgeCount();
+      expect(badgeCount).toBe(1);
+    },
+  );
 
   authenticatedTest('should add multiple items to cart', async ({ authenticatedPage }) => {
     await authenticatedPage.addToCart(0);

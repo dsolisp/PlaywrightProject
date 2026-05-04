@@ -75,7 +75,8 @@ export default [
       'no-restricted-syntax': [
         'error',
         {
-          selector: 'CallExpression[callee.object.name="page"][callee.property.name=/^(locator|getByRole|getByText|getByLabel|getByPlaceholder|getByTestId|getByAltText|getByTitle|fill|click|type)$/]',
+          selector:
+            'CallExpression[callee.object.name="page"][callee.property.name=/^(locator|getByRole|getByText|getByLabel|getByPlaceholder|getByTestId|getByAltText|getByTitle|fill|click|type)$/]',
           message: '❌ Law 3: No raw selectors in specs. Use page object methods instead.',
         },
       ],
@@ -93,7 +94,8 @@ export default [
             {
               name: '@playwright/test',
               importNames: ['expect'],
-              message: '❌ Law 2: No assertions in pages/components. Return values; let tests assert.',
+              message:
+                '❌ Law 2: No assertions in pages/components. Return values; let tests assert.',
             },
           ],
         },

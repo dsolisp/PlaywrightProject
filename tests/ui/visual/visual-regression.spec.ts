@@ -4,7 +4,6 @@ import { test, expect, authenticatedTest } from '../../../fixtures/test.fixture'
 // Law 3: all locators accessed via POM methods — no raw page.locator() in specs.
 
 test.describe('Visual Regression Testing @visual', () => {
-
   test.describe('Login Page — Visual States', () => {
     test.beforeEach(async ({ loginPage }) => {
       await loginPage.open();
@@ -31,16 +30,22 @@ test.describe('Visual Regression Testing @visual', () => {
       await page.goto('/inventory.html');
     });
 
-    authenticatedTest('should match baseline for inventory page full scroll', async ({ authenticatedPage, page }) => {
-      await expect(authenticatedPage.inventoryItemsLocator().first()).toBeVisible();
-      await expect(page).toHaveScreenshot('inventory-page-full.png', { fullPage: true });
-    });
+    authenticatedTest(
+      'should match baseline for inventory page full scroll',
+      async ({ authenticatedPage, page }) => {
+        await expect(authenticatedPage.inventoryItemsLocator().first()).toBeVisible();
+        await expect(page).toHaveScreenshot('inventory-page-full.png', { fullPage: true });
+      },
+    );
 
-    authenticatedTest('should match baseline ignoring cart badge (dynamic content)', async ({ authenticatedPage, page }) => {
-      await expect(page).toHaveScreenshot('inventory-page-clean.png', {
-        mask: [authenticatedPage.header.cartBadgeLocator()]
-      });
-    });
+    authenticatedTest(
+      'should match baseline ignoring cart badge (dynamic content)',
+      async ({ authenticatedPage, page }) => {
+        await expect(page).toHaveScreenshot('inventory-page-clean.png', {
+          mask: [authenticatedPage.header.cartBadgeLocator()],
+        });
+      },
+    );
   });
 
   test.describe('Responsive Layout — Cross-Device', () => {
@@ -70,12 +75,19 @@ test.describe('Visual Regression Testing @visual', () => {
     });
 
     authenticatedTest('should allow minor differences with 10% threshold', async ({ page }) => {
-      await expect(page).toHaveScreenshot('inventory-flexible-comparison.png', { maxDiffPixelRatio: 0.10 });
+      await expect(page).toHaveScreenshot('inventory-flexible-comparison.png', {
+        maxDiffPixelRatio: 0.1,
+      });
     });
 
-    authenticatedTest('should detect even tiny differences with strict 1% threshold', async ({ page }) => {
-      await expect(page).toHaveScreenshot('inventory-strict-comparison.png', { maxDiffPixelRatio: 0.01 });
-    });
+    authenticatedTest(
+      'should detect even tiny differences with strict 1% threshold',
+      async ({ page }) => {
+        await expect(page).toHaveScreenshot('inventory-strict-comparison.png', {
+          maxDiffPixelRatio: 0.01,
+        });
+      },
+    );
   });
 
   test.describe('Component Visual Snapshots', () => {
@@ -88,7 +100,9 @@ test.describe('Visual Regression Testing @visual', () => {
     });
 
     test('should match baseline for username input field', async ({ loginPage }) => {
-      await expect(loginPage.usernameInputLocator()).toHaveScreenshot('username-input-component.png');
+      await expect(loginPage.usernameInputLocator()).toHaveScreenshot(
+        'username-input-component.png',
+      );
     });
 
     test('should match baseline for login logo', async ({ loginPage }) => {

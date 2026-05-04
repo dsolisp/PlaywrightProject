@@ -7,7 +7,13 @@ import { generateTestData } from '../../utils/test-data-factory';
 
 test.describe('Framework Integration Tests', () => {
   test.describe('Data Factory Integration', () => {
-    test('should generate and use test data with factory pattern', async ({ page, loginPage, inventoryPage, cartPage, checkoutPage }) => {
+    test('should generate and use test data with factory pattern', async ({
+      page,
+      loginPage,
+      inventoryPage,
+      cartPage,
+      checkoutPage,
+    }) => {
       // Use factory pattern to generate data
       const testData = generateTestData();
       const userData = {
@@ -77,7 +83,10 @@ test.describe('Framework Integration Tests', () => {
   });
 
   test.describe('Semantic Locators Integration', () => {
-    test('should use semantic locators for login flow via page objects', async ({ loginPage, inventoryPage }) => {
+    test('should use semantic locators for login flow via page objects', async ({
+      loginPage,
+      inventoryPage,
+    }) => {
       // GEMINI style - use semantic locators via page objects
       await loginPage.open();
       await loginPage.loginWithDefaults();

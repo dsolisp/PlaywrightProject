@@ -1,9 +1,9 @@
 ## Description
+
 <!-- What does this PR do? Link to the relevant task or issue. -->
 
-
-
 ## Type of change
+
 - [ ] `feat` — new feature (test, page, component, locator)
 - [ ] `fix` — bug fix
 - [ ] `refactor` — architectural improvement
@@ -13,6 +13,7 @@
 ---
 
 ## 7 Laws Compliance Checklist
+
 > Every PR must satisfy all 7 laws. CI will fail if any is violated.
 > Reference: [STANDARDS.md](../STANDARDS.md) · [ADRs](../docs/adr/)
 
@@ -27,6 +28,7 @@
 ---
 
 ## Parity Checklist
+
 > Required for any PR that adds or modifies a test scenario.
 
 - [ ] This PR does **not** add or modify test scenarios (parity check N/A)
@@ -35,6 +37,7 @@
 ---
 
 ## Architectural Changes
+
 > Required only if this PR changes a cross-cutting pattern (new layer, new tool, etc.)
 
 - [ ] No architectural change
@@ -43,14 +46,16 @@
 ---
 
 ## Sync-Managed Files
+
 > These files are managed by `sync-standards.sh`. Do not edit them directly in this repo.
 
-- [ ] I did **not** modify any sync-managed file (STANDARDS.md, docs/adr/*, lefthook.yml, renovate.json, etc.)
+- [ ] I did **not** modify any sync-managed file (STANDARDS.md, docs/adr/\*, lefthook.yml, renovate.json, etc.)
 - [ ] OR: I edited the canonical in `shared-docs/`, ran `sync-standards.sh`, and the updated files are included in this PR
 
 ---
 
 ## Testing
+
 - [ ] `task test` passes locally
 - [ ] `task lint` passes locally (0 warnings)
 - [ ] `task audit` passes locally (0 violations)
@@ -58,4 +63,5 @@
 ---
 
 ## Screenshots / Evidence
+
 <!-- If applicable: test run output, Allure report link, or before/after screenshot -->

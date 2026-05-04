@@ -98,4 +98,3 @@ test.describe('API Schema Validation @api @contract', () => {
     expect(body.results[0]).toHaveProperty('height');
   });
 });
-

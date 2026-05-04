@@ -27,10 +27,18 @@ export class WindowsPage extends BasePage {
   }
 
   // ── ADV-E5: target="_blank" link ──────────────────────────────────────
-  tabLink()   { return this.locators.openTabLink; }
-  tabButton() { return this.locators.openTabJs; }
+  tabLink() {
+    return this.locators.openTabLink;
+  }
+  tabButton() {
+    return this.locators.openTabJs;
+  }
 
   // ── /windows/new.html getters ──────────────────────────────────────────
-  newWindowHeading() { return this.locators.newWindowHeading; }
-  newWindowBody()    { return this.locators.newWindowBody; }
+  newWindowHeading() {
+    return this.locators.newWindowHeading;
+  }
+  newWindowBody() {
+    return this.locators.newWindowBody;
+  }
 }

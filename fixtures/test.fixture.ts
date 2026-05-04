@@ -64,7 +64,7 @@ export const test = base.extend<CustomFixtures>({
           }
           span.end();
         }
-      }
+      },
     );
   },
   loginPage: async ({ page }, use) => {

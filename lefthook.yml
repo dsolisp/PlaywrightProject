@@ -7,11 +7,10 @@ min_version: 1.6.0
 pre-commit:
   parallel: true
   commands:
-
     # ── Universal guards (sync-managed) ─────────────────────────────────────
 
     no-search-engine:
-      glob: "**/*.ts"
+      glob: '**/*.ts'
       run: |
         if grep -rn "bing\|google\.com\|search-engine\|SearchEngine" {staged_files} 2>/dev/null | grep -v "//"; then
           echo "❌ Search-engine reference found. See ADR decommission plan."
@@ -19,7 +18,7 @@ pre-commit:
         fi
 
     no-assertions-in-poms:
-      glob: "{pages,locators,components}/**/*.ts"
+      glob: '{pages,locators,components}/**/*.ts'
       run: |
         if grep -n "expect(\|\.should(\|toBeVisible\|toHaveText" {staged_files} 2>/dev/null; then
           echo "❌ Assertion found in pages/locators/components. Violates Law 2."
@@ -27,7 +26,7 @@ pre-commit:
         fi
 
     no-selectors-in-tests:
-      glob: "{tests,e2e}/**/*.{ts,feature}"
+      glob: '{tests,e2e}/**/*.{ts,feature}'
       run: |
         if grep -n "page\.locator(\|page\.getBy\|page\.getByTestId" {staged_files} 2>/dev/null; then
           echo "❌ Selector literal found in tests/. Violates Law 3."
@@ -37,11 +36,11 @@ pre-commit:
     # ── Stack-specific linting ───────────────────────────────────────────────
 
     eslint:
-      glob: "**/*.ts"
+      glob: '**/*.ts'
       run: pnpm exec eslint {staged_files} --max-warnings 0
 
     tsc:
-      glob: "**/*.ts"
+      glob: '**/*.ts'
       run: pnpm exec tsc --noEmit
 
 commit-msg:

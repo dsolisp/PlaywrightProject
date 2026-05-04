@@ -80,8 +80,6 @@ test.describe('E2E Integration Tests', () => {
     );
   });
 
-
-
   test.describe('API and UI Integration', () => {
     test('should verify API data matches UI', async ({ request }) => {
       const apiResponse = await request.get(`${URLS.JSON_PLACEHOLDER}/posts/1`);

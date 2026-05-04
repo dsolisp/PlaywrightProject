@@ -42,4 +42,3 @@ test.describe('Pact Consumer Contract (JSONPlaceholder) @pact', () => {
     await provider.finalize();
   });
 });
-

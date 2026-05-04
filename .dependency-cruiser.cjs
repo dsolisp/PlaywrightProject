@@ -13,7 +13,8 @@ module.exports = {
     {
       name: 'no-locators-importing-pages',
       severity: 'error',
-      comment: 'Locators are pure selector definitions — they must not depend on pages or components.',
+      comment:
+        'Locators are pure selector definitions — they must not depend on pages or components.',
       from: { path: '^locators/' },
       to: { path: '^(pages|components)/' },
     },

@@ -7,8 +7,16 @@ import type { Page } from '@playwright/test';
 export class DropdownLocators {
   constructor(private readonly page: Page) {}
 
-  get staticDropdown()  { return this.page.getByTestId('static-dropdown'); }
-  get staticStatus()    { return this.page.getByTestId('static-status'); }
-  get dynamicDropdown() { return this.page.getByTestId('dynamic-dropdown'); }
-  get dynamicStatus()   { return this.page.getByTestId('dynamic-status'); }
+  get staticDropdown() {
+    return this.page.getByTestId('static-dropdown');
+  }
+  get staticStatus() {
+    return this.page.getByTestId('static-status');
+  }
+  get dynamicDropdown() {
+    return this.page.getByTestId('dynamic-dropdown');
+  }
+  get dynamicStatus() {
+    return this.page.getByTestId('dynamic-status');
+  }
 }

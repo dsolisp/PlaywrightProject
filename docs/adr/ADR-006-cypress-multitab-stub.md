@@ -1,6 +1,7 @@
 # ADR-006 — Cypress Multi-Tab Strategy (window.open Stub)
 
 ## Status
+
 Accepted — 2026-05-02
 
 ## Context
@@ -17,12 +18,12 @@ current page — there is no mechanism to switch to a tab opened by the applicat
 
 ### Alternatives considered
 
-| Option | Verdict | Reason |
-|--------|---------|--------|
-| `cypress-multi-session` plugin | Rejected | Experimental, unmaintained, brittle |
-| CDP-level tab switching | Rejected | Requires Chrome-only setup, breaks cross-browser |
-| Skip the scenarios in Cypress | Rejected | Breaks test parity (Law 7) and hides a capability gap |
-| Stub `window.open` + validate URL intent | **Accepted** | Deterministic, fast, transparent about limitation |
+| Option                                   | Verdict      | Reason                                                |
+| ---------------------------------------- | ------------ | ----------------------------------------------------- |
+| `cypress-multi-session` plugin           | Rejected     | Experimental, unmaintained, brittle                   |
+| CDP-level tab switching                  | Rejected     | Requires Chrome-only setup, breaks cross-browser      |
+| Skip the scenarios in Cypress            | Rejected     | Breaks test parity (Law 7) and hides a capability gap |
+| Stub `window.open` + validate URL intent | **Accepted** | Deterministic, fast, transparent about limitation     |
 
 ## Decision
 
@@ -36,12 +37,12 @@ For scenarios E5 and E6 in the Cypress Advanced suite, use a **documented stub s
 
 ```typescript
 // cypress/e2e/advanced/windows.cy.ts
-it("E5 — opens new tab via link and validates destination", () => {
-  cy.window().then(win => cy.stub(win, "open").as("newTab"));
+it('E5 — opens new tab via link and validates destination', () => {
+  cy.window().then((win) => cy.stub(win, 'open').as('newTab'));
   windowsPage.clickNewTabLink();
-  cy.get("@newTab").should("have.been.calledWith", Cypress.env("WINDOWS_NEW_URL"));
-  cy.visit(Cypress.env("WINDOWS_NEW_URL"));
-  windowsPage.getNewWindowHeading().should("contain", "New Window");
+  cy.get('@newTab').should('have.been.calledWith', Cypress.env('WINDOWS_NEW_URL'));
+  cy.visit(Cypress.env('WINDOWS_NEW_URL'));
+  windowsPage.getNewWindowHeading().should('contain', 'New Window');
 });
 ```
 
@@ -62,13 +63,13 @@ Every test using this stub MUST include the following comment block:
 
 ### Cross-stack parity clarification
 
-| Stack | Multi-tab strategy |
-|-------|--------------------|
-| Python (Selenium) | `driver.window_handles` + `driver.switch_to.window()` |
-| Java (Selenium) | `driver.getWindowHandles()` + `driver.switchTo().window()` |
-| C# (Selenium) | `driver.WindowHandles` + `driver.SwitchTo().Window()` |
-| Playwright | `context.waitForEvent("page")` |
-| Cypress | **Stub** (this ADR) — documented limitation |
+| Stack             | Multi-tab strategy                                         |
+| ----------------- | ---------------------------------------------------------- |
+| Python (Selenium) | `driver.window_handles` + `driver.switch_to.window()`      |
+| Java (Selenium)   | `driver.getWindowHandles()` + `driver.switchTo().window()` |
+| C# (Selenium)     | `driver.WindowHandles` + `driver.SwitchTo().Window()`      |
+| Playwright        | `context.waitForEvent("page")`                             |
+| Cypress           | **Stub** (this ADR) — documented limitation                |
 
 The canonical test ID (E5, E6) is present in all 5 stacks. Cypress covers the URL intent
 validation; the actual handle-switching behavior is covered by the other 4 stacks.
@@ -76,11 +77,13 @@ validation; the actual handle-switching behavior is covered by the other 4 stack
 ## Consequences
 
 ### Positive
+
 - Test parity is maintained (all 5 stacks have E5 and E6).
 - The limitation is transparent — documented in the ADR, the test file, and the README.
 - The stub approach is deterministic and fast (no actual tab opened).
 
 ### Negative
+
 - Cypress E5/E6 do not fully replicate the browser UX (no real tab switching).
   This is an **honest gap**, not hidden behavior.
 - Recruiters and reviewers will see the stub — the comment block and README note turn
