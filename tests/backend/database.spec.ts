@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/test.fixture';
 import Database from 'better-sqlite3';
-import { seed } from '../../scripts/seed_db.js';
+import { seed } from '../../scripts/seed_db';
 
 // Hybrid DB Testing Patterns
 // Mirror of Cypress database.cy.ts

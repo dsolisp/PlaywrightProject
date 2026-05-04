@@ -1,5 +1,5 @@
 import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
@@ -33,16 +33,11 @@ export function configureTracing(serviceName: string) {
     diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
   }
 
-  const provider = new NodeTracerProvider({
-    resource: new Resource({
-      'service.name': serviceName,
-    }),
-  });
-
   const endpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT; // e.g. http://localhost:4318/v1/traces
+  const spanProcessors = [];
   if (endpoint) {
     const headers = parseOtelHeaders(process.env.OTEL_EXPORTER_OTLP_HEADERS);
-    provider.addSpanProcessor(
+    spanProcessors.push(
       new BatchSpanProcessor(
         new OTLPTraceExporter({
           url: endpoint,
@@ -51,6 +46,13 @@ export function configureTracing(serviceName: string) {
       ),
     );
   }
+
+  const provider = new NodeTracerProvider({
+    resource: resourceFromAttributes({
+      'service.name': serviceName,
+    }),
+    spanProcessors,
+  });
 
   provider.register();
 
