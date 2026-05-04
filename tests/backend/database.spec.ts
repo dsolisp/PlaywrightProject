@@ -1,7 +1,6 @@
 import { test, expect } from '../../fixtures/test.fixture';
 import Database from 'better-sqlite3';
-import path from 'path';
-import { PATHS } from '../../config/constants';
+import { seed } from '../../scripts/seed_db.js';
 
 // Hybrid DB Testing Patterns
 // Mirror of Cypress database.cy.ts
@@ -9,12 +8,11 @@ import { PATHS } from '../../config/constants';
 test.describe('Hybrid DB Testing Patterns @db', () => {
   test.describe.configure({ mode: 'serial' });
   let db: Database.Database;
-  const dbPath = path.resolve(process.cwd(), PATHS.DB);
 
   test.beforeAll(() => {
-    // Database seeding is now handled by PlaywrightProject/scripts/seed_db.js
-    // or via global setup, but we'll use a direct exec for now or assume it's seeded.
-    db = new Database(dbPath, { timeout: 5000 });
+    // Hermetic DB: use an isolated in-memory SQLite DB for this suite.
+    db = new Database(':memory:', { timeout: 5000 });
+    seed(db);
     db.pragma('journal_mode = WAL');
   });
 

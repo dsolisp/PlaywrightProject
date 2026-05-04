@@ -80,29 +80,7 @@ test.describe('E2E Integration Tests', () => {
     );
   });
 
-  // Search-engine stack was decommissioned in Phase 1 — fixture removed.
-  test.describe.skip('Search Engine Integration', () => {
-    // Bing often blocks automated browsers with CAPTCHA or bot detection.
-    // This test verifies we can at least reach the site and attempt a search.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    test('should search and navigate to results', async ({ searchPage }: any) => {
-      await searchPage.open();
 
-      // Verify we can access search input
-      const isSearchVisible = await searchPage.isSearchInputVisible();
-      expect(isSearchVisible).toBe(true);
-
-      // Attempt search - may be blocked by bot detection
-      await searchPage.search('playwright testing automation');
-
-      const result = await searchPage.assertSearchAttempted();
-      // Log the outcome for debugging
-      console.info(`Search result: ${result.message}`);
-
-      // Test passes if we at least reached Bing (bot detection is external limitation)
-      expect(result.hasResults || result.searchAttempted || isSearchVisible).toBe(true);
-    });
-  });
 
   test.describe('API and UI Integration', () => {
     test('should verify API data matches UI', async ({ request }) => {

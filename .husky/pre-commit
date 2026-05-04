@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+if command -v npx >/dev/null 2>&1; then
+  npx lint-staged
+else
+  echo "husky: npx not found in PATH; skipping pre-commit (likely GitHub Desktop environment)."
+  echo "husky: run 'pnpm exec lint-staged' (or 'npx lint-staged') from a terminal to validate locally."
+fi

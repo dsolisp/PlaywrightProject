@@ -2,11 +2,11 @@ import { test, expect } from '../../fixtures/test.fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { settings } from '../../config/settings';
 
-// a11y checks with axe-core. We're lenient on external sites (Bing) but stricter on our own pages.
+// a11y checks with axe-core. We're lenient on the homepage audit and stricter on our own pages.
 // GEMINI Style: Use semantic locators directly
 
 test.describe('Accessibility Tests', () => {
-  test.describe('Bing Accessibility', () => {
+  test.describe('Homepage Accessibility', () => {
     test('should not have critical accessibility violations on homepage', async ({ page }) => {
       await page.goto(settings().baseUrl);
 
@@ -29,11 +29,11 @@ test.describe('Accessibility Tests', () => {
       expect(results.violations.length).toBeLessThanOrEqual(10);
     });
 
-    test('should have accessible search form', async ({ page }) => {
+    test('should have accessible login form labels', async ({ page }) => {
       await page.goto(settings().baseUrl);
 
       const results = await new AxeBuilder({ page })
-        .include('#sb_form')
+        .include('#login_button_container')
         .withTags(['wcag2a', 'wcag2aa'])
         .analyze();
 

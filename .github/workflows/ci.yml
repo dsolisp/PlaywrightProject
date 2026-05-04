@@ -33,5 +33,9 @@ jobs:
         run: pnpm exec tsc --noEmit
       - name: Audit (Dependency Cruise)
         run: pnpm run depcruise
+
+      - name: Audit (Static Waits)
+        run: bash scripts/audit_static_waits.sh
+
       - name: Run unit tests
         run: pnpm run test:unit
