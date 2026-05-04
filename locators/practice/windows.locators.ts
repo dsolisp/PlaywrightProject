@@ -8,10 +8,18 @@ export class WindowsLocators {
   constructor(private readonly page: Page) {}
 
   // ── /windows.html ──────────────────────────────────────────────────────
-  get openTabLink() { return this.page.getByTestId('open-new-tab-link'); }
-  get openTabJs()   { return this.page.getByTestId('open-new-tab-js'); }
+  get openTabLink() {
+    return this.page.getByTestId('open-new-tab-link');
+  }
+  get openTabJs() {
+    return this.page.getByTestId('open-new-tab-js');
+  }
 
   // ── /windows/new.html ──────────────────────────────────────────────────
-  get newWindowHeading() { return this.page.getByTestId('new-window-heading'); }
-  get newWindowBody()    { return this.page.getByTestId('new-window-body'); }
+  get newWindowHeading() {
+    return this.page.getByTestId('new-window-heading');
+  }
+  get newWindowBody() {
+    return this.page.getByTestId('new-window-body');
+  }
 }

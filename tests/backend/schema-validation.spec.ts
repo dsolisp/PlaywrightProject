@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { URLS } from '../../config/constants';
 
-// API Contract Tests
-// Validates API schemas and contract stability using JSON Schema validation.
-// Mirror of Cypress contract.cy.ts
+// API Schema Validation Tests
+// Formerly: contract.spec.ts
+// Mirror of Cypress schema-validation.cy.ts
 
-test.describe('API Contract Tests @api @contract', () => {
+test.describe('API Schema Validation @api @contract', () => {
   const SWAPI_BASE = URLS.SWAPI;
 
   test('should match expected schema for /people endpoint', async ({ request }) => {
@@ -30,7 +30,7 @@ test.describe('API Contract Tests @api @contract', () => {
     expect(body).toHaveProperty('url');
   });
 
-  test('should validate films endpoint contract', async ({ request }) => {
+  test('should validate films endpoint schema', async ({ request }) => {
     const response = await request.get(`${SWAPI_BASE}/films/1/`);
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -50,7 +50,7 @@ test.describe('API Contract Tests @api @contract', () => {
     expect(body).toHaveProperty('url');
   });
 
-  test('should validate planets endpoint contract', async ({ request }) => {
+  test('should validate planets endpoint schema', async ({ request }) => {
     const response = await request.get(`${SWAPI_BASE}/planets/1/`);
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -67,13 +67,19 @@ test.describe('API Contract Tests @api @contract', () => {
     expect(Array.isArray(body.films)).toBe(true);
   });
 
-  test('should ensure contract stability — no unexpected fields removed', async ({ request }) => {
+  test('should ensure schema stability — required fields remain', async ({ request }) => {
     const response = await request.get(`${SWAPI_BASE}/people/1/`);
     expect(response.status()).toBe(200);
     const body = await response.json();
     const requiredFields = [
-      'name', 'height', 'mass', 'hair_color', 'skin_color',
-      'eye_color', 'birth_year', 'gender'
+      'name',
+      'height',
+      'mass',
+      'hair_color',
+      'skin_color',
+      'eye_color',
+      'birth_year',
+      'gender',
     ];
     for (const field of requiredFields) {
       expect(body).toHaveProperty(field);

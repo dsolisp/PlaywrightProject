@@ -55,7 +55,7 @@ test.describe('SWAPI — Comprehensive API Tests @api', () => {
   test('Example 2: Fetches a paginated collection of people', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/people`);
     expect(response.status()).toBe(200);
-    const body = await response.json() as SwapiListResponse<SwapiPerson>;
+    const body = (await response.json()) as SwapiListResponse<SwapiPerson>;
     expect(body.count).toBeGreaterThan(0);
     expect(body.next).not.toBeNull();
     expect(body.previous).toBeNull();
@@ -66,7 +66,7 @@ test.describe('SWAPI — Comprehensive API Tests @api', () => {
   test('Example 3: Fetches a person using search query', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/people?search=Darth Vader`);
     expect(response.status()).toBe(200);
-    const body = await response.json() as SwapiListResponse<SwapiPerson>;
+    const body = (await response.json()) as SwapiListResponse<SwapiPerson>;
     expect(body.count).toBe(1);
     expect(body.results[0].name).toBe('Darth Vader');
   });
@@ -75,12 +75,26 @@ test.describe('SWAPI — Comprehensive API Tests @api', () => {
   test('Example 4: Validates starship resource schema', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/starships/9`);
     expect(response.status()).toBe(200);
-    const body = await response.json() as SwapiStarship;
+    const body = (await response.json()) as SwapiStarship;
     const expectedKeys = [
-      'name', 'model', 'manufacturer', 'cost_in_credits', 'length',
-      'max_atmosphering_speed', 'crew', 'passengers', 'cargo_capacity',
-      'consumables', 'hyperdrive_rating', 'MGLT', 'starship_class',
-      'pilots', 'films', 'created', 'edited', 'url'
+      'name',
+      'model',
+      'manufacturer',
+      'cost_in_credits',
+      'length',
+      'max_atmosphering_speed',
+      'crew',
+      'passengers',
+      'cargo_capacity',
+      'consumables',
+      'hyperdrive_rating',
+      'MGLT',
+      'starship_class',
+      'pilots',
+      'films',
+      'created',
+      'edited',
+      'url',
     ];
     for (const key of expectedKeys) {
       expect(body).toHaveProperty(key);
@@ -110,7 +124,7 @@ test.describe('SWAPI — Comprehensive API Tests @api', () => {
   test('Example 8: Handles search with no matches', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/people?search=xyz_no_match`);
     expect(response.status()).toBe(200);
-    const body = await response.json() as SwapiListResponse<SwapiPerson>;
+    const body = (await response.json()) as SwapiListResponse<SwapiPerson>;
     expect(body.count).toBe(0);
     expect(body.results.length).toBe(0);
   });
@@ -119,19 +133,19 @@ test.describe('SWAPI — Comprehensive API Tests @api', () => {
   test('Example 9: Verifies first page has no previous link', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/people?page=1`);
     expect(response.status()).toBe(200);
-    const body = await response.json() as SwapiListResponse<SwapiPerson>;
+    const body = (await response.json()) as SwapiListResponse<SwapiPerson>;
     expect(body.previous).toBeNull();
     expect(body.next).not.toBeNull();
   });
 
   test('Example 10: Verifies last page has no next link', async ({ request }) => {
     const response = await request.get(`${BASE_URL}/people`);
-    const body = await response.json() as SwapiListResponse<SwapiPerson>;
+    const body = (await response.json()) as SwapiListResponse<SwapiPerson>;
     const totalPages = Math.ceil(body.count / body.results.length);
 
     const lastPage = await request.get(`${BASE_URL}/people?page=${totalPages}`);
     expect(lastPage.status()).toBe(200);
-    const lastBody = await lastPage.json() as SwapiListResponse<SwapiPerson>;
+    const lastBody = (await lastPage.json()) as SwapiListResponse<SwapiPerson>;
     expect(lastBody.next).toBeNull();
   });
 });

@@ -65,7 +65,7 @@ case $TEST_TYPE in
         ;;
     "contract")
         echo -e "${GREEN}Running contract tests...${NC}"
-        npm run test:contract
+        npm run test:schema-validation
         ;;
     "all")
         echo -e "${GREEN}Running all tests...${NC}"

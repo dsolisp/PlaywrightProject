@@ -18,7 +18,9 @@ test.describe('Practice App — Iframes @practice', () => {
       await expect(iframesPage.parentFrame()).toBeVisible();
     });
 
-    test('should allow typing in the contenteditable editor inside the iframe', async ({ iframesPage }) => {
+    test('should allow typing in the contenteditable editor inside the iframe', async ({
+      iframesPage,
+    }) => {
       await iframesPage.typeInEditor('Hello from Playwright!');
       await expect(iframesPage.editor()).toContainText('Hello from Playwright!');
     });

@@ -24,58 +24,118 @@ export class SelectorsPage extends BasePage {
   }
 
   // ── Section 1: id & name ──────────────────────────────────────────────
-  usernameInput() { return this.locators.inputUsername; }
-  passwordInput() { return this.locators.inputPassword; }
+  usernameInput() {
+    return this.locators.inputUsername;
+  }
+  passwordInput() {
+    return this.locators.inputPassword;
+  }
 
   // ── Section 2: CSS class & attribute ─────────────────────────────────
-  primaryButton()   { return this.locators.btnPrimary; }
-  secondaryButton() { return this.locators.btnSecondary; }
-  successBadge()    { return this.locators.badgeSuccess; }
-  warningBadge()    { return this.locators.badgeWarning; }
-  errorBadge()      { return this.locators.badgeError; }
+  primaryButton() {
+    return this.locators.btnPrimary;
+  }
+  secondaryButton() {
+    return this.locators.btnSecondary;
+  }
+  successBadge() {
+    return this.locators.badgeSuccess;
+  }
+  warningBadge() {
+    return this.locators.badgeWarning;
+  }
+  errorBadge() {
+    return this.locators.badgeError;
+  }
 
   // ── Section 3: link text ──────────────────────────────────────────────
-  exactLink()   { return this.locators.linkExact; }
-  partialLink() { return this.locators.linkPartial; }
-  ariaLink()    { return this.locators.linkAria; }
+  exactLink() {
+    return this.locators.linkExact;
+  }
+  partialLink() {
+    return this.locators.linkPartial;
+  }
+  ariaLink() {
+    return this.locators.linkAria;
+  }
 
   // ── Section 4: ARIA ───────────────────────────────────────────────────
-  emailInput()    { return this.locators.inputEmail; }
-  liveRegion()    { return this.locators.liveRegion; }
+  emailInput() {
+    return this.locators.inputEmail;
+  }
+  liveRegion() {
+    return this.locators.liveRegion;
+  }
   async triggerLiveRegion(): Promise<void> {
     await this.locators.btnTriggerLive.click();
   }
 
   // ── Section 5: form attributes ────────────────────────────────────────
-  disabledInput() { return this.locators.inputDisabled; }
-  checkboxAgree() { return this.locators.checkboxAgree; }
-  radioBasic()    { return this.locators.radioBasic; }
-  radioPro()      { return this.locators.radioPro; }
+  disabledInput() {
+    return this.locators.inputDisabled;
+  }
+  checkboxAgree() {
+    return this.locators.checkboxAgree;
+  }
+  radioBasic() {
+    return this.locators.radioBasic;
+  }
+  radioPro() {
+    return this.locators.radioPro;
+  }
   async selectCountry(value: string): Promise<void> {
     await this.locators.selectCountry.selectOption(value);
   }
 
   // ── Section 6: data attributes ────────────────────────────────────────
-  productList()        { return this.locators.productList; }
-  productItems()       { return this.locators.productItems; }
-  electronicsItems()   { return this.locators.productElectronics; }
+  productList() {
+    return this.locators.productList;
+  }
+  productItems() {
+    return this.locators.productItems;
+  }
+  electronicsItems() {
+    return this.locators.productElectronics;
+  }
 
   // ── Section 7: image ──────────────────────────────────────────────────
-  logo() { return this.locators.imgLogo; }
+  logo() {
+    return this.locators.imgLogo;
+  }
 
   // ── Section 8: title attribute ────────────────────────────────────────
-  saveButton()   { return this.locators.btnSave; }
-  deleteButton() { return this.locators.btnDelete; }
-  abbrQA()       { return this.locators.abbrQA; }
+  saveButton() {
+    return this.locators.btnSave;
+  }
+  deleteButton() {
+    return this.locators.btnDelete;
+  }
+  abbrQA() {
+    return this.locators.abbrQA;
+  }
 
   // ── Section 9: table ──────────────────────────────────────────────────
-  dataTable()                         { return this.locators.dataTable; }
-  tableRows()                         { return this.locators.tableRows; }
-  tableRowNameCell(rowId: number | string) { return this.locators.tableRowNameCell(rowId); }
+  dataTable() {
+    return this.locators.dataTable;
+  }
+  tableRows() {
+    return this.locators.tableRows;
+  }
+  tableRowNameCell(rowId: number | string) {
+    return this.locators.tableRowNameCell(rowId);
+  }
 
   // ── Section 10: XPath targets ─────────────────────────────────────────
-  fruitList()    { return this.locators.fruitList; }
-  fruitItems()   { return this.locators.fruitItems; }
-  xpathText()    { return this.locators.xpathText; }
-  xpathPartial() { return this.locators.xpathPartial; }
+  fruitList() {
+    return this.locators.fruitList;
+  }
+  fruitItems() {
+    return this.locators.fruitItems;
+  }
+  xpathText() {
+    return this.locators.xpathText;
+  }
+  xpathPartial() {
+    return this.locators.xpathPartial;
+  }
 }

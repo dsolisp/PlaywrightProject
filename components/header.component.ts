@@ -34,8 +34,12 @@ export class HeaderComponent extends BaseComponent {
   }
 
   /** Expose locators for test-level assertions (Law 2). */
-  pageTitleLocator() { return this.locators.pageTitle; }
-  cartBadgeLocator() { return this.locators.cartBadge; }
+  pageTitleLocator() {
+    return this.locators.pageTitle;
+  }
+  cartBadgeLocator() {
+    return this.locators.cartBadge;
+  }
 
   // ── Actions ────────────────────────────────────────────────────────
 

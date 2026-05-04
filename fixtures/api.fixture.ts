@@ -19,9 +19,9 @@ export const apiTest = base.extend<ApiFixtures>({
     // For our demo, we just mock the pattern.
     // Apply headers or cookies directly to the request context
     // request.post('/api/login', { data: { username: '...', password: '...' } });
-    
+
     await use(request);
-    
+
     // Cleanup code goes here
   },
 });

@@ -19,7 +19,8 @@
     "test:visual": "playwright test tests/ui/visual/",
     "test:perf": "playwright test tests/performance/",
     "test:integration": "playwright test tests/integration/",
-    "test:contract": "playwright test tests/backend/contract.spec.ts",
+    "test:schema-validation": "playwright test tests/backend/schema-validation.spec.ts",
+    "test:pact": "playwright test tests/pact/",
     "test:chromium": "playwright test --project=chromium",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
@@ -50,10 +51,11 @@
     ]
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.8.0",
     "@axe-core/playwright": "^4.11.0",
     "@eslint/css": "^0.13.0",
     "@eslint/js": "^9.37.0",
+    "@faker-js/faker": "^9.8.0",
+    "@pact-foundation/pact": "^15.0.0",
     "@playwright/test": "^1.56.0",
     "@types/pngjs": "^6.0.5",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
@@ -79,6 +81,13 @@
     "vitest": "^4.0.15"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.206.0",
+    "@opentelemetry/instrumentation": "^0.206.0",
+    "@opentelemetry/instrumentation-http": "^0.206.0",
+    "@opentelemetry/resources": "^2.7.1",
+    "@opentelemetry/sdk-trace-base": "^2.7.1",
+    "@opentelemetry/sdk-trace-node": "^2.7.1",
     "@types/better-sqlite3": "^7.6.13",
     "better-sqlite3": "^12.5.0",
     "dotenv": "^17.2.3",

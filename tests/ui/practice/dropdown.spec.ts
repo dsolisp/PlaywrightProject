@@ -47,7 +47,9 @@ test.describe('Practice App — Dropdown @practice @smoke', () => {
       await expect(dropdownPage.dynamicStatus()).toContainText('loaded');
     });
 
-    test('should select a dynamic option after load and update status', async ({ dropdownPage }) => {
+    test('should select a dynamic option after load and update status', async ({
+      dropdownPage,
+    }) => {
       await expect(dropdownPage.dynamicDropdown()).toBeEnabled();
       await dropdownPage.selectDynamic('1');
       await expect(dropdownPage.dynamicStatus()).not.toContainText('Fetching');

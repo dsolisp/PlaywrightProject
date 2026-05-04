@@ -1,6 +1,7 @@
 # ADR-005 — Component Object Model (COM)
 
 ## Status
+
 Accepted — 2026-05-02
 
 ## Context
@@ -44,11 +45,11 @@ locators/components/
 
 ### When to use a Component vs. a Page method
 
-| Situation | Use |
-|-----------|-----|
-| Widget appears on ≥ 2 pages | Component |
-| Widget has > 3 interactable elements | Component |
-| Logic is specific to one page | Page method |
+| Situation                                 | Use         |
+| ----------------------------------------- | ----------- |
+| Widget appears on ≥ 2 pages               | Component   |
+| Widget has > 3 interactable elements      | Component   |
+| Logic is specific to one page             | Page method |
 | Widget is a simple button with one action | Page method |
 
 ### Example (Python)
@@ -77,11 +78,13 @@ class InventoryPage(BasePage):
 ## Consequences
 
 ### Positive
+
 - Widget changes require editing one Component file — zero Page files touched.
 - Components are independently testable (inject a mock driver).
 - Pages become thinner and more focused on page-level flows.
 
 ### Negative
+
 - Initial setup requires identifying and extracting all reusable widgets (one-time cost,
   tracked in task 3.4, 5.3, 6.4, 7.4, 8.5).
 - Constructor injection increases constructor signature length — mitigated by using
