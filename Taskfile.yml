@@ -1,0 +1,125 @@
+version: "3"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# QA Portfolio — Playwright / TypeScript Stack
+# Interface contract: task names are IDENTICAL across all 5 repos.
+# ──────────────────────────────────────────────────────────────────────────────
+
+vars:
+  ALLURE_RESULTS: allure-results
+  ALLURE_REPORT:  allure-report
+  AUTH_FILE:      .auth/sauce.json
+
+tasks:
+
+  # ── Core ──────────────────────────────────────────────────────────────────
+
+  test:
+    desc: "Run the full test suite"
+    cmds:
+      - pnpm exec playwright test --reporter=allure-playwright
+
+  test:sauce:
+    desc: "Run SauceDemo E2E tests only"
+    cmds:
+      - pnpm exec playwright test tests/e2e/sauce-demo/ --reporter=allure-playwright
+
+  test:advanced:
+    desc: "Run Advanced Interactions tests (E1-E9)"
+    cmds:
+      - pnpm exec playwright test tests/e2e/advanced/ --reporter=allure-playwright
+
+  test:api:
+    desc: "Run API tests"
+    cmds:
+      - pnpm exec playwright test tests/api/ --reporter=allure-playwright
+
+  test:a11y:
+    desc: "Run Accessibility tests"
+    cmds:
+      - pnpm exec playwright test tests/accessibility/ --reporter=allure-playwright
+
+  test:bdd:
+    desc: "Run BDD (Cucumber) scenarios"
+    cmds:
+      - pnpm exec playwright test tests/bdd/ --reporter=allure-playwright
+
+  test:headed:
+    desc: "Run in headed mode (local debug)"
+    cmds:
+      - pnpm exec playwright test --headed
+
+  # ── Quality ───────────────────────────────────────────────────────────────
+
+  lint:
+    desc: "Run ESLint (0 warnings policy)"
+    cmds:
+      - pnpm exec eslint . --max-warnings 0
+
+  lint:fix:
+    desc: "Auto-fix ESLint violations"
+    cmds:
+      - pnpm exec eslint . --fix
+
+  lint:types:
+    desc: "TypeScript type-check"
+    cmds:
+      - pnpm exec tsc --noEmit
+
+  audit:
+    desc: "Run violation audit (must return 0)"
+    cmds:
+      - bash scripts/audit_violations.sh
+      - bash scripts/check-sync.sh
+
+  # ── Practice App ──────────────────────────────────────────────────────────
+
+  practice:up:
+    desc: "Start qa-practice-app on localhost:8080"
+    cmds:
+      - docker compose -f qa-practice-app/docker-compose.yml up -d
+      - echo "Practice app running at http://localhost:8080"
+
+  practice:down:
+    desc: "Stop qa-practice-app"
+    cmds:
+      - docker compose -f qa-practice-app/docker-compose.yml down
+
+  # ── Auth ──────────────────────────────────────────────────────────────────
+
+  auth:clear:
+    desc: "Delete cached auth state (force fresh login)"
+    cmds:
+      - rm -f {{.AUTH_FILE}}
+      - echo "Auth cache cleared."
+
+  # ── Allure ────────────────────────────────────────────────────────────────
+
+  allure:open:
+    desc: "Generate and open Allure report"
+    cmds:
+      - allure generate {{.ALLURE_RESULTS}} -o {{.ALLURE_REPORT}} --clean
+      - allure open {{.ALLURE_REPORT}}
+
+  allure:clean:
+    desc: "Remove allure results and report"
+    cmds:
+      - rm -rf {{.ALLURE_RESULTS}} {{.ALLURE_REPORT}}
+
+  # ── Setup ─────────────────────────────────────────────────────────────────
+
+  setup:
+    desc: "Install all dependencies via pnpm"
+    cmds:
+      - pnpm install
+      - pnpm exec playwright install --with-deps
+
+  # ── CI convenience ────────────────────────────────────────────────────────
+
+  ci:
+    desc: "Full CI pipeline (lint + types + audit + test)"
+    cmds:
+      - task: lint
+      - task: lint:types
+      - task: audit
+      - task: test

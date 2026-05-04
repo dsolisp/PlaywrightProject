@@ -1,12 +1,14 @@
 import { defineConfig, devices } from '@playwright/test';
-import { URLS } from './lib/config/constants';
+import { URLS, TIMEOUTS } from './config/constants';
+
+const AUTH_FILE = '.auth/sauce.json';
 
 export default defineConfig({
-  testDir: './e2e',
-  testIgnore: ['**/unit/**', '**/tests/unit/**', '**/database/**', '**/bdd/**'],
-  timeout: 30000,
+  testDir: './tests',
+  testIgnore: ['**/unit/**', '**/bdd/**'],
+  timeout: TIMEOUTS.DEFAULT,
   expect: {
-    timeout: 5000,
+    timeout: TIMEOUTS.EXPECT,
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -21,17 +23,27 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    baseURL: process.env.BASE_URL || URLS.BING,
-    testIdAttribute: 'data-test', // matches our data-test="..." attrs
-    // Desktop UA to look less like a bot in headless mode
+    baseURL: process.env.BASE_URL || URLS.SAUCE_DEMO,
+    actionTimeout: TIMEOUTS.ACTION,
+    navigationTimeout: TIMEOUTS.NAVIGATION,
+    testIdAttribute: 'data-test',
+    ignoreHTTPSErrors: true,
     userAgent:
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   },
   projects: [
+    // ── Setup project: runs once, saves auth state (ADR-009) ──────────
+    {
+      name: 'setup',
+      testMatch: 'auth/*.setup.ts',
+    },
+
+    // ── Main browser projects ─────────────────────────────────────────
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: AUTH_FILE,
         launchOptions: {
           args: [
             '--disable-blink-features=AutomationControlled',
@@ -41,14 +53,23 @@ export default defineConfig({
           ],
         },
       },
+      dependencies: ['setup'],
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: AUTH_FILE,
+      },
+      dependencies: ['setup'],
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: AUTH_FILE,
+      },
+      dependencies: ['setup'],
     },
   ],
 });

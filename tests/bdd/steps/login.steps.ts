@@ -1,6 +1,6 @@
 import { createBdd } from 'playwright-bdd';
 import { expect } from '@playwright/test';
-import { settings } from '../../../lib/config/settings';
+import { settings } from '../../../config/settings';
 
 // GEMINI Style: Use semantic locators directly, no imported locator constants
 

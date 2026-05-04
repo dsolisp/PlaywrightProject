@@ -1,8 +1,19 @@
-# Playwright TypeScript Test Automation Framework
+# 🎭 Playwright Test Automation Framework
 
-![CI](https://github.com/dsolisp/PlaywrightProject/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/dsolisp/PlaywrightProject/actions/workflows/ci.yml/badge.svg)](https://github.com/dsolisp/PlaywrightProject/actions) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern, portfolio-quality test automation framework demonstrating industry best practices for 2025. Built with Playwright, Vitest, and TypeScript.
+A modern, portfolio-quality test automation framework demonstrating industry best practices for 2026. Built with Playwright, Vitest, and TypeScript.
+
+---
+
+## 🏗️ Architecture (TL;DR)
+
+- **Pages/Locators 1:1 separation**: Pure locator data files mirroring business-logic page objects.
+- **Zero locators in specs**: Enforced by strict ESLint guardrails (`no-restricted-syntax`).
+- **API seeding for parallel safety**: Using Playwright fixtures for parallel-safe test setup (60x faster).
+- **Semantic Locators**: Accessibility-first selectors (`getByRole`, `getByPlaceholder`).
+- → [View Full Architecture & ADRs](docs/ARCHITECTURE.md)
+- → [Read the "Zero to Hero" Learning Journey](docs/ZERO-TO-HERO.md)
 
 ---
 

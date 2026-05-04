@@ -1,0 +1,52 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "labels": ["dependencies"],
+  "schedule": ["every weekend"],
+  "prConcurrentLimit": 5,
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps):",
+
+  "packageRules": [
+    {
+      "description": "npm dependencies — group minor+patch for auto-merge",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm dependencies (minor+patch)",
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Playwright — keep all @playwright/* in sync",
+      "matchPackagePatterns": ["^@playwright/"],
+      "groupName": "Playwright",
+      "automerge": false
+    },
+    {
+      "description": "npm major updates — require manual review",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major-update"]
+    },
+    {
+      "description": "GitHub Actions — auto-merge patch",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Security updates — immediate, high priority",
+      "matchCategories": ["security"],
+      "schedule": ["at any time"],
+      "automerge": false,
+      "labels": ["dependencies", "security"],
+      "prPriority": 10
+    }
+  ],
+
+  "vulnerabilityAlerts": { "enabled": true, "labels": ["security"] },
+  "osvVulnerabilityAlerts": true
+}
