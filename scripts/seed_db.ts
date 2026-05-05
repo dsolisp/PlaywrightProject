@@ -1,12 +1,9 @@
 import sqlite3 from 'better-sqlite3';
-import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export type SeedDb = sqlite3.Database;
 
-export function seed(db) {
+export function seed(db: SeedDb) {
   // Idempotent seeding for hermetic DBs.
   db.exec('DROP TABLE IF EXISTS users');
   db.exec('DROP TABLE IF EXISTS products');
@@ -31,7 +28,7 @@ export function seed(db) {
   );
 }
 
-export function seedSqliteFile(dbPath) {
+export function seedSqliteFile(dbPath: string) {
   if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
   const db = new sqlite3(dbPath);
   try {
@@ -40,9 +37,4 @@ export function seedSqliteFile(dbPath) {
     db.close();
   }
   console.log('✅ Playwright Database Seeded.');
-}
-
-if (import.meta.url === `file://${__filename}`) {
-  const dbPath = path.resolve(__dirname, '../app.db');
-  seedSqliteFile(dbPath);
 }

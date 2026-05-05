@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { trace } from '@opentelemetry/api';
 import {
   LoginPage,
   InventoryPage,
@@ -11,6 +12,7 @@ import {
   SelectorsPage,
 } from '../pages';
 import { URLS } from '../config/constants';
+import { configureTracing } from '../utils/otel';
 
 // Page objects available in tests
 type CustomFixtures = {
@@ -28,6 +30,43 @@ type CustomFixtures = {
 
 // Wire up all page objects as fixtures
 export const test = base.extend<CustomFixtures>({
+  page: async ({ page }, use, testInfo) => {
+    configureTracing('PlaywrightProject');
+    const tracer = trace.getTracer('playwright');
+    await tracer.startActiveSpan(
+      'test',
+      {
+        attributes: {
+          'test.title': testInfo.title,
+          'test.file': testInfo.file ?? '',
+          'test.project': testInfo.project.name,
+        },
+      },
+      async (span) => {
+        try {
+          await use(page);
+        } finally {
+          const ctx = span.spanContext();
+          const traceId = ctx && ctx.traceId ? ctx.traceId : '';
+          if (traceId) {
+            await testInfo.attach('otel.trace_id', {
+              body: traceId,
+              contentType: 'text/plain',
+            });
+
+            const jaegerUi = process.env.JAEGER_UI_URL; // e.g. http://localhost:16686
+            if (jaegerUi) {
+              await testInfo.attach('otel.jaeger_trace_url', {
+                body: `${jaegerUi.replace(/\/$/, '')}/trace/${traceId}`,
+                contentType: 'text/plain',
+              });
+            }
+          }
+          span.end();
+        }
+      },
+    );
+  },
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
   },

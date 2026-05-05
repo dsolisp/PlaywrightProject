@@ -26,8 +26,12 @@ export class IframesPage extends BasePage {
 
   // ── ADV-E3: Simple iframe (contenteditable editor) ────────────────────
 
-  parentFrame() { return this.locators.parentFrame; }
-  editor()      { return this.locators.editor; }
+  parentFrame() {
+    return this.locators.parentFrame;
+  }
+  editor() {
+    return this.locators.editor;
+  }
 
   /** Type text into the rich-text editor inside the parent frame. */
   async typeInEditor(text: string): Promise<void> {
@@ -37,8 +41,12 @@ export class IframesPage extends BasePage {
 
   // ── ADV-E4: Nested iframes ─────────────────────────────────────────────
 
-  outerFrame()  { return this.locators.outerFrame; }
-  innerResult() { return this.locators.innerResult; }
+  outerFrame() {
+    return this.locators.outerFrame;
+  }
+  innerResult() {
+    return this.locators.innerResult;
+  }
 
   /** Submit the inner form inside the nested iframes. */
   async submitInnerForm(name: string, email: string): Promise<void> {

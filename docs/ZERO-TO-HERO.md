@@ -321,19 +321,19 @@ mkdir -p test-data docs .github/workflows
 
 ### Directory Purposes
 
-| Directory    | Purpose                                        |
-| ------------ | ---------------------------------------------- |
-| `pages/`     | Page Object Model classes (business logic)     |
-| `locators/`  | Pure locator data classes (mirrors `pages/`)   |
-| `fixtures/`  | Playwright custom fixtures                     |
-| `tests/`     | All tests (E2E, unit, BDD, visual, API, etc.)  |
-| `config/`    | Configuration and constants                    |
-| `utils/`     | Shared utilities (logger, factories, db)       |
-| `docs/`      | Documentation, ADRs, learning journey          |
-| `test-data/` | Static test data files (JSON, CSV, SQLite)     |
-| `tests/unit/`       | Unit tests (Vitest)                    |
-| `tests/database/`   | Database tests (Vitest)                |
-| `tests/bdd/`        | Cucumber/Gherkin tests                 |
+| Directory         | Purpose                                       |
+| ----------------- | --------------------------------------------- |
+| `pages/`          | Page Object Model classes (business logic)    |
+| `locators/`       | Pure locator data classes (mirrors `pages/`)  |
+| `fixtures/`       | Playwright custom fixtures                    |
+| `tests/`          | All tests (E2E, unit, BDD, visual, API, etc.) |
+| `config/`         | Configuration and constants                   |
+| `utils/`          | Shared utilities (logger, factories, db)      |
+| `docs/`           | Documentation, ADRs, learning journey         |
+| `test-data/`      | Static test data files (JSON, CSV, SQLite)    |
+| `tests/unit/`     | Unit tests (Vitest)                           |
+| `tests/database/` | Database tests (Vitest)                       |
+| `tests/bdd/`      | Cucumber/Gherkin tests                        |
 
 ---
 
@@ -453,7 +453,8 @@ export class LoginPage extends BasePage {
 In earlier versions of this framework, Locators and Page Objects were in the same file. We separated them into pure data classes (`locators/`) and business logic (`pages/`).
 
 Why?
-- **Separation of Concerns**: Locators define *what* elements are. Pages define *how* to interact with them.
+
+- **Separation of Concerns**: Locators define _what_ elements are. Pages define _how_ to interact with them.
 - **Lazy Evaluation**: Using `get` accessors ensures a fresh Locator reference is evaluated every time, avoiding stale element exceptions during retries.
 
 > 💡 **Lesson Learned**: Separating Locators and Pages 1:1 prevents bloated Page Object files and makes UI updates easier to maintain.

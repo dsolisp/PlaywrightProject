@@ -11,7 +11,9 @@ test.describe('Practice App — Selector Playground @practice @selectors', () =>
     await selectorsPage.open();
   });
 
-  test('S1 · id & name: should locate inputs by data-test (mirrors id/name)', async ({ selectorsPage }) => {
+  test('S1 · id & name: should locate inputs by data-test (mirrors id/name)', async ({
+    selectorsPage,
+  }) => {
     await expect(selectorsPage.usernameInput()).toBeVisible();
     await expect(selectorsPage.usernameInput()).toHaveAttribute('id', 'username-field');
     await expect(selectorsPage.passwordInput()).toBeVisible();
@@ -29,13 +31,18 @@ test.describe('Practice App — Selector Playground @practice @selectors', () =>
     await expect(selectorsPage.errorBadge()).toHaveText('Inactive');
   });
 
-  test('S3 · link text: should locate links by exact and partial text', async ({ selectorsPage }) => {
+  test('S3 · link text: should locate links by exact and partial text', async ({
+    selectorsPage,
+  }) => {
     await expect(selectorsPage.exactLink()).toContainText('Download Report');
     await expect(selectorsPage.partialLink()).toContainText('Annual Summary');
   });
 
   test('S3 · link text: should locate link by aria-label', async ({ selectorsPage }) => {
-    await expect(selectorsPage.ariaLink()).toHaveAttribute('aria-label', 'Download the PDF document');
+    await expect(selectorsPage.ariaLink()).toHaveAttribute(
+      'aria-label',
+      'Download the PDF document',
+    );
   });
 
   test('S4 · ARIA: should locate input by role and aria-label', async ({ selectorsPage }) => {
@@ -63,7 +70,9 @@ test.describe('Practice App — Selector Playground @practice @selectors', () =>
     await expect(selectorsPage.disabledInput()).toBeDisabled(); // guard: page still stable
   });
 
-  test('S6 · data attributes: should locate products by data-test + data-category', async ({ selectorsPage }) => {
+  test('S6 · data attributes: should locate products by data-test + data-category', async ({
+    selectorsPage,
+  }) => {
     await expect(selectorsPage.productItems()).toHaveCount(3);
     await expect(selectorsPage.electronicsItems()).toHaveCount(2);
   });
@@ -75,7 +84,10 @@ test.describe('Practice App — Selector Playground @practice @selectors', () =>
 
   test('S8 · title attribute: should locate buttons by title', async ({ selectorsPage }) => {
     await expect(selectorsPage.saveButton()).toHaveAttribute('title', 'Save your current progress');
-    await expect(selectorsPage.deleteButton()).toHaveAttribute('title', 'Delete this record permanently');
+    await expect(selectorsPage.deleteButton()).toHaveAttribute(
+      'title',
+      'Delete this record permanently',
+    );
   });
 
   test('S8 · title attribute: should locate abbr elements by title', async ({ selectorsPage }) => {
@@ -87,7 +99,9 @@ test.describe('Practice App — Selector Playground @practice @selectors', () =>
     await expect(selectorsPage.tableRowNameCell(2)).toHaveText('Bob');
   });
 
-  test('S10 · XPath targets: should locate fruit items via data-test', async ({ selectorsPage }) => {
+  test('S10 · XPath targets: should locate fruit items via data-test', async ({
+    selectorsPage,
+  }) => {
     await expect(selectorsPage.fruitItems()).toHaveCount(3);
     await expect(selectorsPage.fruitItems().nth(1)).toHaveText('Banana');
   });

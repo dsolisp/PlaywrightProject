@@ -1,7 +1,6 @@
 import { test, expect } from '../../fixtures/test.fixture';
 import Database from 'better-sqlite3';
-import path from 'path';
-import { PATHS } from '../../config/constants';
+import { seed } from '../../scripts/seed_db';
 
 // Hybrid DB Testing Patterns
 // Mirror of Cypress database.cy.ts
@@ -9,12 +8,11 @@ import { PATHS } from '../../config/constants';
 test.describe('Hybrid DB Testing Patterns @db', () => {
   test.describe.configure({ mode: 'serial' });
   let db: Database.Database;
-  const dbPath = path.resolve(process.cwd(), PATHS.DB);
 
   test.beforeAll(() => {
-    // Database seeding is now handled by PlaywrightProject/scripts/seed_db.js
-    // or via global setup, but we'll use a direct exec for now or assume it's seeded.
-    db = new Database(dbPath, { timeout: 5000 });
+    // Hermetic DB: use an isolated in-memory SQLite DB for this suite.
+    db = new Database(':memory:', { timeout: 5000 });
+    seed(db);
     db.pragma('journal_mode = WAL');
   });
 
@@ -25,7 +23,11 @@ test.describe('Hybrid DB Testing Patterns @db', () => {
   // ── Example 1: Seed → Login (Precondition) ──────────────────────────
   test('Example 1: Seeds a user then attempts login', async ({ loginPage }) => {
     const testUser = { id: 101, username: 'db_user', password: 'password123' };
-    db.prepare('INSERT OR IGNORE INTO users VALUES (?, ?, ?)').run(testUser.id, testUser.username, 'customer');
+    db.prepare('INSERT OR IGNORE INTO users VALUES (?, ?, ?)').run(
+      testUser.id,
+      testUser.username,
+      'customer',
+    );
 
     await loginPage.open();
     await loginPage.login(testUser.username, testUser.password);
@@ -42,25 +44,44 @@ test.describe('Hybrid DB Testing Patterns @db', () => {
     await loginPage.login(user.username, user.password);
     await expect(page).toHaveURL(/.*inventory.html/);
 
-    const row = db.prepare('SELECT * FROM users WHERE username = ?').get(user.username) as { role: string };
+    const row = db.prepare('SELECT * FROM users WHERE username = ?').get(user.username) as {
+      role: string;
+    };
     expect(row).toBeDefined();
     expect(row.role).toBeDefined();
   });
 
   // ── Example 3: DB Data → UI Assertion (Data-Driven) ─────────────────
-  test('Example 3: Verifies UI price matches DB price for Backpack', async ({ loginPage, inventoryPage }) => {
+  test('Example 3: Verifies UI price matches DB price for Backpack', async ({
+    loginPage,
+    inventoryPage,
+  }) => {
     await loginPage.open();
     await loginPage.login('standard_user', 'secret_sauce');
 
-    const dbPrice = (db.prepare('SELECT price FROM products WHERE name = ?').get('Sauce Labs Backpack') as { price: number }).price;
+    const dbPrice = (
+      db.prepare('SELECT price FROM products WHERE name = ?').get('Sauce Labs Backpack') as {
+        price: number;
+      }
+    ).price;
 
-    const priceText = await inventoryPage.inventoryItemsLocator().first().locator('.inventory_item_price').innerText();
+    const priceText = await inventoryPage
+      .inventoryItemsLocator()
+      .first()
+      .locator('.inventory_item_price')
+      .innerText();
     expect(priceText).toContain(String(dbPrice));
   });
 
   // ── Example 4: Data-Driven Login (Iterate from DB) ───────────────────
-  test('Example 4: Logs in with every customer-role user from DB', async ({ loginPage, inventoryPage, page }) => {
-    const users = db.prepare('SELECT * FROM users WHERE role = ? AND username != ?').all('customer', 'db_user') as { username: string }[];
+  test('Example 4: Logs in with every customer-role user from DB', async ({
+    loginPage,
+    inventoryPage,
+    page,
+  }) => {
+    const users = db
+      .prepare('SELECT * FROM users WHERE role = ? AND username != ?')
+      .all('customer', 'db_user') as { username: string }[];
 
     for (const user of users) {
       await loginPage.open();
@@ -75,10 +96,16 @@ test.describe('Hybrid DB Testing Patterns @db', () => {
     const newUserId = 999;
 
     // Create
-    db.prepare('INSERT OR REPLACE INTO users VALUES (?, ?, ?)').run(newUserId, 'test_cleanup_user', 'tester');
+    db.prepare('INSERT OR REPLACE INTO users VALUES (?, ?, ?)').run(
+      newUserId,
+      'test_cleanup_user',
+      'tester',
+    );
 
     // Read
-    const readRow = db.prepare('SELECT * FROM users WHERE id = ?').get(newUserId) as { username: string };
+    const readRow = db.prepare('SELECT * FROM users WHERE id = ?').get(newUserId) as {
+      username: string;
+    };
     expect(readRow).toBeDefined();
     expect(readRow.username).toBe('test_cleanup_user');
 

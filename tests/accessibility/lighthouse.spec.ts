@@ -48,7 +48,7 @@ function calculateAccessibilityScore(
 }
 
 test.describe('Lighthouse-Style Accessibility Audits', () => {
-  test('should have good accessibility score on Bing homepage', async ({ page }) => {
+  test('should have good accessibility score on homepage', async ({ page }) => {
     await page.goto(settings().baseUrl);
 
     const results = await new AxeBuilder({ page })
@@ -58,7 +58,7 @@ test.describe('Lighthouse-Style Accessibility Audits', () => {
     const scoreData = calculateAccessibilityScore(results);
 
     console.info(`\n=== Lighthouse-Style Accessibility Audit ===`);
-    console.info(`Bing Homepage Score: ${scoreData.score}%`);
+    console.info(`Homepage Score: ${scoreData.score}%`);
     console.info(`Passes: ${scoreData.passes}, Violations: ${scoreData.violations}`);
     console.info(
       `Critical: ${scoreData.criticalViolations}, Serious: ${scoreData.seriousViolations}`,

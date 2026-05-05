@@ -1,6 +1,7 @@
 # ADR-011 — BDD Coexistence Strategy
 
 ## Status
+
 Accepted — 2026-05-02
 
 ## Context
@@ -19,11 +20,11 @@ files (`login.feature`, `cart.feature`, `checkout.feature`) and corresponding st
 
 **Options considered:**
 
-| Option | Verdict | Reason |
-|--------|---------|--------|
-| Delete all 3 feature files, remove BDD | Rejected | BDD is a differentiating showcase skill for recruiters |
-| Keep all 3 features, refactor fully | **Accepted** | Demonstrates full BDD mastery + architectural discipline |
-| Keep only login.feature | Rejected | Cart and checkout BDD scenarios show more complexity |
+| Option                                 | Verdict      | Reason                                                   |
+| -------------------------------------- | ------------ | -------------------------------------------------------- |
+| Delete all 3 feature files, remove BDD | Rejected     | BDD is a differentiating showcase skill for recruiters   |
+| Keep all 3 features, refactor fully    | **Accepted** | Demonstrates full BDD mastery + architectural discipline |
+| Keep only login.feature                | Rejected     | Cart and checkout BDD scenarios show more complexity     |
 
 ## Decision
 
@@ -51,13 +52,13 @@ Scenario: Valid login navigates to inventory
 
 ```typescript
 // login.steps.ts — CORRECT
-When("I log in as {string}", async function (username: string) {
+When('I log in as {string}', async function (username: string) {
   const user = UserBuilder.fromUsername(username).build();
   await this.loginPage.enterCredentials(user.username, user.password);
   await this.loginPage.submit();
 });
 
-Then("I should see the inventory page title {string}", async function (title: string) {
+Then('I should see the inventory page title {string}', async function (title: string) {
   const actual = await this.inventoryPage.getTitle();
   expect(actual).toBe(title); // assertion ONLY in step, not in page
 });
@@ -78,11 +79,13 @@ and C# (Reqnroll covers it in the C# repo) are separate decisions per their own 
 ## Consequences
 
 ### Positive
+
 - Demonstrates ability to design a compliant BDD layer that respects SoC.
 - Three feature files covering login/cart/checkout show realistic BDD usage.
 - The architecture is clean enough to serve as a portfolio reference for BDD interviews.
 
 ### Negative
+
 - BDD scenarios partially overlap with E2E specs — accepted duplication, serving different
   audiences (living documentation vs. fast regression).
 - Step definition refactor required (tracked in task 7.2).

@@ -23,8 +23,16 @@ export class AlertsPage extends BasePage {
   }
 
   // ── Getters — return Locators; tests do the asserting (Law 2) ─────────
-  triggerAlertButton()   { return this.locators.triggerAlert; }
-  triggerConfirmButton() { return this.locators.triggerConfirm; }
-  triggerPromptButton()  { return this.locators.triggerPrompt; }
-  resultText()           { return this.locators.resultText; }
+  triggerAlertButton() {
+    return this.locators.triggerAlert;
+  }
+  triggerConfirmButton() {
+    return this.locators.triggerConfirm;
+  }
+  triggerPromptButton() {
+    return this.locators.triggerPrompt;
+  }
+  resultText() {
+    return this.locators.resultText;
+  }
 }

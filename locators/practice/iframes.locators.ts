@@ -11,15 +11,21 @@ export class IframesLocators {
   constructor(private readonly page: Page) {}
 
   // ── /iframes.html host-page elements ──────────────────────────────────
-  get parentFrame() { return this.page.getByTestId('parent-frame'); }
-  get outerFrame()  { return this.page.getByTestId('outer-frame'); }
+  get parentFrame() {
+    return this.page.getByTestId('parent-frame');
+  }
+  get outerFrame() {
+    return this.page.getByTestId('outer-frame');
+  }
 
   // ── Inside parentFrame (editor.html) ──────────────────────────────────
   /** FrameLocator for the simple editor iframe. */
   get editorFrame() {
     return this.page.frameLocator('[data-test="parent-frame"]');
   }
-  get editor() { return this.editorFrame.getByTestId('editor'); }
+  get editor() {
+    return this.editorFrame.getByTestId('editor');
+  }
 
   // ── Inside outerFrame → childFrame (inner-form.html) ──────────────────
   /** FrameLocator for the outer iframe. */
@@ -29,8 +35,16 @@ export class IframesLocators {
   get childFrameLocator() {
     return this.outerFrameLocator.frameLocator('[data-test="child-frame"]');
   }
-  get innerName()   { return this.childFrameLocator.getByTestId('inner-name'); }
-  get innerEmail()  { return this.childFrameLocator.getByTestId('inner-email'); }
-  get innerSubmit() { return this.childFrameLocator.getByTestId('inner-submit'); }
-  get innerResult() { return this.childFrameLocator.getByTestId('inner-result'); }
+  get innerName() {
+    return this.childFrameLocator.getByTestId('inner-name');
+  }
+  get innerEmail() {
+    return this.childFrameLocator.getByTestId('inner-email');
+  }
+  get innerSubmit() {
+    return this.childFrameLocator.getByTestId('inner-submit');
+  }
+  get innerResult() {
+    return this.childFrameLocator.getByTestId('inner-result');
+  }
 }

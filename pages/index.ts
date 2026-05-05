@@ -15,5 +15,3 @@ export { DropdownPage } from './practice/dropdown.page';
 export { IframesPage } from './practice/iframes.page';
 export { WindowsPage } from './practice/windows.page';
 export { SelectorsPage } from './practice/selectors.page';
-
-
