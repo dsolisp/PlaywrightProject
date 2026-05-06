@@ -23,10 +23,8 @@ allure-results/
 allure-report/
 
 # ── Visual regression artifacts ────────────────────────────────────────────────
-*.png
-*.mp4
-*.webm
-*.trace.zip
+# NOTE: Visual baselines must be committed for true regression testing.
+# Generated media is already covered by ignored output folders above (test-results/, allure-results/, etc.).
 
 # ── Auth state (ADR-009) ──────────────────────────────────────────────────────
 .auth/
