@@ -22,9 +22,6 @@ blob-report/
 allure-results/
 allure-report/
 
-# ── Pact contracts (generated locally / in CI; published to broker) ───────────
-pacts/
-
 # ── Visual regression artifacts ────────────────────────────────────────────────
 *.png
 *.mp4
