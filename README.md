@@ -31,8 +31,8 @@ A modern, portfolio-quality test automation framework demonstrating industry bes
 
 ## 📋 Prerequisites
 
-- **Node.js 20+** ([Download](https://nodejs.org/))
-- **npm** (comes with Node.js)
+- **Node.js 24+** ([Download](https://nodejs.org/))
+- **pnpm** (via Corepack; this repo uses `packageManager: pnpm@9.15.9`)
 - **Git** ([Download](https://git-scm.com/))
 - (Optional) **Allure CLI** for local reporting: `brew install allure`
 
@@ -46,13 +46,14 @@ git clone https://github.com/dsolisp/PlaywrightProject.git
 cd PlaywrightProject
 
 # Install dependencies
-npm ci
+corepack enable
+pnpm install --frozen-lockfile
 
 # Install Playwright browsers
-npx playwright install --with-deps
+pnpm exec playwright install --with-deps chromium
 
 # Run all tests
-npm test
+pnpm test
 ```
 
 ---
@@ -160,56 +161,54 @@ PlaywrightProject/
 
 ```bash
 # Run all tests (unit + Playwright)
-npm test
+pnpm test
 
 # Unit tests only (Vitest)
-npm run test:unit
+pnpm run test:unit
 
 # Playwright E2E tests
-npx playwright test
+pnpm exec playwright test
 
 # Specific test file
-npx playwright test specs/sauce-demo/sauce-demo.spec.ts
+pnpm exec playwright test specs/sauce-demo/sauce-demo.spec.ts
 
 # Specific browser
-npx playwright test --project=chromium
-npx playwright test --project=firefox
-npx playwright test --project=webkit
+pnpm exec playwright test --project=chromium
 
 # Headed mode (see browser)
-npx playwright test --headed
+pnpm exec playwright test --headed
 
 # Debug mode
-npx playwright test --debug
+pnpm exec playwright test --debug
 
 # Update visual snapshots
-npm run playwright:update-snapshots
+pnpm run snapshots:update
 
 # Run by test tag
-npx playwright test --grep @smoke        # Quick validation tests
-npx playwright test --grep @regression   # Full regression suite
-npx playwright test --grep @auth         # Authentication tests
-npx playwright test --grep @cart         # Shopping cart tests
-npx playwright test --grep @checkout     # Checkout flow tests
-npx playwright test --grep @search       # Search engine tests
+pnpm exec playwright test --grep @smoke        # Quick validation tests
+pnpm exec playwright test --grep @regression   # Full regression suite
+pnpm exec playwright test --grep @auth         # Authentication tests
+pnpm exec playwright test --grep @cart         # Shopping cart tests
+pnpm exec playwright test --grep @checkout     # Checkout flow tests
+pnpm exec playwright test --grep @search       # Search engine tests
 ```
 
 ### BDD Tests (Separate Config)
 
 ```bash
 cd tests/bdd
-npx bddgen                        # Generate test files from features
-npx playwright test               # Run BDD tests
+pnpm exec bddgen                  # Generate test files from features
+pnpm exec playwright test         # Run BDD tests
 ```
 
 ### Test Reports
 
 ```bash
 # View Playwright HTML report
-npx playwright show-report
+pnpm exec playwright show-report
 
 # Generate Allure report
-npm run allure
+pnpm run report:allure
 ```
 
 ---
@@ -287,7 +286,7 @@ To change URLs for different environments, set the environment variables in `.en
 ## 🤝 Contributing
 
 1. Create a feature branch: `git checkout -b feature/my-feature`
-2. Run quality checks: `npm run lint && npm test`
+2. Run quality checks: `pnpm run lint && pnpm test`
 3. Commit with conventional commits: `feat(scope): description`
 4. Submit a PR to `main`
 
@@ -304,11 +303,11 @@ To change URLs for different environments, set the environment variables in `.en
 
 | Issue                     | Solution                                                                                                                                                        |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Browser not installed     | `npx playwright install --with-deps`                                                                                                                            |
+| Browser not installed     | `pnpm exec playwright install --with-deps chromium`                                                                                                             |
 | Tests timeout on Bing     | Normal - CAPTCHA protection, tests handle gracefully                                                                                                            |
-| Visual tests fail         | Run `npm run playwright:update-snapshots`                                                                                                                       |
-| TypeScript errors         | Run `npx tsc --noEmit` to check                                                                                                                                 |
-| ESLint errors             | Run `npm run lint` to see issues                                                                                                                                |
+| Visual tests fail         | Run `pnpm run snapshots:update`                                                                                                                                 |
+| TypeScript errors         | Run `pnpm run typecheck`                                                                                                                                        |
+| ESLint errors             | Run `pnpm run lint` to see issues                                                                                                                               |
 | Database tests skip       | Download Chinook DB: `curl -L -o test-data/chinook.db https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite` |
 | better-sqlite3 build fail | Ensure you have C++ build tools: macOS: `xcode-select --install`, Linux: `apt install build-essential`                                                          |
 

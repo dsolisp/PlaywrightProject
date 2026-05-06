@@ -2,6 +2,15 @@
 
 This tutorial walks you through recreating this entire test automation framework from scratch. Each step explains **what** we're doing, **why** we're doing it, and the **commands** to execute.
 
+> **Note (this repository uses pnpm):** Some historical snippets use `npm` / `npx` because they’re widely known.  
+> For consistency with this repo and CI, prefer:
+>
+> - `npm ci` / `npm install` → `pnpm install` (use `pnpm install --frozen-lockfile` in CI)
+> - `npm install --save-dev <pkg>` → `pnpm add -D <pkg>`
+> - `npx <bin>` → `pnpm exec <bin>`
+>
+> If pnpm isn’t available: `corepack enable`.
+
 ---
 
 ## Table of Contents
@@ -43,13 +52,16 @@ Every Node.js project starts with `package.json`. This file:
 # Create project directory
 mkdir PlaywrightProject && cd PlaywrightProject
 
+# This repository uses pnpm via Corepack (see packageManager in package.json)
+corepack enable
+
 # Initialize package.json with defaults
 # -y flag accepts all defaults (name from folder, version 1.0.0, etc.)
-npm init -y
+pnpm init -y
 
 # Enable ES Modules (modern JavaScript imports)
 # This allows using `import/export` instead of `require/module.exports`
-npm pkg set type="module"
+pnpm pkg set type="module"
 ```
 
 ### Understanding the Output
@@ -84,10 +96,10 @@ TypeScript adds static typing to JavaScript, catching errors at compile time ins
 ```bash
 # Install TypeScript and Node.js type definitions
 # --save-dev (-D) means "development dependency" - not needed in production
-npm install --save-dev typescript @types/node
+pnpm add -D typescript @types/node
 
 # Create tsconfig.json with recommended settings
-npx tsc --init
+pnpm exec tsc --init
 ```
 
 ### Configuration (tsconfig.json)
@@ -139,11 +151,11 @@ Playwright is a modern browser automation library by Microsoft. Compared to Sele
 ```bash
 # Install Playwright Test framework
 # This includes the test runner, assertions, and browser automation
-npm install --save-dev @playwright/test
+pnpm add -D @playwright/test
 
-# Install browser binaries (Chromium, Firefox, WebKit)
+# Install browser binaries
 # --with-deps also installs system dependencies (Linux)
-npx playwright install --with-deps
+pnpm exec playwright install --with-deps chromium
 ```
 
 ### Configuration (playwright.config.ts)
@@ -949,31 +961,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          run_install: false
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Run linting
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Run TypeScript check
-        run: npx tsc --noEmit
+        run: pnpm run typecheck
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: pnpm run test:unit
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: pnpm exec playwright test
 
       - name: Upload test results
         if: always()
