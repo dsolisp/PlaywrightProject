@@ -38,7 +38,7 @@ export default defineConfig({
       testMatch: 'auth/*.setup.ts',
     },
 
-    // ── Main browser projects ─────────────────────────────────────────
+    // ── Default CI runs Chromium only ─────────────────────────────────
     {
       name: 'chromium',
       use: {
@@ -52,22 +52,6 @@ export default defineConfig({
             '--disable-dev-shm-usage',
           ],
         },
-      },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: AUTH_FILE,
-      },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: AUTH_FILE,
       },
       dependencies: ['setup'],
     },
