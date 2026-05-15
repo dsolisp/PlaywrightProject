@@ -10,22 +10,20 @@ A modern, portfolio-quality test automation framework demonstrating industry bes
 
 - **Pages/Locators 1:1 separation**: Pure locator data files mirroring business-logic page objects.
 - **Zero locators in specs**: Enforced by strict ESLint guardrails (`no-restricted-syntax`).
-- **API seeding for parallel safety**: Using Playwright fixtures for parallel-safe test setup (60x faster).
+- **API seeding for parallel safety**: Playwright fixtures (`fixtures/`) for shared setup where tests need it.
 - **Semantic Locators**: Accessibility-first selectors (`getByRole`, `getByPlaceholder`).
 - → [View Full Architecture & ADRs](docs/ARCHITECTURE.md)
-- → [Read the "Zero to Hero" Learning Journey](docs/ZERO-TO-HERO.md)
+- → [Read the "Zero to Hero" Learning Journey](docs/ZERO_TO_HERO.md)
 
 ---
 
-## 📊 Test Coverage
+## 📊 Test suites (implementation)
 
-| Test Type      | Count   | Framework      |
-| -------------- | ------- | -------------- |
-| Unit Tests     | 68      | Vitest         |
-| Database Tests | 11      | Vitest         |
-| E2E Tests      | 78      | Playwright     |
-| BDD Tests      | 13      | playwright-bdd |
-| **Total**      | **170** |                |
+- **Unit + database**: Vitest under `tests/unit/` and `tests/database/`
+- **Playwright**: `tests/` (see `playwright.config.ts` `testDir` / `testIgnore`)
+- **BDD**: `tests/bdd/` (separate config inside that folder)
+
+Counts change as tests are added; discover locally with `pnpm run test:unit` and `pnpm exec playwright test --list`.
 
 ---
 
@@ -62,22 +60,22 @@ pnpm test
 
 ### 🧪 Testing Capabilities
 
-| Feature               | Technology           | Description                                |
-| --------------------- | -------------------- | ------------------------------------------ |
-| **E2E Web Testing**   | Playwright           | Page Object Model with 1:1 locator pairing |
-| **API Testing**       | Playwright Request   | REST API validation and contract testing   |
-| **Visual Regression** | Playwright Snapshots | Automated screenshot comparison            |
-| **Accessibility**     | axe-core             | WCAG 2.1 AA compliance checking            |
-| **BDD Testing**       | playwright-bdd       | Cucumber-style Gherkin syntax              |
-| **Unit Testing**      | Vitest               | Fast, modern unit test runner              |
-| **Performance**       | Playwright Metrics   | Page load and Core Web Vitals              |
+| Feature                 | Technology           | Description                                                                     |
+| ----------------------- | -------------------- | ------------------------------------------------------------------------------- |
+| **E2E Web Testing**     | Playwright           | Page Object Model with 1:1 locator pairing                                      |
+| **API / schema checks** | Playwright Request   | REST checks + JSON shape tests (e.g. `tests/backend/schema-validation.spec.ts`) |
+| **Visual Regression**   | Playwright Snapshots | Automated screenshot comparison                                                 |
+| **Accessibility**       | axe-core             | WCAG 2.1 AA compliance checking                                                 |
+| **BDD Testing**         | playwright-bdd       | Cucumber-style Gherkin syntax                                                   |
+| **Unit Testing**        | Vitest               | Fast, modern unit test runner                                                   |
+| **Performance**         | Playwright Metrics   | Page load and Core Web Vitals                                                   |
 
 ### 🏗️ Architecture Patterns
 
 - **Page Object Model (POM)** - 1:1 Page + Locator file pairing
 - **Fixture Pattern** - Reusable test setup with authentication
 - **Factory Pattern** - Dynamic test data generation
-- **Configuration Management** - Environment-based settings in `lib/config/`
+- **Configuration Management** - Environment-based settings in `config/` (`constants.ts`, `settings.ts`)
 
 ### 🔧 Developer Experience
 
@@ -93,64 +91,20 @@ pnpm test
 
 ```
 PlaywrightProject/
-├── e2e/                          # End-to-end test code
-│   ├── fixtures/                 # Playwright test fixtures
-│   │   └── test.fixture.ts       # Custom fixtures with auth
-│   ├── page-objects/             # Page Object Model classes
-│   │   ├── base.page.ts          # Abstract base page
-│   │   ├── sauce-demo/           # SauceDemo pages (1:1 pattern)
-│   │   │   ├── login.page.ts + login.locators.ts
-│   │   │   ├── inventory.page.ts + inventory.locators.ts
-│   │   │   ├── cart.page.ts + cart.locators.ts
-│   │   │   ├── checkout.page.ts + checkout.locators.ts
-│   │   │   └── index.ts          # Barrel exports
-│   │   └── search-engine/        # Search engine pages
-│   │       ├── search.page.ts + search.locators.ts
-│   │       └── index.ts
-│   └── specs/                    # All E2E test specs
-│       ├── sauce-demo/           # SauceDemo tests
-│       ├── search-engine/        # Search engine tests
-│       ├── accessibility/        # WCAG accessibility tests
-│       ├── api/                  # API integration tests
-│       ├── contract/             # API contract tests
-│       ├── integration/          # E2E integration tests
-│       ├── performance/          # Performance metrics tests
-│       └── visual/               # Visual regression tests
-│
-├── lib/                          # Shared library code
-│   ├── config/                   # Configuration management
-│   │   ├── constants.ts          # Application constants & credentials
-│   │   └── settings.ts           # Environment settings loader
-│   └── utils/                    # Shared utilities
-│       └── test-data-factory.ts  # Factory pattern for test data
-│
-├── src/                          # Source utilities
-│   └── utils/                    # Core utilities
-│       ├── data-manager.ts       # Test data loading (CSV, JSON)
-│       ├── database.ts           # SQLite database helper
-│       └── logger.ts             # Winston-based structured logging
-│
-├── tests/                        # Non-E2E tests
-│   ├── bdd/                      # Cucumber BDD tests
-│   │   ├── features/             # Gherkin feature files
-│   │   ├── steps/                # Step definitions
-│   │   └── playwright.config.ts  # BDD-specific config
-│   ├── database/                 # Database tests (Vitest)
-│   └── unit/                     # Unit tests (Vitest)
-│
-├── test-data/                    # Test data files
-│   ├── chinook.db                # SQLite database for database tests
-│   ├── users.json                # User test data
-│   └── test_users.csv            # CSV test data
-│
-├── .github/workflows/            # CI/CD pipelines
-│   └── ci.yml                    # GitHub Actions workflow
-│
-├── playwright.config.ts          # Playwright configuration (testDir: ./e2e)
-├── vitest.config.ts              # Vitest configuration
-├── eslint.config.js              # ESLint flat config
-├── tsconfig.json                 # TypeScript configuration
-└── package.json                  # Dependencies & scripts
+├── tests/                        # Playwright specs (see playwright.config.ts testDir)
+│   ├── auth/                     # Auth setup project (storage state)
+│   ├── accessibility/            # A11y tests (axe)
+│   ├── backend/                  # Backend/schema validation tests
+│   ├── integration/              # End-to-end integration suites
+│   ├── performance/              # Performance/metrics oriented suites
+│   └── ui/                       # UI suites (sauce/practice/visual)
+├── pages/                        # Page objects (behavior)
+├── locators/                     # Locator mirrors (no selectors in specs)
+├── fixtures/                     # Test fixtures (ADR-009)
+├── config/                       # Central settings/constants
+├── utils/                        # Shared helpers (logging, data, etc.)
+├── docs/                         # Zero-to-Hero, Architecture, ADRs
+└── playwright.config.ts          # Playwright config (Chromium-only by default)
 ```
 
 ---
@@ -170,7 +124,7 @@ pnpm run test:unit
 pnpm exec playwright test
 
 # Specific test file
-pnpm exec playwright test specs/sauce-demo/sauce-demo.spec.ts
+pnpm exec playwright test tests/ui/sauce/
 
 # Specific browser
 pnpm exec playwright test --project=chromium
@@ -190,7 +144,7 @@ pnpm exec playwright test --grep @regression   # Full regression suite
 pnpm exec playwright test --grep @auth         # Authentication tests
 pnpm exec playwright test --grep @cart         # Shopping cart tests
 pnpm exec playwright test --grep @checkout     # Checkout flow tests
-pnpm exec playwright test --grep @search       # Search engine tests
+pnpm exec playwright test --grep @search       # Inventory / filter flows on SauceDemo (not external search engines)
 ```
 
 ### BDD Tests (Separate Config)
@@ -213,35 +167,34 @@ pnpm run report:allure
 
 ---
 
-## 🎯 Test Applications
+## 🎯 Applications under test
 
-This framework tests two applications:
+### 1. SauceDemo (primary UI)
 
-### 1. SauceDemo (Primary)
+- **Default**: `https://www.saucedemo.com` (`URLS.SAUCE_DEMO` in `config/constants.ts`)
+- **Tests**: `tests/ui/sauce/` (login, inventory, cart, checkout patterns)
 
-- **URL**: https://www.saucedemo.com
-- **Purpose**: E-commerce testing demo
-- **Tests**: Login, inventory, cart, checkout flows
+### 2. Local practice app (UI drills)
 
-### 2. Bing Search (Secondary)
+- **Default**: `http://localhost:8080` (`URLS.PRACTICE_APP` — override with `PRACTICE_BASE_URL`)
+- **Tests**: `tests/ui/practice/` (alerts, windows, iframes, selectors, etc.)
 
-- **URL**: https://www.bing.com
-- **Purpose**: Search engine automation
-- **Tests**: Search, results, navigation
-- **Note**: Tests are CAPTCHA-resilient
+### 3. Public APIs (backend / schema)
+
+- Examples: JSONPlaceholder, SWAPI (see `tests/backend/` and `config/constants.ts`)
 
 ---
 
 ## 📁 Key Files Explained
 
-| File                             | Purpose                                  |
-| -------------------------------- | ---------------------------------------- |
-| `playwright.config.ts`           | Browser config, timeouts, reporters      |
-| `vitest.config.ts`               | Unit test runner configuration           |
-| `e2e/fixtures/test.fixture.ts`   | Custom Playwright fixtures with auth     |
-| `e2e/page-objects/base.page.ts`  | Abstract base class for all pages        |
-| `lib/config/settings.ts`         | Environment configuration loader         |
-| `lib/utils/test-data-factory.ts` | Factory pattern for generating test data |
+| File                         | Purpose                              |
+| ---------------------------- | ------------------------------------ |
+| `playwright.config.ts`       | Browser config, timeouts, reporters  |
+| `vitest.config.ts`           | Unit test runner configuration       |
+| `fixtures/test.fixture.ts`   | Custom Playwright fixtures with auth |
+| `pages/base.page.ts`         | Base page pattern for page objects   |
+| `config/settings.ts`         | Environment configuration loader     |
+| `utils/test-data-factory.ts` | Factory helpers for test data        |
 
 ---
 
@@ -250,8 +203,9 @@ This framework tests two applications:
 Create a `.env` file (see `.env.example`):
 
 ```bash
-# URL Configuration (all URLs are centralized in lib/config/constants.ts)
-BASE_URL=https://www.bing.com                    # Search engine for web tests
+# URL configuration (see config/constants.ts)
+# playwright.config.ts uses: process.env.BASE_URL || URLS.SAUCE_DEMO
+BASE_URL=https://www.saucedemo.com               # Optional override (defaults to SauceDemo)
 SAUCE_DEMO_URL=https://www.saucedemo.com         # E-commerce demo app
 API_BASE_URL=https://jsonplaceholder.typicode.com # REST API for testing
 
@@ -263,21 +217,21 @@ LOG_LEVEL=info              # debug, info, warn, error
 LOG_TO_FILE=true            # Set to 'false' to disable file logging
 LOG_SILENT=false            # Set to 'true' to disable all logging
 
-# Browser
+# Browser / runner
 HEADLESS=true               # Set to 'false' for headed mode
-BROWSER=chromium            # chromium, firefox, webkit
+# CI config defines chromium (+ setup) only; extra browsers require new projects in playwright.config.ts
 ```
 
 ### URL Configuration
 
-All URLs are defined in `lib/config/constants.ts` as the single source of truth:
+All URLs are defined in `config/constants.ts` as the single source of truth (see that file for the full list).
 
-| URL Constant            | Default                              | Environment Variable | Purpose             |
-| ----------------------- | ------------------------------------ | -------------------- | ------------------- |
-| `URLS.BING`             | https://www.bing.com                 | `BASE_URL`           | Search engine tests |
-| `URLS.SAUCE_DEMO`       | https://www.saucedemo.com            | `SAUCE_DEMO_URL`     | E-commerce UI tests |
-| `URLS.JSON_PLACEHOLDER` | https://jsonplaceholder.typicode.com | `API_BASE_URL`       | API tests           |
-| `URLS.REQRES`           | https://reqres.in/api                | -                    | Auth API (optional) |
+| URL Constant            | Default                              | Environment Variable          | Purpose                |
+| ----------------------- | ------------------------------------ | ----------------------------- | ---------------------- |
+| `URLS.SAUCE_DEMO`       | https://www.saucedemo.com            | `BASE_URL` / `SAUCE_DEMO_URL` | Primary UI tests       |
+| `URLS.JSON_PLACEHOLDER` | https://jsonplaceholder.typicode.com | `API_BASE_URL`                | API tests              |
+| `URLS.SWAPI`            | https://swapi.dev/api                | -                             | Schema-style API tests |
+| `URLS.REQRES`           | https://reqres.in/api                | -                             | Auth API (optional)    |
 
 To change URLs for different environments, set the environment variables in `.env` or pass them at runtime.
 
@@ -293,7 +247,7 @@ To change URLs for different environments, set the environment variables in `.en
 ### Code Style
 
 - Follow Page Object Model with 1:1 locator pairing
-- Add new pages to `e2e/page-objects/<app>/`
+- Add new pages under `pages/<app>/` with matching locators under `locators/`
 - Include unit tests for new utilities
 - Update documentation for new features
 
@@ -304,18 +258,28 @@ To change URLs for different environments, set the environment variables in `.en
 | Issue                     | Solution                                                                                                                                                        |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Browser not installed     | `pnpm exec playwright install --with-deps chromium`                                                                                                             |
-| Tests timeout on Bing     | Normal - CAPTCHA protection, tests handle gracefully                                                                                                            |
+| Practice app not running  | Start the practice app on `PRACTICE_BASE_URL` (default `http://localhost:8080`) before `@practice` UI tests                                                     |
 | Visual tests fail         | Run `pnpm run snapshots:update`                                                                                                                                 |
 | TypeScript errors         | Run `pnpm run typecheck`                                                                                                                                        |
 | ESLint errors             | Run `pnpm run lint` to see issues                                                                                                                               |
 | Database tests skip       | Download Chinook DB: `curl -L -o test-data/chinook.db https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite` |
 | better-sqlite3 build fail | Ensure you have C++ build tools: macOS: `xcode-select --install`, Linux: `apt install build-essential`                                                          |
 
+### Lighthouse-style vs Google Lighthouse CLI
+
+**Lighthouse-style** here means **axe-core** plus a **scoring methodology inspired by Lighthouse** and **Web Vitals–style** checks using Playwright metrics and the Performance API — not the same as running Google’s **Lighthouse CLI** in CI (heavier, Chrome-specific, optional elsewhere in the portfolio). Default CI uses the specs below, not the npm Lighthouse package.
+
+| Area                    | Spec                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| Accessibility / scoring | [`tests/accessibility/lighthouse.spec.ts`](tests/accessibility/lighthouse.spec.ts) |
+| Performance / metrics   | [`tests/performance/performance.spec.ts`](tests/performance/performance.spec.ts)   |
+
 ---
 
 ## 📚 Documentation
 
-- [ZERO-TO-HERO.md](ZERO-TO-HERO.md) - Complete guide to recreate this project from scratch
+- [docs/ZERO_TO_HERO.md](docs/ZERO_TO_HERO.md) - Complete guide to recreate this project from scratch (`docs/ZERO-TO-HERO.md` redirects here)
+- Cross-repo OpenTelemetry test-run attributes (monorepo / portfolio layout): [shared-docs `OTEL_TEST_RUN_ATTRIBUTES.md`](../shared-docs/docs/OTEL_TEST_RUN_ATTRIBUTES.md)
 
 ---
 
@@ -327,7 +291,7 @@ This project demonstrates:
 ✅ **Multi-Layer Testing** - Unit, integration, E2E, visual, accessibility, BDD
 ✅ **Type Safety** - Full TypeScript with strict mode
 ✅ **CI/CD Ready** - GitHub Actions with Allure reporting
-✅ **Real-World Patterns** - CAPTCHA handling, auth fixtures, data-driven tests
+✅ **Real-World Patterns** - Auth storage state, practice-app UI drills, data-driven tests
 ✅ **2025 Best Practices** - ESLint v9, Vitest, Playwright latest
 
 ---

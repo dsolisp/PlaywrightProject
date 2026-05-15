@@ -40,6 +40,9 @@ export const test = base.extend<CustomFixtures>({
           'test.title': testInfo.title,
           'test.file': testInfo.file ?? '',
           'test.project': testInfo.project.name,
+          'test.browser': testInfo.project.name,
+          ...(process.env.GITHUB_SHA ? { 'git.sha': process.env.GITHUB_SHA } : {}),
+          ...(process.env.OTEL_TEST_SUITE ? { 'test.suite': process.env.OTEL_TEST_SUITE } : {}),
         },
       },
       async (span) => {

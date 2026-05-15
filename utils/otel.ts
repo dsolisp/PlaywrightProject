@@ -25,6 +25,16 @@ function parseOtelHeaders(raw?: string): Record<string, string> {
     }, {});
 }
 
+/** Portfolio contract: shared-docs/docs/OTEL_TEST_RUN_ATTRIBUTES.md */
+function testRunResourceAttributes(serviceName: string): Record<string, string> {
+  const attrs: Record<string, string> = { 'service.name': serviceName };
+  const sha = process.env.GITHUB_SHA ?? process.env.GIT_SHA ?? '';
+  if (sha) attrs['git.sha'] = sha;
+  const suite = process.env.OTEL_TEST_SUITE ?? '';
+  if (suite) attrs['test.suite'] = suite;
+  return attrs;
+}
+
 export function configureTracing(serviceName: string) {
   if (configured) return;
 
@@ -48,9 +58,7 @@ export function configureTracing(serviceName: string) {
   }
 
   const provider = new NodeTracerProvider({
-    resource: resourceFromAttributes({
-      'service.name': serviceName,
-    }),
+    resource: resourceFromAttributes(testRunResourceAttributes(serviceName)),
     spanProcessors,
   });
 

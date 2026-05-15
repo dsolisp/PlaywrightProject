@@ -9,6 +9,7 @@ vars:
   ALLURE_RESULTS: allure-results
   ALLURE_REPORT: allure-report
   AUTH_FILE: .auth/sauce.json
+  QA_PRACTICE_APP: ../qa-practice-app
 
 tasks:
   # ── Core ──────────────────────────────────────────────────────────────────
@@ -76,13 +77,13 @@ tasks:
   practice:up:
     desc: 'Start qa-practice-app on localhost:8080'
     cmds:
-      - docker compose -f qa-practice-app/docker-compose.yml up -d
+      - docker compose -f {{.QA_PRACTICE_APP}}/docker-compose.yml up -d
       - echo "Practice app running at http://localhost:8080"
 
   practice:down:
     desc: 'Stop qa-practice-app'
     cmds:
-      - docker compose -f qa-practice-app/docker-compose.yml down
+      - docker compose -f {{.QA_PRACTICE_APP}}/docker-compose.yml down
 
   # ── Auth ──────────────────────────────────────────────────────────────────
 
