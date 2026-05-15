@@ -1,5 +1,5 @@
 // All the constants we use across tests.
-// NOTE: Credentials are now in lib/utils/test-data-factory.ts (UserFactory)
+// NOTE: Credentials / factories live in utils/test-data-factory.ts (UserFactory, etc.)
 
 // ── Timeouts (ms) ────────────────────────────────────────────────────
 

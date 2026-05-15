@@ -265,11 +265,21 @@ To change URLs for different environments, set the environment variables in `.en
 | Database tests skip       | Download Chinook DB: `curl -L -o test-data/chinook.db https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite` |
 | better-sqlite3 build fail | Ensure you have C++ build tools: macOS: `xcode-select --install`, Linux: `apt install build-essential`                                                          |
 
+### Lighthouse-style vs Google Lighthouse CLI
+
+**Lighthouse-style** here means **axe-core** plus a **scoring methodology inspired by Lighthouse** and **Web Vitals–style** checks using Playwright metrics and the Performance API — not the same as running Google’s **Lighthouse CLI** in CI (heavier, Chrome-specific, optional elsewhere in the portfolio). Default CI uses the specs below, not the npm Lighthouse package.
+
+| Area                    | Spec                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| Accessibility / scoring | [`tests/accessibility/lighthouse.spec.ts`](tests/accessibility/lighthouse.spec.ts) |
+| Performance / metrics   | [`tests/performance/performance.spec.ts`](tests/performance/performance.spec.ts)   |
+
 ---
 
 ## 📚 Documentation
 
 - [docs/ZERO_TO_HERO.md](docs/ZERO_TO_HERO.md) - Complete guide to recreate this project from scratch (`docs/ZERO-TO-HERO.md` redirects here)
+- Cross-repo OpenTelemetry test-run attributes (monorepo / portfolio layout): [shared-docs `OTEL_TEST_RUN_ATTRIBUTES.md`](../shared-docs/docs/OTEL_TEST_RUN_ATTRIBUTES.md)
 
 ---
 
