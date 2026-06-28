@@ -36,6 +36,10 @@ export class InventoryPage extends BasePage {
     return this.locators.itemPrices.allTextContents();
   }
 
+  async getFirstItemPriceText(): Promise<string> {
+    return this.locators.itemPrices.first().innerText();
+  }
+
   async getCartBadgeCount(): Promise<number> {
     if (!(await this.locators.cartBadge.isVisible())) {
       return 0;
@@ -53,6 +57,10 @@ export class InventoryPage extends BasePage {
 
   async addToCart(index: number): Promise<void> {
     await this.locators.addToCartButtons.nth(index).click();
+  }
+
+  async addToCartByProductName(name: string): Promise<void> {
+    await this.locators.addToCartButtonForProduct(name).click();
   }
 
   async addBackpack(): Promise<void> {

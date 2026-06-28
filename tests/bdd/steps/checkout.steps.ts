@@ -1,7 +1,7 @@
 import { createBdd, DataTable } from 'playwright-bdd';
 import { expect } from '@playwright/test';
-
-// GEMINI Style: Use semantic locators directly, no imported locator constants
+import { HeaderComponent } from '../../../components/header.component';
+import { CheckoutPage } from '../../../pages/sauce-demo/checkout.page';
 
 const { Given, When, Then } = createBdd();
 
@@ -13,7 +13,7 @@ Given('I have items in my cart', async ({ page }) => {
 });
 
 When('I proceed to checkout', async ({ page }) => {
-  await page.locator('.shopping_cart_link').click();
+  await new HeaderComponent(page).goToCart();
   await expect(page).toHaveURL(/cart/);
   await page.getByRole('button', { name: 'Checkout' }).click();
   await expect(page).toHaveURL(/checkout-step-one/);
@@ -37,13 +37,13 @@ When('I finish the checkout', async ({ page }) => {
 });
 
 Then('I should see the order confirmation', async ({ page }) => {
-  const completeHeader = page.locator('.complete-header');
-  await expect(completeHeader).toContainText('Thank you');
+  const checkoutPage = new CheckoutPage(page);
+  await expect(checkoutPage.completeHeaderLocator()).toContainText('Thank you');
 });
 
 Then('I should see the order total', async ({ page }) => {
-  const total = page.locator('.summary_total_label');
-  await expect(total).toContainText('$');
+  const checkoutPage = new CheckoutPage(page);
+  await expect(checkoutPage.totalLabelLocator()).toContainText('$');
 });
 
 When('I click continue without entering information', async ({ page }) => {

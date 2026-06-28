@@ -1,8 +1,8 @@
 import { createBdd } from 'playwright-bdd';
 import { expect } from '@playwright/test';
 import { settings } from '../../../config/settings';
-
-// GEMINI Style: Use semantic locators directly, no imported locator constants
+import { HeaderComponent } from '../../../components/header.component';
+import { CartPage } from '../../../pages/sauce-demo/cart.page';
 
 const { Given, When, Then } = createBdd();
 
@@ -50,13 +50,11 @@ Then('the cart should be empty', async ({ page }) => {
 });
 
 When('I go to the cart', async ({ page }) => {
-  await page.locator('.shopping_cart_link').click();
+  await new HeaderComponent(page).goToCart();
   await expect(page).toHaveURL(/cart/);
 });
 
 Then('I should see {string} in the cart', async ({ page }, productName: string) => {
-  const cartItem = page.locator('.cart_item .inventory_item_name', {
-    hasText: productName,
-  });
-  await expect(cartItem).toBeVisible();
+  const cartPage = new CartPage(page);
+  await expect(cartPage.cartItemByNameLocator(productName)).toBeVisible();
 });

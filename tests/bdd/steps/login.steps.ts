@@ -1,8 +1,7 @@
 import { createBdd } from 'playwright-bdd';
 import { expect } from '@playwright/test';
 import { settings } from '../../../config/settings';
-
-// GEMINI Style: Use semantic locators directly, no imported locator constants
+import { InventoryPage } from '../../../pages/sauce-demo/inventory.page';
 
 const { Given, When, Then } = createBdd();
 
@@ -27,9 +26,9 @@ Then('I should be on the inventory page', async ({ page }) => {
 });
 
 Then('I should see products displayed', async ({ page }) => {
-  const products = page.locator('.inventory_item');
-  await expect(products.first()).toBeVisible();
-  const count = await products.count();
+  const inventoryPage = new InventoryPage(page);
+  await expect(inventoryPage.inventoryItemsLocator().first()).toBeVisible();
+  const count = await inventoryPage.inventoryItemsLocator().count();
   expect(count).toBeGreaterThan(0);
 });
 
