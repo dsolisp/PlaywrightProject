@@ -1,7 +1,6 @@
 # ADR-002 — No Assertions in Page Objects or Locators
 
 ## Status
-
 Accepted — 2026-05-02
 
 ## Context
@@ -32,13 +31,13 @@ Files under `pages/`, `locators/`, and `components/` directories (all stacks) mu
 
 ### Banned patterns by stack
 
-| Stack                   | Banned in pages/ & locators/                                  |
-| ----------------------- | ------------------------------------------------------------- |
-| Python                  | `assert`, `assert_that(...)`, any hamcrest matcher            |
-| TypeScript (Playwright) | `expect(...)`, `toBeVisible()`, `toHaveText()`                |
-| TypeScript (Cypress)    | `.should(...)`, `expect(...)`, `cy.contains(...).should(...)` |
-| Java                    | `assertThat(...)`, `assertEquals(...)`, `assertTrue(...)`     |
-| C#                      | `Assert.*`, `.Should()`, `FluentAssertions` in any form       |
+| Stack | Banned in pages/ & locators/ |
+|-------|------------------------------|
+| Python | `assert`, `assert_that(...)`, any hamcrest matcher |
+| TypeScript (Playwright) | `expect(...)`, `toBeVisible()`, `toHaveText()` |
+| TypeScript (Cypress) | `.should(...)`, `expect(...)`, `cy.contains(...).should(...)` |
+| Java | `assertThat(...)`, `assertEquals(...)`, `assertTrue(...)` |
+| C# | `Assert.*`, `.Should()`, `FluentAssertions` in any form |
 
 ### Compliant pattern
 
@@ -56,13 +55,11 @@ def test_invalid_login_shows_error(login_page):
 ## Consequences
 
 ### Positive
-
 - Stack traces point to the test, not the page — failures are immediately actionable.
 - Page methods are reusable across positive and negative test scenarios.
 - Assertion logic is consolidated in one place, making test intent readable at a glance.
 
 ### Negative
-
 - Page methods must be designed to return meaningful values instead of asserting silently.
   This requires slightly more deliberate API design per page.
 - Existing pages with embedded assertions must be refactored (tracked in Phase 3, 7, 8).

@@ -32,6 +32,10 @@ allure-report/
 # ── Environment & secrets ─────────────────────────────────────────────────────
 .env
 .env.*
+!.env.ai.example
+
+# AI heal cache (ADR-019)
+.ai-heal-cache/
 
 # ── Logs ──────────────────────────────────────────────────────────────────────
 *.log

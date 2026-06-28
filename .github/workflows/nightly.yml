@@ -16,6 +16,10 @@ jobs:
     env:
       HEADLESS: true
       CI: 'true'
+      AI_HEALING_ENABLED: 'true'
+      AI_TRIAGE_ENABLED: 'true'
+      AI_PROVIDER: ollama
+      AI_MAX_HEALS_PER_RUN: '10'
     steps:
       - uses: actions/checkout@v5
       - name: Install pnpm
@@ -136,3 +140,8 @@ jobs:
           else
             echo "Optional: set **R2_PUBLIC_URL** to that public base URL to get a hosted link above." >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      - name: AI failure triage (optional, ADR-019)
+        if: always()
+        continue-on-error: true
+        run: pnpm run ai:triage

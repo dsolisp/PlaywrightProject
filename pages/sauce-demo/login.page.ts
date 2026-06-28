@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { aiSettings } from '../../config/ai-settings';
 import { settings } from '../../config/settings';
 import type { UserCredentials } from '../../utils/test-data-factory';
 import { LoginLocators } from '../../locators/sauce-demo/login.locators';
@@ -27,9 +28,15 @@ export class LoginPage extends BasePage {
   // ── Actions ────────────────────────────────────────────────────────
 
   async login(username: string, password: string): Promise<void> {
-    await this.locators.usernameInput.fill(username);
+    const usernameLoc = aiSettings().healingEnabled
+      ? await this.locators.usernameInputHealing()
+      : this.locators.usernameInput;
+    const loginBtn = aiSettings().healingEnabled
+      ? await this.locators.loginButtonHealing()
+      : this.locators.loginButton;
+    await usernameLoc.fill(username);
     await this.locators.passwordInput.fill(password);
-    await this.locators.loginButton.click();
+    await loginBtn.click();
   }
 
   async loginWithUser(user: UserCredentials): Promise<void> {
