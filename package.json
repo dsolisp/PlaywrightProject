@@ -34,7 +34,10 @@
     "typecheck": "tsc --noEmit",
     "depcruise": "depcruise --config .dependency-cruiser.cjs pages locators tests/ui tests/backend tests/accessibility tests/performance tests/integration tests/auth utils",
     "prepare": "husky install",
-    "clean": "rm -rf dist test-results allure-results allure-report playwright-report"
+    "clean": "rm -rf dist test-results allure-results allure-report playwright-report",
+    "ai:init-agents": "playwright init-agents --loop=vscode",
+    "ai:promote-heal": "node scripts/promote-healed-locator.mjs",
+    "ai:triage": "node scripts/ai-triage-failure.mjs"
   },
   "keywords": [],
   "author": "",

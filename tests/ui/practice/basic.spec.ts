@@ -1,21 +1,21 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../../../fixtures/test.fixture';
 
-test('basic test', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com');
-  await expect(page).toHaveTitle('Swag Labs');
-  await page.getByTestId('username').fill('standard_user');
-  await expect(page).toHaveTitle('Swag Labs');
-  await page.getByTestId('password').fill('secret_sauce');
-  await expect(page).toHaveTitle('Swag Labs');
-  await page.getByTestId('login-button').click();
-  await expect(page).toHaveTitle('Swag Labs');
+test.use({ storageState: undefined });
 
-  //loop example
-  const items = page.getByText('Add to cart');
-  for (const item of await items.all()) {
-    await page.getByRole('button', { name: 'Add to cart' }).first().click();
-  }
-  await expect(page.getByTestId('cart-button')).toHaveText('6');
+/**
+ * Challenge — add a product by title; changing the product name should be a one-line edit.
+ * Law 3: all locators accessed via page-object methods — no raw page.* calls in specs.
+ *
+ * https://www.saucedemo.com/
+ * Change ONLY the PRODUCT_TITLE constant to switch products without any other modification.
+ */
+test('basic test — add product to cart by product name', async ({ loginPage, inventoryPage }) => {
+  const PRODUCT_TITLE = 'Sauce Labs Fleece Jacket'; // ← one-line change to switch product
 
+  await loginPage.open();
+  await loginPage.login('standard_user', 'secret_sauce');
 
+  await inventoryPage.addToCartByProductName(PRODUCT_TITLE);
+
+  await expect(inventoryPage.header.cartBadgeLocator()).toHaveText('1');
 });

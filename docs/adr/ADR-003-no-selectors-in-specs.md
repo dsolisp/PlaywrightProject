@@ -1,7 +1,6 @@
 # ADR-003 — No Selector Literals in Test Specs
 
 ## Status
-
 Accepted — 2026-05-02
 
 ## Context
@@ -29,27 +28,27 @@ and **Component Object** method calls.
 
 ### Banned patterns by stack
 
-| Stack           | Banned in tests/                                                              |
-| --------------- | ----------------------------------------------------------------------------- |
-| Python          | `By.ID`, `By.CSS_SELECTOR`, `find_element(...)`, `find_elements(...)`         |
-| Playwright (TS) | `page.locator(...)`, `page.getByTestId(...)`, `page.getByRole(...)`           |
-| Cypress         | `cy.get(...)`, `cy.find(...)`, `cy.contains(...)` (as selector, not via page) |
-| Java            | `By.*`, `driver.findElement(...)`, `driver.findElements(...)`                 |
-| C#              | `By.*`, `driver.FindElement(...)`, `driver.FindElements(...)`                 |
+| Stack | Banned in tests/ |
+|-------|-----------------|
+| Python | `By.ID`, `By.CSS_SELECTOR`, `find_element(...)`, `find_elements(...)` |
+| Playwright (TS) | `page.locator(...)`, `page.getByTestId(...)`, `page.getByRole(...)` |
+| Cypress | `cy.get(...)`, `cy.find(...)`, `cy.contains(...)` (as selector, not via page) |
+| Java | `By.*`, `driver.findElement(...)`, `driver.findElements(...)` |
+| C# | `By.*`, `driver.FindElement(...)`, `driver.FindElements(...)` |
 
 ### Compliant pattern
 
 ```typescript
 // tests/e2e/sauce-demo/login.spec.ts — CORRECT
-test('invalid login shows error', async ({ loginPage }) => {
+test("invalid login shows error", async ({ loginPage }) => {
   await loginPage.enterCredentials(user.username, user.password);
   await loginPage.submit();
   const error = await loginPage.getErrorMessage();
-  expect(error).toContain('Username and password do not match');
+  expect(error).toContain("Username and password do not match");
 });
 
 // ❌ VIOLATION
-test('invalid login shows error', async ({ page }) => {
+test("invalid login shows error", async ({ page }) => {
   await page.locator('[data-test="username"]').fill(user.username); // raw selector in test
 });
 ```
@@ -64,13 +63,11 @@ test('invalid login shows error', async ({ page }) => {
 ## Consequences
 
 ### Positive
-
 - A selector change requires editing one locator file — zero test files touched.
 - Test files read as business specifications, approachable by QA leads and product owners.
 - DOM coupling is isolated to the locator layer.
 
 ### Negative
-
 - Writing a new test requires creating or extending a page object first (slightly slower initial
   authoring, significantly faster long-term maintenance).
 - BDD step definitions require the same discipline — steps call page methods, not page API.

@@ -36,22 +36,24 @@ test.describe('Practice App — Dropdown @practice @smoke', () => {
   // ── ADV-E2: Dynamic dropdown ─────────────────────────────────────────
   test.describe('ADV-E2: Dynamic dropdown (async load)', () => {
     test('should start disabled while loading', async ({ dropdownPage }) => {
-      // Check immediately on load — the dropdown starts disabled
-      await expect(dropdownPage.dynamicDropdown()).toBeDisabled();
-      await expect(dropdownPage.dynamicStatus()).toContainText('Fetching');
+      // Soft assertions (expect.soft) report both failures together rather than
+      // stopping at the first — mirrors the Java SoftAssertions pattern.
+      await expect.soft(dropdownPage.dynamicDropdown()).toBeDisabled();
+      await expect.soft(dropdownPage.dynamicStatus()).toContainText('Fetching');
     });
 
     test('should become enabled and show options after async load', async ({ dropdownPage }) => {
-      // Dynamic options load after ~1.5 s — Playwright auto-waits
-      await expect(dropdownPage.dynamicDropdown()).toBeEnabled();
-      await expect(dropdownPage.dynamicStatus()).toContainText('loaded');
+      // Dynamic options load after ~1.5 s — Playwright auto-waits.
+      await expect.soft(dropdownPage.dynamicDropdown()).toBeEnabled();
+      await expect.soft(dropdownPage.dynamicStatus()).toContainText('loaded');
     });
 
     test('should select a dynamic option after load and update status', async ({
       dropdownPage,
     }) => {
       await expect(dropdownPage.dynamicDropdown()).toBeEnabled();
-      await dropdownPage.selectDynamic('1');
+      // API returns option values: selenium, playwright, cypress, appium
+      await dropdownPage.selectDynamic('selenium');
       await expect(dropdownPage.dynamicStatus()).not.toContainText('Fetching');
     });
   });

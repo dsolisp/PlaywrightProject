@@ -1,7 +1,6 @@
 # ADR-008 — Test Data Builders (Programmatic Generation Over Static JSON)
 
 ## Status
-
 Accepted — 2026-05-02
 
 ## Context
@@ -30,12 +29,12 @@ that generate strongly-typed test data on demand.
 
 ### Per-stack library
 
-| Stack      | Library                 | Location                         |
-| ---------- | ----------------------- | -------------------------------- |
-| Python     | `factory_boy` + `Faker` | `utils/builders/`                |
-| Java       | `Datafaker`             | `src/main/java/.../builders/`    |
-| C#         | `Bogus`                 | `Automation.Framework/Builders/` |
-| TypeScript | `@faker-js/faker`       | `utils/builders/`                |
+| Stack | Library | Location |
+|-------|---------|----------|
+| Python | `factory_boy` + `Faker` | `utils/builders/` |
+| Java | `Datafaker` | `src/main/java/.../builders/` |
+| C# | `Bogus` | `Automation.Framework/Builders/` |
+| TypeScript | `@faker-js/faker` | `utils/builders/` |
 
 ### API contract (same across all stacks)
 
@@ -53,8 +52,8 @@ ProductBuilder().random(count=3).build()
 
 ```typescript
 // TypeScript
-new UserBuilder().standard().build();
-new CheckoutBuilder().withInvalidPostal().build();
+new UserBuilder().standard().build()
+new CheckoutBuilder().withInvalidPostal().build()
 ```
 
 ```java
@@ -65,24 +64,22 @@ new CheckoutBuilder().withInvalidPostal().build()
 
 ### What stays as JSON/static data
 
-| Data type                                   | Stays static?                       | Reason                                            |
-| ------------------------------------------- | ----------------------------------- | ------------------------------------------------- |
-| SauceDemo user credentials                  | **Yes** — they are fixed by the app | These are not generated; they are known constants |
-| API schema definitions                      | **Yes**                             | Reference schemas are read-only                   |
-| Visual baselines                            | **Yes**                             | Screenshot files, not data                        |
-| Dynamic test input (names, addresses, etc.) | **No** → Builder                    | Faker generates fresh values per run              |
+| Data type | Stays static? | Reason |
+|-----------|---------------|--------|
+| SauceDemo user credentials | **Yes** — they are fixed by the app | These are not generated; they are known constants |
+| API schema definitions | **Yes** | Reference schemas are read-only |
+| Visual baselines | **Yes** | Screenshot files, not data |
+| Dynamic test input (names, addresses, etc.) | **No** → Builder | Faker generates fresh values per run |
 
 ## Consequences
 
 ### Positive
-
 - Type-safe at authoring time (TypeScript) or via class attributes (Python dataclasses).
 - Builder methods communicate test intent: `.locked_out()` is self-documenting.
 - Edge cases are composable: `.with_invalid_postal().with_very_long_name()`.
 - Each test run can use fresh data, reducing test-order dependencies.
 
 ### Negative
-
 - Initial builder classes require upfront authoring (tracked in tasks 3.5, 5.4, 6.5, 7.5, 8.6).
 - Faker output is random — tests that assert on specific generated values must capture the
   value before asserting (`name = builder.build().first_name; assert page.get_name() == name`).

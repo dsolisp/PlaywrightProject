@@ -38,4 +38,11 @@ export class InventoryLocators {
   get addToCartBikeLightButton() {
     return this.page.getByTestId('add-to-cart-sauce-labs-bike-light');
   }
+
+  /** Add-to-cart button within the inventory item whose title matches `name`. */
+  addToCartButtonForProduct(name: string) {
+    return this.inventoryItems
+      .filter({ has: this.page.getByText(name, { exact: true }) })
+      .getByRole('button', { name: /add to cart/i });
+  }
 }

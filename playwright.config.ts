@@ -18,6 +18,9 @@ export default defineConfig({
     ['list'],
     ['allure-playwright'],
     ['json', { outputFile: 'data/results/playwright-results.json' }],
+    ...(process.env.FLAKE_DETECTIVE_ENABLED === 'true'
+      ? ([['./reporters/flaky-reporter.stub.ts']] as const)
+      : []),
   ],
   use: {
     trace: 'on-first-retry',
@@ -28,6 +31,9 @@ export default defineConfig({
     navigationTimeout: TIMEOUTS.NAVIGATION,
     testIdAttribute: 'data-test',
     ignoreHTTPSErrors: true,
+    // Deterministic viewport — matches baselines across macOS and Linux CI
+    viewport: { width: 1280, height: 720 },
+    deviceScaleFactor: 1,
     userAgent:
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   },
@@ -39,8 +45,25 @@ export default defineConfig({
     },
 
     // ── Default CI runs Chromium only ─────────────────────────────────
+    // Practice UI examples skip Sauce auth setup (no dependency on `setup`).
+    {
+      name: 'chromium-practice',
+      testMatch: '**/ui/practice/**/*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: [
+            '--disable-blink-features=AutomationControlled',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+          ],
+        },
+      },
+    },
     {
       name: 'chromium',
+      testIgnore: ['**/ui/practice/**'],
       use: {
         ...devices['Desktop Chrome'],
         storageState: AUTH_FILE,

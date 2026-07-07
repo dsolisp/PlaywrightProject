@@ -53,8 +53,12 @@ export class CheckoutPage extends BasePage {
     return (await this.locators.completeHeader.textContent()) ?? '';
   }
 
-  /** Expose locator so tests can call expect() on it (Law 2). */
+  /** Expose locators so tests can call expect() on them (Law 2). */
   completeHeaderLocator() {
     return this.locators.completeHeader;
+  }
+
+  totalLabelLocator() {
+    return this.locators.totalLabel;
   }
 }

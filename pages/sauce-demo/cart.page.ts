@@ -35,9 +35,13 @@ export class CartPage extends BasePage {
     return this.locators.itemNames.allTextContents();
   }
 
-  /** Expose locator so tests can call expect() on it (Law 2). */
+  /** Expose locators so tests can call expect() on them (Law 2). */
   cartItemsLocator() {
     return this.locators.cartItems;
+  }
+
+  cartItemByNameLocator(name: string) {
+    return this.locators.cartItems.filter({ hasText: name });
   }
 
   // ── Actions ────────────────────────────────────────────────────────

@@ -65,11 +65,7 @@ test.describe('Hybrid DB Testing Patterns @db', () => {
       }
     ).price;
 
-    const priceText = await inventoryPage
-      .inventoryItemsLocator()
-      .first()
-      .locator('.inventory_item_price')
-      .innerText();
+    const priceText = await inventoryPage.getFirstItemPriceText();
     expect(priceText).toContain(String(dbPrice));
   });
 
