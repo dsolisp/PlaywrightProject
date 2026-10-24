@@ -54,7 +54,9 @@ export async function resolveHealingLocator(
       }
     }
     // Optional: integrate healwright / autoheal-locator-js when installed (see docs/ai/README.md)
-    logger.warn(`AI heal libraries not wired for ${locatorKey}; install healwright for LLM fallback`);
+    logger.warn(
+      `AI heal libraries not wired for ${locatorKey}; install healwright for LLM fallback`,
+    );
   }
 
   return primary;

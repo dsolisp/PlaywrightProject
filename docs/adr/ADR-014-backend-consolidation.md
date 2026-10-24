@@ -20,6 +20,7 @@ However, as the project evolved into Phase 8, it became clear that naming this d
 We will supersede the directory naming rule from ADR-013 regarding `api/`. The directory `api/` will be renamed to `backend/` across all five project stacks (Cypress, Playwright, Python, Java, C#).
 
 The new canonical structure for backend concerns will be:
+
 ```text
 <root>/
 ├── backend/
@@ -41,10 +42,12 @@ The new canonical structure for backend concerns will be:
 ## Consequences
 
 ### ✅ Positive
+
 1. More accurate mental model for developers switching between UI and Backend test layers.
 2. Future backend integrations (message brokers, caches, background jobs) have a clear home.
 
 ### ⚠️ Breaking Changes
+
 1. All `api/` folders must be renamed to `backend/`.
 2. CI/CD test execution scripts, framework configurations (`cypress.config.ts`, `playwright.config.ts`, `pytest.ini`, etc.), and package scripts must be updated to target `backend/` instead of `api/`.
 3. Any documentation referencing `api/` tests must be updated.
@@ -54,6 +57,7 @@ The new canonical structure for backend concerns will be:
 ## Implementation Summary (Phase 8)
 
 The rename involves moving the files from `<root>/api/` to `<root>/backend/` in:
+
 - `CypressProject/cypress/`
 - `PlaywrightProject/tests/`
 - `PythonSeleniumProject/tests/`

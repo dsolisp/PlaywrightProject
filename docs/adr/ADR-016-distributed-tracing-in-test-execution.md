@@ -94,4 +94,3 @@ We will surface the `trace_id` into reporting artifacts so reviewers can drill d
 - Cypress: Node runner creates `cypress.run` span
 - Java: JUnit extension creates `test` span; WebDriver extension ensures tracing configured
 - C#: xUnit attribute creates `Activity` per test using `ActivitySource`
-

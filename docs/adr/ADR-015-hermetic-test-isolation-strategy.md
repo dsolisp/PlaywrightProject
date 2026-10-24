@@ -23,11 +23,11 @@ We want hermetic tests: each test (or test class) should run with isolated DB st
 
 We standardize on a 3-tier approach and pick the best tier per repo/test-suite:
 
-| Tier | Strategy | Default scope |
-|---|---|---|
-| L1 | Transaction per test (`BEGIN` / `ROLLBACK`) | Per test |
-| L2 | Fresh DB per test/class (SQLite `:memory:` or temp DB) | Per test or per class |
-| L3 | Testcontainers + Postgres | Per class or per suite |
+| Tier | Strategy                                               | Default scope          |
+| ---- | ------------------------------------------------------ | ---------------------- |
+| L1   | Transaction per test (`BEGIN` / `ROLLBACK`)            | Per test               |
+| L2   | Fresh DB per test/class (SQLite `:memory:` or temp DB) | Per test or per class  |
+| L3   | Testcontainers + Postgres                              | Per class or per suite |
 
 Additionally, we require seeding to be connection-based:
 
@@ -64,4 +64,3 @@ The `seed(connection)` rule is the enabling constraint for all tiers.
 
 - Start with **Python**: convert DB seeding to `seed(conn)` and use a hermetic fixture for backend DB tests.
 - Backport L1/L2 patterns to the other stacks as they touch DB validation tests.
-

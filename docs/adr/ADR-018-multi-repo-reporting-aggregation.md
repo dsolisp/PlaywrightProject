@@ -22,10 +22,10 @@ Goals:
 
 ### 1. Two R2 buckets (conceptual separation)
 
-| Bucket | Purpose | Typical layout |
-|--------|---------|----------------|
+| Bucket                 | Purpose                              | Typical layout                                                        |
+| ---------------------- | ------------------------------------ | --------------------------------------------------------------------- |
 | `qa-portfolio-metrics` | Small JSON summaries for aggregation | `<repo-name>/<run-id>.json` or nested unique keys (e.g. matrix suite) |
-| `qa-portfolio-allure` | Generated Allure HTML sites | `<repo-name>/<run-id>/` (and matrix subpaths where applicable) |
+| `qa-portfolio-allure`  | Generated Allure HTML sites          | `<repo-name>/<run-id>/` (and matrix subpaths where applicable)        |
 
 Access uses the **S3-compatible API** with `aws s3 cp` / `aws s3 sync` and endpoint `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`.
 
@@ -33,14 +33,14 @@ Access uses the **S3-compatible API** with `aws s3 cp` / `aws s3 sync` and endpo
 
 Produced by each repo’s `scripts/generate_summary_json.js` (copied from [shared-docs/templates/scripts/generate_summary_json.js](../../templates/scripts/generate_summary_json.js)). Minimum fields consumed by the dashboard builder:
 
-| Field | Type | Notes |
-|-------|------|--------|
-| `repo` | string | Repository name (e.g. `PythonSeleniumProject`) |
-| `run_id` | string | `GITHUB_RUN_ID` |
-| `timestamp` | string | ISO-8601 |
-| `suite` | string | Logical suite label (`full-tests` input, `nightly`, or matrix `suite`) |
-| `total`, `passed`, `failed`, `broken`, `skipped` | number | Derived from Allure `*-result.json` |
-| `duration_ms` | number | Sum of result durations |
+| Field                                            | Type   | Notes                                                                  |
+| ------------------------------------------------ | ------ | ---------------------------------------------------------------------- |
+| `repo`                                           | string | Repository name (e.g. `PythonSeleniumProject`)                         |
+| `run_id`                                         | string | `GITHUB_RUN_ID`                                                        |
+| `timestamp`                                      | string | ISO-8601                                                               |
+| `suite`                                          | string | Logical suite label (`full-tests` input, `nightly`, or matrix `suite`) |
+| `total`, `passed`, `failed`, `broken`, `skipped` | number | Derived from Allure `*-result.json`                                    |
+| `duration_ms`                                    | number | Sum of result durations                                                |
 
 **Environment variables** (align CI with script):
 

@@ -139,13 +139,13 @@ pnpm exec tsc --init
 
 ### Key Options Explained
 
-| Option                       | Purpose                                                           |
-| ---------------------------- | ----------------------------------------------------------------- |
-| `strict: true`               | Enables all strict type-checking options                          |
-| `esModuleInterop`            | Allows `import axios from 'axios'` instead of `import * as axios` |
-| `skipLibCheck`               | Speeds up compilation by not checking node_modules types          |
+| Option                      | Purpose                                                            |
+| --------------------------- | ------------------------------------------------------------------ |
+| `strict: true`              | Enables all strict type-checking options                           |
+| `esModuleInterop`           | Allows `import axios from 'axios'` instead of `import * as axios`  |
+| `skipLibCheck`              | Speeds up compilation by not checking node_modules types           |
 | `module: "commonjs"`        | Matches this repo’s current `tsconfig` (Playwright/Vitest tooling) |
-| `declaration` + `sourceMap`  | Better jump-to-definition and debugging across tests and pages     |
+| `declaration` + `sourceMap` | Better jump-to-definition and debugging across tests and pages     |
 
 ---
 
@@ -365,19 +365,19 @@ mkdir -p test-data docs .github/workflows
 
 ### Directory Purposes
 
-| Directory         | Purpose                                       |
-| ----------------- | --------------------------------------------- |
-| `pages/`          | Page Object Model classes (business logic)    |
-| `locators/`       | Pure locator data classes (mirrors `pages/`)  |
-| `fixtures/`       | Playwright custom fixtures                    |
-| `tests/`          | All tests (E2E, unit, BDD, visual, API, etc.) |
-| `config/`         | Configuration and constants                   |
-| `utils/`          | Shared utilities (logger, factories, db)      |
-| `docs/`           | Documentation, ADRs, learning journey         |
-| `test-data/`      | Static test data files (JSON, CSV, SQLite)    |
-| `tests/unit/`     | Unit tests (Vitest)                           |
-| `tests/backend/`  | API / schema-style checks (Playwright)      |
-| `tests/bdd/`      | Cucumber/Gherkin tests                        |
+| Directory        | Purpose                                       |
+| ---------------- | --------------------------------------------- |
+| `pages/`         | Page Object Model classes (business logic)    |
+| `locators/`      | Pure locator data classes (mirrors `pages/`)  |
+| `fixtures/`      | Playwright custom fixtures                    |
+| `tests/`         | All tests (E2E, unit, BDD, visual, API, etc.) |
+| `config/`        | Configuration and constants                   |
+| `utils/`         | Shared utilities (logger, factories, db)      |
+| `docs/`          | Documentation, ADRs, learning journey         |
+| `test-data/`     | Static test data files (JSON, CSV, SQLite)    |
+| `tests/unit/`    | Unit tests (Vitest)                           |
+| `tests/backend/` | API / schema-style checks (Playwright)        |
+| `tests/bdd/`     | Cucumber/Gherkin tests                        |
 
 ---
 
@@ -611,7 +611,13 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage',
-      include: ['config/**/*.ts', 'pages/**/*.ts', 'locators/**/*.ts', 'utils/**/*.ts', 'fixtures/**/*.ts'],
+      include: [
+        'config/**/*.ts',
+        'pages/**/*.ts',
+        'locators/**/*.ts',
+        'utils/**/*.ts',
+        'fixtures/**/*.ts',
+      ],
       exclude: ['**/*.d.ts'],
     },
     testTimeout: 10000,

@@ -12,12 +12,18 @@ if (!locatorKey || !winnerName) {
   process.exit(1);
 }
 
-const cacheFile = path.join(process.cwd(), process.env.AI_HEAL_CACHE_DIR || '.ai-heal-cache', 'heals.jsonl');
+const cacheFile = path.join(
+  process.cwd(),
+  process.env.AI_HEAL_CACHE_DIR || '.ai-heal-cache',
+  'heals.jsonl',
+);
 if (!fs.existsSync(cacheFile)) {
   console.error('No heal cache at', cacheFile);
   process.exit(1);
 }
 
-console.log(`Review locators/ and update primary selector for "${locatorKey}" to match strategy "${winnerName}".`);
+console.log(
+  `Review locators/ and update primary selector for "${locatorKey}" to match strategy "${winnerName}".`,
+);
 console.log('Cache entry:', cacheFile);
 console.log('Do not run unattended — open a PR after editing locators/*.ts');
