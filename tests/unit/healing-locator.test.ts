@@ -15,6 +15,12 @@ describe('healing-locator', () => {
   });
 
   it('aiSettings defaults healing off', async () => {
+    // Product default is off. Nightly/CI may set AI_HEALING_ENABLED=true at
+    // job level (ADR-019) — clear real env so this asserts the default, not
+    // the ambient runner config. vi.unstubAllEnvs() does not delete real env.
+    delete process.env.AI_HEALING_ENABLED;
+    delete process.env.AI_TRIAGE_ENABLED;
+    resetAiSettingsForTests();
     const { aiSettings } = await import('../../config/ai-settings');
     expect(aiSettings().healingEnabled).toBe(false);
   });

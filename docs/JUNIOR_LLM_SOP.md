@@ -15,13 +15,13 @@ When in doubt, you stop and ask rather than guessing.
 
 **Repositories under your care** (treat as peers, never let them drift):
 
-| Stack | Repo | Runtime | Lint / Type | Arch Guard | Headless flag |
-|-------|------|---------|-------------|-----------|---------------|
-| Python | `PythonSeleniumProject` | `uv` + pytest | `ruff`, `mypy` | `import-linter` | env `HEADLESS` |
-| Playwright | `PlaywrightProject` | `pnpm` + Node 24 | `eslint`, `tsc` | ESLint `no-restricted-syntax` | config/CI env |
-| Cypress | `CypressProject` | `pnpm` | `eslint`, `tsc` | ESLint rules | config/CI env |
-| Java | `JavaSeleniumProject` | Maven + JUnit 5 | `spotless`/checkstyle | ArchUnit | `-DHEADLESS=true` |
-| C# | `CSharpSeleniumProject` | `dotnet test` | `dotnet format` | NetArchTest / Roslyn | env `HEADLESS` |
+| Stack      | Repo                    | Runtime          | Lint / Type           | Arch Guard                    | Headless flag     |
+| ---------- | ----------------------- | ---------------- | --------------------- | ----------------------------- | ----------------- |
+| Python     | `PythonSeleniumProject` | `uv` + pytest    | `ruff`, `mypy`        | `import-linter`               | env `HEADLESS`    |
+| Playwright | `PlaywrightProject`     | `pnpm` + Node 24 | `eslint`, `tsc`       | ESLint `no-restricted-syntax` | config/CI env     |
+| Cypress    | `CypressProject`        | `pnpm`           | `eslint`, `tsc`       | ESLint rules                  | config/CI env     |
+| Java       | `JavaSeleniumProject`   | Maven + JUnit 5  | `spotless`/checkstyle | ArchUnit                      | `-DHEADLESS=true` |
+| C#         | `CSharpSeleniumProject` | `dotnet test`    | `dotnet format`       | NetArchTest / Roslyn          | env `HEADLESS`    |
 
 **Hard exclusion:** Never read, reference, modify, or reason about `openspot-music-app`.
 It is not part of this ecosystem.
@@ -56,7 +56,7 @@ You may **never** suppress a lint rule to pass a Law. Fix the code, or open an A
 7. **Identical Naming Across Stacks** — `LoginPage` / `enterCredentials` are spelled
    identically everywhere (only casing convention differs per language). See `TEST_PARITY.md`.
 
-**Pedagogical mandate (Zero-to-Hero POC):** Each repo teaches *why*. When you add code,
+**Pedagogical mandate (Zero-to-Hero POC):** Each repo teaches _why_. When you add code,
 mirror the existing comment density — explain architectural intent where the surrounding
 `docs/ZERO_TO_HERO.md` and ADRs already do, but never add redundant inline narration to code.
 
@@ -95,7 +95,7 @@ Every repo MUST expose, and you MUST keep working:
 - `scripts/run_ci_checks.sh` — static gates (lint → format → type-check → arch/audit →
   security). **Exit `0` = all pass, exit `2` = one or more failed.** Mirror the Python
   reference (accumulate failures in a `FAILED` flag; do not abort on first failure during
-  the *check* phase).
+  the _check_ phase).
 - `scripts/run_full_workflow.sh` — end-to-end run (build → unit → backend → UI →
   performance/visual), always in **headless** mode for CI parity.
 
@@ -179,22 +179,22 @@ Build on what is **already ratified**; do not re-propose it. AI policy is fixed 
 
 Use these to justify the standards and to detect regression of value.
 
-| Metric | Definition | Target / Signal |
-|--------|-----------|-----------------|
-| **Selector blast radius** | Files touched to change one element's selector | **1** (Law 1). >1 means mirroring rot. |
-| **Cross-stack lead time** | Time to land an equivalent feature in all 5 repos | Trends down as naming parity (Law 7) lowers cognitive load. |
-| **Flake rate** | % non-deterministic failures per 100 runs | ↓ — stateless POMs (Law 5) + headless parity + deterministic merges (AI off in PR CI). |
-| **Environment-failure recurrence** | Repeat CI breaks from env mismatch (headed-on-Linux, false coverage gate) | **→ 0**. The `Settings` system-property fix is the template. |
-| **Script-rot index** | Specs with raw selectors or assertions-in-pages | **0** via `audit_violations.sh`. Any non-zero blocks merge. |
-| **Mean time to triage** | Time from red CI to root cause | ↓ via deep-link Allure→trace; one click instead of log archaeology. |
-| **Heal acceptance ratio** | Promoted healed locators ÷ heals proposed | Quality signal for self-healing; low ratio ⇒ tighten fallbacks. |
+| Metric                             | Definition                                                                | Target / Signal                                                                        |
+| ---------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| **Selector blast radius**          | Files touched to change one element's selector                            | **1** (Law 1). >1 means mirroring rot.                                                 |
+| **Cross-stack lead time**          | Time to land an equivalent feature in all 5 repos                         | Trends down as naming parity (Law 7) lowers cognitive load.                            |
+| **Flake rate**                     | % non-deterministic failures per 100 runs                                 | ↓ — stateless POMs (Law 5) + headless parity + deterministic merges (AI off in PR CI). |
+| **Environment-failure recurrence** | Repeat CI breaks from env mismatch (headed-on-Linux, false coverage gate) | **→ 0**. The `Settings` system-property fix is the template.                           |
+| **Script-rot index**               | Specs with raw selectors or assertions-in-pages                           | **0** via `audit_violations.sh`. Any non-zero blocks merge.                            |
+| **Mean time to triage**            | Time from red CI to root cause                                            | ↓ via deep-link Allure→trace; one click instead of log archaeology.                    |
+| **Heal acceptance ratio**          | Promoted healed locators ÷ heals proposed                                 | Quality signal for self-healing; low ratio ⇒ tighten fallbacks.                        |
 
 **Narrative for stakeholders:** Parity (Laws 1 & 7) converts five maintenance surfaces into
-one mental model — a selector or rename is an *O(1)* edit, not *O(5)*. Statelessness
+one mental model — a selector or rename is an _O(1)_ edit, not _O(5)_. Statelessness
 (Laws 5–6) plus enforced headless parity removes the two largest historical flake sources
 (cross-test pollution and env drift). Unified Allure+OTel collapses triage from log-reading
 to a single trace link. Net effect: lower script rot, faster lead time, and CI failures that
-mean *real product defects* rather than infrastructure noise.
+mean _real product defects_ rather than infrastructure noise.
 
 ---
 

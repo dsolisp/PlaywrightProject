@@ -12,18 +12,18 @@ mask real product failures.
 
 ## Decision
 
-| # | Decision | Rationale |
-|---|----------|-----------|
-| 1 | **Dev-time AI on by default (local)** — Playwright MCP / Test Agents, optional Ollama | High ROI; no PR gate token burn |
-| 2 | **Runtime healing off in PR CI** — `AI_HEALING_ENABLED=false` on `ci.yml` | Deterministic merges |
-| 3 | **Runtime healing optional on nightly** — `AI_HEALING_ENABLED=true` on `nightly.yml` / `workflow_dispatch` | Demonstrates capability without blocking PRs |
-| 4 | **Heal at locator/page layer only** — never in `tests/` specs | Preserves Law 3 |
-| 5 | **Promote healed selectors via reviewed PR** — `scripts/promote-healed-locator.*` updates `locators/` | Keeps locator files source of truth |
-| 6 | **Provider: OSS-first** — `ollama` (local), `groq` (CI optional); API keys only in env/secrets | No keys in git |
-| 7 | **Cost cap** — `AI_MAX_HEALS_PER_RUN` default `10` | Prevents runaway LLM calls |
-| 8 | **Observability** — log `test.heal.applied=true` on OTel span when heal used | Aligns with ADR-016 |
-| 9 | **Scope** — healing for **locator drift** only; not assertions, data, or timing | Parity-safe (ADR-007) |
-| 10 | **Commercial AI UI tools** — Cypress Cloud `cy.prompt`, Applitools: **out of scope** for default portfolio path | OSS-first policy |
+| #   | Decision                                                                                                        | Rationale                                    |
+| --- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| 1   | **Dev-time AI on by default (local)** — Playwright MCP / Test Agents, optional Ollama                           | High ROI; no PR gate token burn              |
+| 2   | **Runtime healing off in PR CI** — `AI_HEALING_ENABLED=false` on `ci.yml`                                       | Deterministic merges                         |
+| 3   | **Runtime healing optional on nightly** — `AI_HEALING_ENABLED=true` on `nightly.yml` / `workflow_dispatch`      | Demonstrates capability without blocking PRs |
+| 4   | **Heal at locator/page layer only** — never in `tests/` specs                                                   | Preserves Law 3                              |
+| 5   | **Promote healed selectors via reviewed PR** — `scripts/promote-healed-locator.*` updates `locators/`           | Keeps locator files source of truth          |
+| 6   | **Provider: OSS-first** — `ollama` (local), `groq` (CI optional); API keys only in env/secrets                  | No keys in git                               |
+| 7   | **Cost cap** — `AI_MAX_HEALS_PER_RUN` default `10`                                                              | Prevents runaway LLM calls                   |
+| 8   | **Observability** — log `test.heal.applied=true` on OTel span when heal used                                    | Aligns with ADR-016                          |
+| 9   | **Scope** — healing for **locator drift** only; not assertions, data, or timing                                 | Parity-safe (ADR-007)                        |
+| 10  | **Commercial AI UI tools** — Cypress Cloud `cy.prompt`, Applitools: **out of scope** for default portfolio path | OSS-first policy                             |
 
 ### Healing contract (all stacks)
 
